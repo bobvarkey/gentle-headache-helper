@@ -100,10 +100,11 @@ The Headache Diagnostic App is a mobile application designed to help users ident
 
 #### 3.5.1 ICHD-3 Reference Library
 
-- **Glossary**: Comprehensive definitions of medical terms
-  - Aura, photophobia, phonophobia, allodynia, pulsating, pressing, unilateral
-  - Autonomic symptoms: lacrimation, miosis, ptosis, conjunctival injection
-  - Temporal classifications: chronic, episodic, acute, persistent
+**Glossary**: Comprehensive definitions of medical terms used in diagnosis
+
+- **Symptom Terms**: Aura, photophobia, phonophobia, allodynia, pulsating, pressing, unilateral
+- **Autonomic Symptoms**: Lacrimation, miosis, ptosis, conjunctival injection
+- **Temporal Classifications**: Chronic, episodic, acute, persistent
 
 #### 3.5.2 Headache Information
 
@@ -123,6 +124,7 @@ The Headache Diagnostic App is a mobile application designed to help users ident
 ## 4. Technical Requirements
 
 ### 4.1 Architecture
+
 - **Framework**: Vite + React 18 (Web with PWA capability)
 - **Styling**: Tailwind CSS
 - **State Management**: React Context + useReducer
@@ -130,25 +132,31 @@ The Headache Diagnostic App is a mobile application designed to help users ident
 - **Language**: JavaScript/TypeScript
 
 ### 4.2 Data Structure
-- **Diagnostic Engine**: Rule-based system matching symptoms to ICHD-3 criteria
-- **Wizard Steps**: Modular question definitions with conditional logic
-- **Assessment Records**: Structured storage of user responses and results
+
+- Diagnostic Engine: Rule-based system matching symptoms to ICHD-3 criteria
+- Wizard Steps: Modular question definitions with conditional logic
+- Assessment Records: Structured storage of user responses and results
+- Glossary: Searchable medical terminology database
 
 ### 4.3 Performance & Accessibility
-- **Responsive Design**: Optimized for mobile and desktop
-- **Accessibility**: WCAG 2.1 AA compliance
-- **Offline Support**: Full functionality without internet connection
+
+- Responsive Design: Optimized for mobile and desktop
+- Accessibility: WCAG 2.1 AA compliance
+- Offline Support: Full functionality without internet connection
+- Fast Loading: Optimized bundle size and lazy loading
 
 ---
 
 ## 5. User Flow
 
 ### 5.1 First-Time User
-1. Onboarding Screen: Welcome message and medical disclaimer
-2. Main Dashboard: Introduction to app features
-3. Start Diagnostic: User initiates new assessment
+
+1. **Onboarding**: Welcome message and medical disclaimer
+2. **Main Dashboard**: Introduction to app features
+3. **Start Diagnostic**: User initiates new assessment
 
 ### 5.2 Diagnostic Assessment Flow
+
 1. Initial Questions: Frequency, duration, and onset of headaches
 2. Pain Characteristics: Location, quality (pulsating/pressing), intensity
 3. Associated Symptoms: Nausea, vomiting, photophobia, phonophobia
@@ -158,26 +166,38 @@ The Headache Diagnostic App is a mobile application designed to help users ident
 7. Result Screen: Classification with confidence score and recommendations
 
 ### 5.3 Post-Assessment
-1. View Results: Detailed breakdown of classification and criteria
-2. Save Assessment: Automatically saved with timestamp
-3. Share or Export: Option to export for healthcare provider
-4. New Assessment: Start another diagnostic or return to dashboard
+
+1. **View Results**: Detailed breakdown of classification and criteria
+2. **Save Assessment**: Automatically saved with timestamp
+3. **Share or Export**: Option to export for healthcare provider
+4. **New Assessment**: Start another diagnostic or return to dashboard
+
+### 5.4 History & Reference
+
+1. **View History**: Browse all past assessments
+2. **Compare Results**: View trends over time
+3. **Access Glossary**: Look up medical terms
+4. **Read Guides**: Learn about specific headache types
 
 ---
 
 ## 6. Key Design Principles
 
 ### 6.1 Medical Accuracy
+
 - All diagnostic criteria directly from ICHD-3 official classification
 - Regular updates to reflect new evidence and criteria changes
 - Consultation with medical experts in headache disorders
 
 ### 6.2 User Experience
+
 - Clear, non-technical language while maintaining medical accuracy
 - Progressive disclosure: Show only relevant questions based on answers
 - Visual feedback: Progress indicators, confidence scores, color-coded results
+- Accessibility: Large text, high contrast, keyboard navigation
 
 ### 6.3 Safety & Responsibility
+
 - Prominent emergency warnings for red flag symptoms
 - Clear medical disclaimer on every result
 - Encouragement to seek professional medical evaluation
@@ -193,6 +213,7 @@ The Headache Diagnostic App is a mobile application designed to help users ident
 | User Completion Rate | >80% complete full wizard | Indicates usability |
 | Assessment Saved | 100% of completed assessments | Enables history tracking |
 | Emergency Detection | 100% of red flag symptoms flagged | Ensures safety |
+| User Satisfaction | >4.0/5.0 stars | Indicates overall quality |
 | Time to Result | <5 minutes average | Ensures reasonable UX |
 
 ---
@@ -200,6 +221,7 @@ The Headache Diagnostic App is a mobile application designed to help users ident
 ## 8. Scope Limitations
 
 ### Out of Scope (Future Enhancements)
+
 - Real-time telemedicine consultations
 - Prescription management or medication recommendations
 - Integration with electronic health records (EHR)
@@ -208,7 +230,9 @@ The Headache Diagnostic App is a mobile application designed to help users ident
 - Multi-language support (initial release: English only)
 
 ### Assumptions
+
 - Users have basic understanding of their symptoms
+- Users are 18+ years old
 - App is used for educational and preliminary assessment only
 - Healthcare provider consultation is always recommended
 
