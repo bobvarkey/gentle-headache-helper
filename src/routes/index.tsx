@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Brain, Droplets, Moon, Activity, Check } from "lucide-react";
+import { Brain, Droplets, Moon, Activity, Check, Stethoscope, FileSearch, ShieldCheck } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
