@@ -34,6 +34,7 @@ function Index() {
         </div>
         <nav className="hidden gap-8 text-sm text-[#1f2230]/70 md:flex">
           <a href="#features" className="hover:text-[#1f2230]">Features</a>
+          <a href="#ichd3" className="hover:text-[#1f2230]">ICHD-3 Engine</a>
           <a href="#how" className="hover:text-[#1f2230]">How it works</a>
           <a href="#pricing" className="hover:text-[#1f2230]">Pricing</a>
         </nav>
