@@ -268,6 +268,68 @@ function Index() {
         </div>
       </section>
       
+      {/* FAQ Section */}
+      <section id="faq" className="mx-auto max-w-4xl px-4 py-10">
+        <h2 className="text-2xl font-bold text-center mb-8">Frequently Asked Questions</h2>
+        
+        <div className="space-y-4">
+          {/* FAQ 1 */}
+          <details className="group rounded-xl bg-white p-4 cursor-pointer">
+            <summary className="flex items-center justify-between font-medium list-none">
+              <span>How accurate is this diagnostic?</span>
+              <span className="transition group-open:rotate-180">▼</span>
+            </summary>
+            <div className="mt-3 text-sm text-[#1f2230]/70">
+              <p>This tool evaluates your symptoms against ICHD-3 diagnostic criteria used by neurologists worldwide. It provides a preliminary assessment, not a definitive diagnosis. Clinical accuracy depends on how precisely your inputs match observed symptoms. Always verify results with a healthcare provider.</p>
+            </div>
+          </details>
+          
+          {/* FAQ 2 */}
+          <details className="group rounded-xl bg-white p-4 cursor-pointer">
+            <summary className="flex items-center justify-between font-medium list-none">
+              <span>How does the ICHD-3 engine work?</span>
+              <span className="transition group-open:rotate-180">▼</span>
+            </summary>
+            <div className="mt-3 text-sm text-[#1f2230]/70">
+              <p>The engine uses a scoring algorithm that matches your symptom answers against official ICHD-3 criteria for each headache type. Each criterion (like unilateral pain, nausea, photophobia) adds to a score. Higher scores indicate stronger matches. Red flags are screened first—if detected, the tool prioritizes safety warnings.</p>
+            </div>
+          </details>
+          
+          {/* FAQ 3 */}
+          <details className="group rounded-xl bg-white p-4 cursor-pointer">
+            <summary className="flex items-center justify-between font-medium list-none">
+              <span>Is my data private?</span>
+              <span className="transition group-open:rotate-180">▼</span>
+            </summary>
+            <div className="mt-3 text-sm text-[#1f2230]/70">
+              <p>Yes. All data is stored locally on your device. We don't collect, store, or transmit any personal health information to external servers. No accounts, no tracking, no analytics.</p>
+            </div>
+          </details>
+          
+          {/* FAQ 4 */}
+          <details className="group rounded-xl bg-white p-4 cursor-pointer">
+            <summary className="flex items-center justify-between font-medium list-none">
+              <span>What if I get an emergency warning?</span>
+              <span className="transition group-open:rotate-180">▼</span>
+            </summary>
+            <div className="mt-3 text-sm text-[#1f2230]/70">
+              <p>If red flag symptoms are detected (like thunderclap headache, fever with neck stiffness, new neurological symptoms), the tool shows an immediate "Seek Medical Care" alert. Do not ignore these warnings. Call emergency services or go to the ER immediately.</p>
+            </div>
+          </details>
+          
+          {/* FAQ 5 */}
+          <details className="group rounded-xl bg-white p-4 cursor-pointer">
+            <summary className="flex items-center justify-between font-medium list-none">
+              <span>Can I use this for free?</span>
+              <span className="transition group-open:rotate-180">▼</span>
+            </summary>
+            <div className="mt-3 text-sm text-[#1f2230]/70">
+              <p>Yes, the diagnostic tool is completely free to use. No subscription, no ads, no hidden fees.</p>
+            </div>
+          </details>
+        </div>
+      </section>
+      
       {/* Footer */}
       <footer id="about" className="bg-white border-t py-8 mt-12">
         <div className="mx-auto max-w-4xl px-4 text-center text-sm text-[#1f2230]/50">
