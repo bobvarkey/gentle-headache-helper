@@ -1,289 +1,315 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Brain, Droplets, Moon, Activity, Check, Stethoscope, FileSearch, ShieldCheck } from "lucide-react";
+import { useState } from "react";
+import { Brain, Shield, AlertTriangle, CheckCircle, ArrowRight, Stethoscope } from "lucide-react";
+import { diagnose, formatDifferentialResults } from "../utils/diagnostic-engine";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Mira — Track & Tame Your Headaches" },
-      {
-        name: "description",
-        content:
-          "Mira helps you log headaches, spot triggers, and find relief with a calm, science-backed daily companion.",
-      },
-      { property: "og:title", content: "Mira — Track & Tame Your Headaches" },
-      {
-        property: "og:description",
-        content:
-          "Log headaches, spot triggers, and find relief with a calm daily companion.",
-      },
+      { title: "Mira — Headache Diagnostic" },
+      { name: "description", content: "ICHD-3 based headache diagnostic. Identify your headache type." },
+      { property: "og:title", content: "Mira — Headache Diagnostic" },
     ],
   }),
   component: Index,
 });
 
 function Index() {
+  // Diagnostic state
+  const [answers, setAnswers] = useState({});
+  const [results, setResults] = useState(null);
+  const [showDiagnostic, setShowDiagnostic] = useState(false);
+  
+  const questions = getQuickQuestions();
+  
+  const handleAnswer = (id, value) => {
+    const newAnswers = { ...answers, [id]: value };
+    setAnswers(newAnswers);
+    
+    // Auto-diagnose when we have enough
+    if (id === 'intensity' || id === 'nausea') {
+      const diagnosis = diagnose(newAnswers);
+      setResults(formatDifferentialResults(diagnosis));
+    }
+  };
+  
+  const resetDiagnostic = () => {
+    setAnswers({});
+    setResults(null);
+    setShowDiagnostic(false);
+  };
+
   return (
     <div className="min-h-screen bg-[#f7f5ef] text-[#1f2230]">
-      {/* Nav */}
-      <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
+      {/* Header */}
+      <header className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1f2230] text-[#f7f5ef]">
             <Brain className="h-4 w-4" />
           </div>
-          <span className="text-lg font-semibold tracking-tight">Mira</span>
+          <span className="text-lg font-semibold">Mira</span>
         </div>
-        <nav className="hidden gap-8 text-sm text-[#1f2230]/70 md:flex">
-          <a href="#features" className="hover:text-[#1f2230]">Features</a>
-          <a href="#ichd3" className="hover:text-[#1f2230]">ICHD-3 Engine</a>
-          <a href="#how" className="hover:text-[#1f2230]">How it works</a>
-          <a href="#pricing" className="hover:text-[#1f2230]">Pricing</a>
+        <nav className="flex gap-4 text-xs text-[#1f2230]/60">
+          <a href="#diagnose" className="hover:text-[#1f2230]">Diagnostic</a>
+          <a href="#about" className="hover:text-[#1f2230]">About</a>
         </nav>
-        <a
-          href="#get"
-          className="rounded-full bg-[#1f2230] px-4 py-2 text-sm font-medium text-[#f7f5ef] transition hover:bg-[#2d3142]"
-        >
-          Get the app
-        </a>
       </header>
 
       {/* Hero */}
-      <section className="mx-auto max-w-6xl px-6 pb-20 pt-10 md:pt-20">
-        <div className="grid items-center gap-12 md:grid-cols-2">
-          <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-[#1f2230]/15 bg-white/60 px-3 py-1 text-xs font-medium text-[#1f2230]/70">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#e07856]" />
-              New · iOS & Android
-            </span>
-            <h1 className="mt-5 text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl">
-              Quiet the noise in your head.
-            </h1>
-            <p className="mt-5 max-w-md text-lg text-[#1f2230]/70">
-              Mira is a gentle headache tracker that learns your patterns,
-              flags triggers, and helps you feel better — one day at a time.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href="#get"
-                className="rounded-full bg-[#e07856] px-6 py-3 text-sm font-medium text-white transition hover:bg-[#cf6a4a]"
-              >
-                Start tracking free
-              </a>
-              <a
-                href="#how"
-                className="rounded-full border border-[#1f2230]/20 px-6 py-3 text-sm font-medium text-[#1f2230] transition hover:bg-white"
-              >
-                See how it works
-              </a>
+      <section className="mx-auto max-w-4xl px-4 pt-6 pb-10">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold md:text-4xl">Headache Diagnostic</h1>
+          <p className="mt-2 text-sm text-[#1f2230]/60">Based on ICHD-3 Classification</p>
+        </div>
+        
+        {/* SAFETY DISCLAIMER - Always visible */}
+        <div className="mb-6 rounded-xl bg-red-50 border border-red-200 p-4">
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="h-5 w-5 shrink-0 text-red-600 mt-0.5" />
+            <div className="text-sm">
+              <p className="font-semibold text-red-700">Medical Disclaimer</p>
+              <p className="text-red-600/80">This tool is for educational purposes only. It does NOT provide medical diagnosis. Always consult a qualified healthcare provider for proper evaluation and treatment of headaches.</p>
             </div>
           </div>
+        </div>
 
-          {/* Phone mock */}
-          <div className="relative mx-auto w-full max-w-sm">
-            <div className="absolute -inset-8 rounded-[3rem] bg-gradient-to-br from-[#e9e3d2] to-[#dcd3bb] blur-2xl opacity-70" />
-            <div className="relative rounded-[2.5rem] border border-[#1f2230]/10 bg-white p-5 shadow-xl">
-              <div className="mb-4 flex items-center justify-between text-xs text-[#1f2230]/60">
-                <span>Today</span>
-                <span>9:41</span>
+        {/* QUICK DIAGNOSTIC FORM */}
+        <div id="diagnose" className="scroll-mt-8 bg-white rounded-2xl p-5 shadow-sm mb-8">
+          <div className="flex items-center gap-2 mb-4">
+            <Stethoscope className="h-5 w-5 text-[#e07856]" />
+            <h2 className="text-lg font-semibold">Quick Symptom Check</h2>
+          </div>
+          
+          <p className="text-sm text-[#1f2230]/60 mb-4">Answer a few questions to get an initial assessment:</p>
+          
+          {/* Questions Grid */}
+          <div className="grid gap-4 text-sm">
+            {/* Q1: Duration */}
+            <div>
+              <p className="font-medium mb-2">How long do headaches last?</p>
+              <div className="flex flex-wrap gap-2">
+                {questions.duration.map((opt) => (
+                  <button key={opt.value} onClick={() => handleAnswer('duration', opt.value)}
+                    className={`px-3 py-2 rounded-lg border transition ${
+                      answers.duration === opt.value 
+                        ? 'bg-[#1f2230] text-white border-[#1f2230]' 
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}>
+                    {opt.label}
+                  </button>
+                ))}
               </div>
-              <div className="rounded-2xl bg-[#f7f5ef] p-5">
-                <p className="text-xs uppercase tracking-wider text-[#1f2230]/50">
-                  How's your head?
-                </p>
-                <p className="mt-2 text-3xl font-semibold">Mild · 3/10</p>
-                <div className="mt-4 flex gap-1.5">
-                  {Array.from({ length: 10 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className={`h-8 flex-1 rounded ${
-                        i < 3 ? "bg-[#e07856]" : "bg-[#1f2230]/10"
-                      }`}
-                    />
+            </div>
+            
+            {/* Q2: Location */}
+            <div>
+              <p className="font-medium mb-2">Pain location?</p>
+              <div className="flex flex-wrap gap-2">
+                {questions.location.map((opt) => (
+                  <button key={opt.value} onClick={() => handleAnswer('location', opt.value)}
+                    className={`px-3 py-2 rounded-lg border transition ${
+                      answers.location === opt.value 
+                        ? 'bg-[#1f2230] text-white border-[#1f2230]' 
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}>
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            
+            {/* Q3: Nausea */}
+            <div>
+              <p className="font-medium mb-2">Nausea or vomiting?</p>
+              <div className="flex gap-2">
+                {questions.nausea.map((opt) => (
+                  <button key={String(opt.value)} onClick={() => handleAnswer('nausea', opt.value)}
+                    className={`px-4 py-2 rounded-lg border transition ${
+                      answers.nausea === opt.value 
+                        ? 'bg-[#1f2230] text-white border-[#1f2230]' 
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}>
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            
+            {/* Q4: Light sensitivity */}
+            <div>
+              <p className="font-medium mb-2">Sensitive to light?</p>
+              <div className="flex gap-2">
+                {questions.photophobia.map((opt) => (
+                  <button key={String(opt.value)} onClick={() => handleAnswer('photophobia', opt.value)}
+                    className={`px-4 py-2 rounded-lg border transition ${
+                      answers.photophobia === opt.value 
+                        ? 'bg-[#1f2230] text-white border-[#1f2230]' 
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}>
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            
+            {/* Q5: Intensity */}
+            <div>
+              <p className="font-medium mb-2">Pain intensity (1-5)?</p>
+              <div className="flex gap-1">
+                {questions.intensity.map((opt) => (
+                  <button key={opt.value} onClick={() => handleAnswer('intensity', opt.value)}
+                    className={`flex-1 py-3 rounded-lg border transition text-center ${
+                      answers.intensity === opt.value 
+                        ? 'bg-[#1f2230] text-white border-[#1f2230]' 
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}>
+                    <span className="block font-bold">{opt.value}</span>
+                    <span className="block text-xs opacity-60">{opt.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          
+          <button onClick={resetDiagnostic} className="mt-4 text-xs text-[#1f2230]/50 hover:text-[#1f2230]">
+            Clear answers
+          </button>
+        </div>
+        
+        {/* RESULTS SECTION */}
+        {results && (
+          <div className="space-y-4 mb-8">
+            {/* RED FLAG WARNING - If emergency detected */}
+            {results.priority === 'emergency' && (
+              <div className="rounded-xl bg-red-600 p-5 text-white">
+                <div className="flex items-center gap-3">
+                  <AlertTriangle className="h-6 w-6" />
+                  <h3 className="text-lg font-bold">Seek Immediate Medical Care!</h3>
+                </div>
+                <p className="mt-2 text-red-100">{results.content}</p>
+                {results.alerts && (
+                  <ul className="mt-3 space-y-1 text-sm">
+                    {results.alerts.map((a, i) => (
+                      <li key={i}>• {a.symptom}</li>
+                    ))}
+                  </ul>
+                )}
+                <p className="mt-3 font-semibold">Call emergency services or go to ER now.</p>
+              </div>
+            )}
+            
+            {/* DIFFERENTIAL DIAGNOSES */}
+            {results.differentials && results.differentials.length > 0 && (
+              <div className="bg-white rounded-2xl p-5 shadow-sm">
+                <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  Possible Diagnoses
+                </h3>
+                
+                <div className="space-y-3">
+                  {results.differentials.slice(0, 3).map((diff, i) => (
+                    <div key={i} className={`p-4 rounded-xl ${
+                      i === 0 ? 'bg-green-50 border-l-4 border-green-500' : 'bg-gray-50'
+                    }`}>
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="font-semibold">{diff.name}</p>
+                          <p className="text-xs text-[#1f2230]/50">ICHD-3: {diff.code}</p>
+                        </div>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          diff.confidence >= 70 ? 'bg-green-500 text-white' :
+                          diff.confidence >= 50 ? 'bg-yellow-500 text-white' :
+                          'bg-gray-400 text-white'
+                        }`}>
+                          {diff.confidence}%
+                        </span>
+                      </div>
+                      {diff.description && (
+                        <p className="text-sm text-[#1f2230]/70 mt-1">{diff.description}</p>
+                      )}
+                      {diff.recommendation && (
+                        <div className="mt-2 text-xs bg-[#f7f5ef] p-2 rounded">
+                          💊 {diff.recommendation}
+                        </div>
+                      )}
+                    </div>
                   ))}
                 </div>
               </div>
-              <div className="mt-3 grid grid-cols-3 gap-3">
-                {[
-                  { icon: Droplets, label: "Water" },
-                  { icon: Moon, label: "Sleep" },
-                  { icon: Activity, label: "Stress" },
-                ].map(({ icon: Icon, label }) => (
-                  <div
-                    key={label}
-                    className="rounded-xl border border-[#1f2230]/10 p-3 text-center"
-                  >
-                    <Icon className="mx-auto h-5 w-5 text-[#1f2230]/70" />
-                    <p className="mt-1 text-xs text-[#1f2230]/60">{label}</p>
-                  </div>
-                ))}
+            )}
+            
+            {/* No clear diagnosis */}
+            {(!results.differentials || results.differentials.length === 0) && results.priority !== 'emergency' && (
+              <div className="bg-gray-50 rounded-xl p-5 text-center">
+                <p className="text-[#1f2230]/60">Answer more questions or consult a healthcare provider.</p>
               </div>
-            </div>
+            )}
           </div>
+        )}
+        
+        {/* RED FLAGS INFO */}
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-8">
+          <h3 className="font-semibold text-amber-800 flex items-center gap-2">
+            <Shield className="h-4 w-4" />
+            Important Red Flags
+          </h3>
+          <p className="text-sm text-amber-700 mt-1">
+            Seek immediate care if: sudden "thunderclap" worst headache, fever/neck stiffness, 
+            new neurological symptoms (weakness, speech difficulty), or headache after age 50 with no history.
+          </p>
         </div>
-      </section>
-
-      {/* Features */}
-      <section id="features" className="bg-white py-20">
-        <div className="mx-auto max-w-6xl px-6">
-          <h2 className="max-w-xl text-3xl font-semibold tracking-tight md:text-4xl">
-            Small inputs. Real insight.
-          </h2>
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {[
-              {
-                icon: Brain,
-                title: "30-second log",
-                desc: "Tap intensity, type, and what you ate or did. That's it.",
-              },
-              {
-                icon: Activity,
-                title: "Pattern detection",
-                desc: "Mira spots the foods, sleep, and weather behind your flare-ups.",
-              },
-              {
-                icon: Droplets,
-                title: "Gentle reminders",
-                desc: "Hydration and rest nudges that adapt to your week — never naggy.",
-              },
-            ].map(({ icon: Icon, title, desc }) => (
-              <div
-                key={title}
-                className="rounded-2xl border border-[#1f2230]/10 p-6"
-              >
-                <Icon className="h-6 w-6 text-[#e07856]" />
-                <h3 className="mt-4 text-lg font-semibold">{title}</h3>
-                <p className="mt-2 text-sm text-[#1f2230]/70">{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ICHD-3 Diagnostic Engine */}
-      <section id="ichd3" className="bg-[#f0ebdc] py-20">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="grid items-center gap-12 md:grid-cols-2">
-            <div>
-              <span className="inline-flex items-center gap-2 rounded-full border border-[#1f2230]/15 bg-white/70 px-3 py-1 text-xs font-medium text-[#1f2230]/70">
-                <Stethoscope className="h-3.5 w-3.5 text-[#e07856]" />
-                ICHD-3 Diagnostic Engine
-              </span>
-              <h2 className="mt-5 text-3xl font-semibold tracking-tight md:text-4xl">
-                Clinically-grounded classification, built in.
-              </h2>
-              <p className="mt-5 max-w-md text-[#1f2230]/70">
-                Mira's diagnostic engine maps your symptoms against the
-                International Classification of Headache Disorders (ICHD-3),
-                the global standard used by neurologists. Get an evidence-based
-                shortlist you can share with your doctor.
-              </p>
-              <ul className="mt-6 space-y-3 text-sm">
-                {[
-                  "300+ ICHD-3 criteria evaluated on every log",
-                  "Migraine, tension-type, cluster & secondary patterns",
-                  "Red-flag detection (SNOOP10) for urgent referrals",
-                  "Plain-language explanations, not just codes",
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#e07856]" />
-                    <span className="text-[#1f2230]/80">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="rounded-2xl border border-[#1f2230]/10 bg-white p-6 shadow-sm">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <FileSearch className="h-4 w-4 text-[#e07856]" />
-                  <span className="text-xs font-medium uppercase tracking-wider text-[#1f2230]/60">
-                    Engine analysis
-                  </span>
-                </div>
-                <span className="rounded-full bg-[#e07856]/10 px-2 py-0.5 text-xs font-medium text-[#e07856]">
-                  ICHD-3
-                </span>
-              </div>
-              <p className="mt-4 text-xs text-[#1f2230]/50">Most likely match</p>
-              <p className="mt-1 text-xl font-semibold">1.2 Migraine with aura</p>
-              <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-[#1f2230]/10">
-                <div className="h-full w-[82%] rounded-full bg-[#e07856]" />
-              </div>
-              <p className="mt-1 text-xs text-[#1f2230]/60">82% criteria match</p>
-
-              <div className="mt-5 space-y-2">
-                {[
-                  ["2.2 Frequent tension-type", "41%"],
-                  ["1.1 Migraine without aura", "28%"],
-                ].map(([label, pct]) => (
-                  <div key={label} className="flex items-center justify-between rounded-lg border border-[#1f2230]/10 px-3 py-2 text-sm">
-                    <span className="text-[#1f2230]/80">{label}</span>
-                    <span className="text-[#1f2230]/50">{pct}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-5 flex items-start gap-2 rounded-xl bg-[#f7f5ef] p-3 text-xs text-[#1f2230]/70">
-                <ShieldCheck className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#e07856]" />
-                <span>No red flags detected (SNOOP10). Decision support only — not a diagnosis.</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How it works */}
-      <section id="how" className="mx-auto max-w-6xl px-6 py-20">
-        <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
-          Three steps to fewer headaches.
-        </h2>
-        <ol className="mt-12 grid gap-8 md:grid-cols-3">
-          {[
-            ["Log", "When a headache hits, rate it in seconds."],
-            ["Learn", "Mira maps triggers across sleep, diet, and stress."],
-            ["Live better", "Get tailored tips to head off the next one."],
-          ].map(([title, desc], i) => (
-            <li key={title}>
-              <span className="text-sm font-medium text-[#e07856]">
-                0{i + 1}
-              </span>
-              <h3 className="mt-2 text-xl font-semibold">{title}</h3>
-              <p className="mt-2 text-sm text-[#1f2230]/70">{desc}</p>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      {/* Pricing / CTA */}
-      <section id="pricing" className="bg-[#1f2230] py-20 text-[#f7f5ef]">
-        <div id="get" className="mx-auto max-w-3xl px-6 text-center">
-          <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
-            Free forever. Premium when you want more.
-          </h2>
-          <ul className="mx-auto mt-8 max-w-md space-y-3 text-left text-sm">
-            {[
-              "Unlimited headache logging",
-              "Weekly insight report",
-              "Trigger detection across 20+ factors",
-              "Export to share with your doctor",
-            ].map((item) => (
-              <li key={item} className="flex items-center gap-3">
-                <Check className="h-4 w-4 text-[#e07856]" />
-                <span className="text-[#f7f5ef]/80">{item}</span>
-              </li>
-            ))}
-          </ul>
-          <a
-            href="#"
-            className="mt-10 inline-block rounded-full bg-[#e07856] px-8 py-3 text-sm font-medium text-white transition hover:bg-[#cf6a4a]"
-          >
-            Download Mira
+        
+        {/* FULL ASSESSMENT LINK */}
+        <div className="text-center">
+          <a href="/diagnostic" className="inline-flex items-center gap-2 bg-[#1f2230] text-white px-6 py-3 rounded-full font-medium hover:bg-[#2d3142]">
+            Take Full Diagnostic Assessment
+            <ArrowRight className="h-4 w-4" />
           </a>
         </div>
       </section>
-
-      <footer className="mx-auto max-w-6xl px-6 py-10 text-sm text-[#1f2230]/60">
-        © 2026 Mira Health. Not a substitute for medical advice.
+      
+      {/* Footer */}
+      <footer id="about" className="bg-white border-t py-8 mt-12">
+        <div className="mx-auto max-w-4xl px-4 text-center text-sm text-[#1f2230]/50">
+          <p className="font-medium text-[#1f2230]/70">Mira Headache Diagnostic</p>
+          <p className="mt-1">Based on International Classification of Headache Disorders (ICHD-3)</p>
+          <p className="mt-2">For educational purposes only. Not medical advice.</p>
+        </div>
       </footer>
     </div>
   );
+}
+
+function getQuickQuestions() {
+  return {
+    duration: [
+      { value: 'minutes_15', label: '<15 min' },
+      { value: 'minutes_30', label: '15-30 min' },
+      { value: 'hours_2', label: '30min-2hr' },
+      { value: 'hours_4', label: '2-4 hr' },
+      { value: 'hours_24', label: '4-24 hr' },
+      { value: 'hours_72', label: '1-3 days' },
+    ],
+    location: [
+      { value: 'unilateral', label: 'One side' },
+      { value: 'bilateral', label: 'Both sides' },
+      { value: 'orbit', label: 'Around eye' },
+      { value: 'diffuse', label: 'Whole head' },
+    ],
+    nausea: [
+      { value: true, label: 'Yes' },
+      { value: false, label: 'No' },
+    ],
+    photophobia: [
+      { value: true, label: 'Yes' },
+      { value: false, label: 'No' },
+    ],
+    intensity: [
+      { value: 1, label: 'Mild' },
+      { value: 2, label: 'Mod' },
+      { value: 3, label: 'Bad' },
+      { value: 4, label: 'Severe' },
+      { value: 5, label: 'Extreme' },
+    ],
+  };
 }
