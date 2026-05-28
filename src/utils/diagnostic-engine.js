@@ -117,7 +117,7 @@ export function diagnose(answers) {
   if (migScore >= 4) {
     differentials.push(createDiagnosis('migraine', 'Migraine without Aura', '1.1', Math.min(95, migScore * 15),
       'A.≥5 attacks B.4-72h C.≥2 of unilateral/pulsating/mod/worsen D.nausea OR photophobia',
-      acute: 'Triptans, NSAIDs | Preventive: CGRP monoclonal antibodies, topiramate'
+       'Triptans, NSAIDs | Preventive: CGRP monoclonal antibodies, topiramate'
     ));
   }
   
