@@ -156,7 +156,7 @@ export function checkRedFlags(symptoms) {
       id: 'worst-sudden',
       text: 'Sudden worst headache of life',
       priority: 'emergency',
-      description. 'Could indicate subarachnoid hemorrhage or stroke'
+      description: 'Could indicate subarachnoid hemorrhage or stroke'
     });
   }
 
