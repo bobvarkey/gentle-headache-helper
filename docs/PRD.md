@@ -101,10 +101,9 @@ The Headache Diagnostic App is a mobile application designed to help users ident
 #### 3.5.1 ICHD-3 Reference Library
 
 **Glossary**: Comprehensive definitions of medical terms used in diagnosis
-
-- **Symptom Terms**: Aura, photophobia, phonophobia, allodynia, pulsating, pressing, unilateral
-- **Autonomic Symptoms**: Lacrimation, miosis, ptosis, conjunctival injection
-- **Temporal Classifications**: Chronic, episodic, acute, persistent
+- Aura, photophobia, phonophobia, allodynia, pulsating, pressing, unilateral, etc.
+- Autonomic symptoms: lacrimation, miosis, ptosis, conjunctival injection
+- Temporal classifications: chronic, episodic, acute, persistent
 
 #### 3.5.2 Headache Information
 
@@ -127,9 +126,9 @@ The Headache Diagnostic App is a mobile application designed to help users ident
 
 - **Framework**: Vite + React 18 (Web with PWA capability)
 - **Styling**: Tailwind CSS
-- **State Management**: React Context + useReducer
-- **Database**: localStorage for history
-- **Language**: JavaScript/TypeScript
+- **State Management**: React Context for diagnostic state
+- **Database**: Local localStorage for history with optional backend sync
+- **Language**: JavaScript/TypeScript for type safety
 
 ### 4.2 Data Structure
 
@@ -140,7 +139,7 @@ The Headache Diagnostic App is a mobile application designed to help users ident
 
 ### 4.3 Performance & Accessibility
 
-- Responsive Design: Optimized for mobile and desktop
+- Responsive Design: Optimized for mobile portrait orientation
 - Accessibility: WCAG 2.1 AA compliance
 - Offline Support: Full functionality without internet connection
 - Fast Loading: Optimized bundle size and lazy loading
@@ -151,7 +150,7 @@ The Headache Diagnostic App is a mobile application designed to help users ident
 
 ### 5.1 First-Time User
 
-1. **Onboarding**: Welcome message and medical disclaimer
+1. **Onboarding Screen**: Welcome message and medical disclaimer
 2. **Main Dashboard**: Introduction to app features
 3. **Start Diagnostic**: User initiates new assessment
 
@@ -244,6 +243,7 @@ The Headache Diagnostic App is a mobile application designed to help users ident
 - **Privacy**: No collection of personally identifiable health information
 - **Data Storage**: All data stored locally on device
 - **Accessibility**: WCAG 2.1 AA compliance
+- **Platform Requirements**: iOS 14+ and Android 10+
 
 ---
 
