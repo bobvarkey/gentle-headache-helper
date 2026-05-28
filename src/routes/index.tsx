@@ -158,6 +158,79 @@ function Index() {
         </div>
       </section>
 
+      {/* ICHD-3 Diagnostic Engine */}
+      <section id="ichd3" className="bg-[#f0ebdc] py-20">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="grid items-center gap-12 md:grid-cols-2">
+            <div>
+              <span className="inline-flex items-center gap-2 rounded-full border border-[#1f2230]/15 bg-white/70 px-3 py-1 text-xs font-medium text-[#1f2230]/70">
+                <Stethoscope className="h-3.5 w-3.5 text-[#e07856]" />
+                ICHD-3 Diagnostic Engine
+              </span>
+              <h2 className="mt-5 text-3xl font-semibold tracking-tight md:text-4xl">
+                Clinically-grounded classification, built in.
+              </h2>
+              <p className="mt-5 max-w-md text-[#1f2230]/70">
+                Mira's diagnostic engine maps your symptoms against the
+                International Classification of Headache Disorders (ICHD-3),
+                the global standard used by neurologists. Get an evidence-based
+                shortlist you can share with your doctor.
+              </p>
+              <ul className="mt-6 space-y-3 text-sm">
+                {[
+                  "300+ ICHD-3 criteria evaluated on every log",
+                  "Migraine, tension-type, cluster & secondary patterns",
+                  "Red-flag detection (SNOOP10) for urgent referrals",
+                  "Plain-language explanations, not just codes",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-3">
+                    <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#e07856]" />
+                    <span className="text-[#1f2230]/80">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="rounded-2xl border border-[#1f2230]/10 bg-white p-6 shadow-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <FileSearch className="h-4 w-4 text-[#e07856]" />
+                  <span className="text-xs font-medium uppercase tracking-wider text-[#1f2230]/60">
+                    Engine analysis
+                  </span>
+                </div>
+                <span className="rounded-full bg-[#e07856]/10 px-2 py-0.5 text-xs font-medium text-[#e07856]">
+                  ICHD-3
+                </span>
+              </div>
+              <p className="mt-4 text-xs text-[#1f2230]/50">Most likely match</p>
+              <p className="mt-1 text-xl font-semibold">1.2 Migraine with aura</p>
+              <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-[#1f2230]/10">
+                <div className="h-full w-[82%] rounded-full bg-[#e07856]" />
+              </div>
+              <p className="mt-1 text-xs text-[#1f2230]/60">82% criteria match</p>
+
+              <div className="mt-5 space-y-2">
+                {[
+                  ["2.2 Frequent tension-type", "41%"],
+                  ["1.1 Migraine without aura", "28%"],
+                ].map(([label, pct]) => (
+                  <div key={label} className="flex items-center justify-between rounded-lg border border-[#1f2230]/10 px-3 py-2 text-sm">
+                    <span className="text-[#1f2230]/80">{label}</span>
+                    <span className="text-[#1f2230]/50">{pct}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-5 flex items-start gap-2 rounded-xl bg-[#f7f5ef] p-3 text-xs text-[#1f2230]/70">
+                <ShieldCheck className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#e07856]" />
+                <span>No red flags detected (SNOOP10). Decision support only — not a diagnosis.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* How it works */}
       <section id="how" className="mx-auto max-w-6xl px-6 py-20">
         <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
