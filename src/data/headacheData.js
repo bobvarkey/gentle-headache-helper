@@ -1,234 +1,530 @@
 /**
- * ICHD-3 Headache Classification Data
- * Based on International Classification of Headache Disorders, 3rd Edition
+ * ICHD-3 Headache Classification Data - Detailed
+ * 
+ * Comprehensive headache types based on International Classification of Headache Disorders, 3rd Edition
+ * Each entry includes: diagnostic criteria, clinical features, and navigation triggers
  */
 
-export const HEADACHE_CATEGORIES = {
+export const HEADACHE_TYPES = {
+  // ============================================
+  // PART I: PRIMARY HEADACHES
+  // ============================================
+  
   primary: {
-    id: 'primary',
     name: 'Primary Headaches',
-    description: 'Headaches that are not caused by an underlying medical condition',
-    subtypes: [
-      {
-        id: 'migraine',
-        name: 'Migraine',
-        code: '1',
-        description: 'Recurrent headache disorder manifesting as attacks lasting 4-72 hours',
-        ichtCode: '1.',
-        criteria: {
-         A: { text: 'At least 5 attacks fulfilling criteria B-D', required: true },
-          B: { text: 'Headache attacks lasting 4-72 hours (untreated or unsuccessfully treated)', required: true },
-          C: { text: 'At least two of: unilateral location, pulsating quality, moderate pain intensity, aggravation by routine physical activity', required: true, matches: 2 },
-          D: { text: 'At least one of: nausea and/or vomiting, photophobia and phonophobia', required: true }
-        },
-        variants: [
-          {
-            id: 'migraine-with-aura',
-            name: 'Migraine with Aura',
-            code: '1.2',
-            additionalQuestions: [
-              { id: 'aura-visual', text: 'Did you experience visual disturbances before the headache? (zigzag lines, blind spots, flashes)', type: 'boolean' },
-              { id: 'aura-sensory', text: 'Did you experience tingling or numbness?', type: 'boolean' },
-              { id: 'aura-motor', text: 'Did you experience any weakness or difficulty moving?', type: 'boolean' },
-              { id: 'aura-duration', text: 'How long did the aura symptoms last?', options: ['5-60 minutes', '>60 minutes'] }
-            ]
+    description: 'Headaches that are the disease itself, not symptomatic of another condition',
+    
+    // CHAPTER 1: Migraine
+    migraine: {
+      id: 'migraine',
+      name: 'Migraine',
+      code: '1',
+      description: 'A chronic neurological disease characterized by recurrent headaches',
+      prevalence: '~12% of population',
+      genderRatio: 'F>M (3:1)',
+      
+      subtypes: {
+        '1.1': {
+          name: 'Migraine without Aura',
+          description: 'Most common migraine type; recurrent headache attacks lasting 4-72 hours',
+          
+          diagnosticCriteria: {
+            A: 'At least 5 attacks fulfilling criteria B-D',
+            B: 'Headache attacks lasting 4-72 hours (untreated or unsuccessfully treated)',
+            C: 'At least two of: unilateral location, pulsating quality, moderate or severe pain, aggravation by physical activity',
+            D: 'At least one of: nausea and/or vomiting, OR photophobia and phonophobia'
           },
-          {
-            id: 'chronic-migraine',
-            name: 'Chronic Migraine',
-            code: '1.3',
-            description: 'Headache occurring ≥15 days/month for >3 months'
-          }
-        ]
-      },
-      {
-        id: 'tth',
-        name: 'Tension-Type Headache (TTH)',
-        code: '2',
-        description: 'Bilateral pressing/tightening quality, mild to moderate intensity',
-        criteria: {
-          A: { text: 'At least 10 episodes fulfilling criteria B-D', required: true },
-          B: { text: 'Headache lasting 30 minutes to 7 days', required: true },
-          C: { text: 'At least two of: bilateral location, pressing/tightening quality, mild or moderate intensity, not aggravated by routine physical activity', required: true, matches: 2 },
-          D: { text: 'No nausea or vomiting (photophobia or phonophobia may be present)', required: false }
-        },
-        variants: [
-          { id: 'episodic-tt', name: 'Episodic TTH', code: '2.1' },
-          { id: 'chronic-tt', name: 'Chronic TTH', code: '2.3', description: '≥15 days/month for >3 months' }
-        ]
-      },
-      {
-        id: 'tac',
-        name: 'Trigeminal Autonomic Cephalalgias (TACs)',
-        code: '3',
-        description: 'Unilateral headache with prominent autonomic symptoms',
-        subtypes: [
-          {
-            id: 'cluster-headache',
-            name: 'Cluster Headache',
-            code: '3.1',
-            criteria: {
-              A: { text: 'At least 5 attacks fulfilling criteria B-D', required: true },
-              B: { text: 'Severe or very severe unilateral orbital, supraorbital and/or temporal pain lasting 15-180 minutes', required: true },
-              C: { text: 'Either or both of: conjunctival injection and/or lacrimation, nasal congestion and/or rhinorrhea, eyelid edema, forehead and facial sweating, miosis and/or ptosis', required: true },
-              D: { text: 'Attacks occur daily to multiple daily, periods lasting weeks to months', required: true }
+          
+          clinicalFeatures: {
+            pain: {
+              location: 'Often unilateral (one side), but can be bilateral',
+              quality: 'Pulsating/throbbing',
+              intensity: 'Moderate to severe',
+              worsening: 'Worsened by routine physical activity'
             },
-            variants: [
-              { id: 'episodic-cluster', name: 'Episodic Cluster Headache', code: '3.1.1' },
-              { id: 'chronic-cluster', name: 'Chronic Cluster Headache', code: '3.1.2' }
-            ]
+            associated: ['Nausea', 'Vomiting', 'Photophobia', 'Phonophobia'],
+            duration: '4-72 hours untreated',
+            frequency: '1-14 days per month'
           },
-          {
-            id: 'paroxysmal-hemicrania',
-            name: 'Paroxysmal Hemicrania',
-            code: '3.2',
-            criteria: {
-              A: { text: 'At least 20 attacks fulfilling criteria B-E', required: true },
-              B: { text: 'Severe unilateral orbital, supraorbital and/or temporal pain lasting 2-30 minutes', required: true },
-              C: { text: 'At least one of: conjunctival injection and/or lacrimation, nasal congestion and/or rhinorrhea, forehead and facial sweating, miosis and/or ptosis', required: true },
-              D: { text: 'Attacks occur >5 times daily', required: true },
-              E: { text: 'Attacks completely abolished by indomethacin', required: true }
-            }
+          
+          treatment: {
+            acute: ['NSAIDs (ibuprofen, naproxen)', 'Triptans (sumatriptan, rizatriptan)', 'Anti-emetics'],
+            preventive: ['Beta-blockers', 'CGRP monoclonal antibodies', 'Topiramate', ' lifestyle modification']
           },
-          {
-            id: 'hemicrania-continua',
-            name: 'Hemicrania Continua',
-            code: '3.4',
-            description: 'Continuous unilateral headache responsive to indomethacin'
+          
+          triggers: ['Stress', 'Hormonal changes', 'Certain foods', 'Weather changes', 'Sleep changes', 'Dehydration']
+        },
+        
+        '1.2': {
+          name: 'Migraine with Aura',
+          description: 'Migraine preceded or accompanied by reversible focal neurological symptoms',
+          
+          diagnosticCriteria: {
+            A: 'At least 2 attacks fulfilling criteria B and C',
+            B: 'Aura symptoms fully reversible',
+            C: 'At least two of: aura entirely one-sided, gradual development >4 min, aura symptoms last 5-60 min'
+          },
+          
+          auraTypes: {
+            visual: ['Scintillation', 'Scotoma', 'Fortification spectrum', 'Visual loss'],
+            sensory: ['Tingling', 'Numbness', 'Pins and needles'],
+            motor: ['Weakness', ' paralysis'],
+            brainstem: ['Dysarthria', 'Ataxia', 'Vertigo', 'Tinnitus']
+          },
+          
+          clinicalFeatures: {
+            auraDuration: '5-60 minutes typical',
+            sequence: 'Aura → Headache (or without headache)',
+            visualAura: 'Most common (90%+)'
+          },
+          
+          treatment: {
+            acute: ['Triptans', 'NSAIDs'],
+            panic: ['Avoid triptans during aura with motor weakness'],
+            preventive: ['Similar to migraine without aura']
           }
-        ]
-      },
-      {
-        id: 'medication-overuse',
-        name: 'Medication-Overuse Headache',
-        code: '8.2',
-        description: 'Headache developing from regular overuse of acute medication',
-        triggers: ['Simple analgesics', 'Opioids', 'Triptans', 'Ergotamines', 'Combination analgesics'],
-        criteria: {
-          A: { text: ' headache present on ≥15 days/month', required: true },
-          B: { text: 'Regular overuse of one or more drugs for acute treatment for >3 months', required: true },
-          C: { text: 'Development or worsening of headache during medication overuse', required: true }
+        },
+        
+        '1.3': {
+          name: 'Chronic Migraine',
+          description: 'Headache ≥15 days/month for >3 months',
+          
+          diagnosticCriteria: {
+            A: 'Headache (migraine or tension-type) ≥15 days/month',
+            B: 'For ≥3 months, fulfilling criteria for migraine without aura ≥8 days/month'
+          },
+          
+          riskFactors: ['Medication overuse', 'Depression', 'Anxiety', 'Obesity', 'Sleep disorders'],
+          
+          treatment: {
+            acute: 'Limit to ≤10 days/month',
+            preventive: 'Essential - CGRP monoclonal antibodies effective'
+          }
+        },
+        
+        '1.4': {
+          name: 'Probable Migraine',
+          description: 'Missing one criterion for migraine',
+          
+          diagnosticCriteria: 'Meets all but one criterion for migraine without aura'
         }
       }
-    ]
-  },
-  secondary: {
-    id: 'secondary',
-    name: 'Secondary Headaches',
-    description: 'Headaches caused by an underlying medical condition',
-    subtypes: [
-      {
-        id: 'trauma',
-        name: 'Headache Attributed to Trauma',
-        code: '5',
-        description: 'Headache following head/neck injury',
-        acute: '5.1', chronic: '5.2'
+    },
+    
+    // CHAPTER 2: Tension-Type Headache
+    tth: {
+      id: 'tth',
+      name: 'Tension-Type Headache (TTH)',
+      code: '2',
+      description: 'Most common primary headache; bilateral pressing/tightening quality',
+      prevalence: '~40% of population',
+      
+      subtypes: {
+        '2.1': {
+          name: 'Infrequent Episodic TTH',
+          description: '<1 day/month',
+          
+          diagnosticCriteria: {
+            A: '≥10 episodes, <1 day/month',
+            B: '30 min - 7 days',
+            C: 'Bilateral, pressing/tightening, mild-moderate',
+            D: 'No nausea, may have photophobia or phonophobia'
+          }
+        },
+        
+        '2.2': {
+          name: 'Frequent Episodic TTH',
+          description: '1-14 days/month',
+          
+          diagnosticCriteria: 'Same as infrequent but 1-14 days/month'
+        },
+        
+        '2.3': {
+          name: 'Chronic TTH',
+          description: '≥15 days/month',
+          
+          diagnosticCriteria: '≥15 days/month for >3 months',
+          
+          clinicalFeatures: {
+            pain: {
+              location: 'Bilateral',
+              quality: 'Pressing/tightening (band-like)',
+              intensity: 'Mild to moderate'
+            },
+            associated: ['Photophobia OR phonophobia', 'No significant nausea'],
+            aggravated: 'Not worsened by routine activity'
+          },
+          
+          treatment: {
+            acute: ['NSAIDs', 'Acetaminophen'],
+            preventive: ['TCAs (amitriptyline)', 'Lifestyle modification']
+          }
+        }
       },
-      {
-        id: 'vascular',
-        name: 'Headache Attributed to Vascular Disorder',
-        code: '6',
-        description: 'Headache due to stroke, TIA, hemorrhage, or vascular malformation',
-        subtypes: ['Ischemic stroke', 'Intracranial hemorrhage', 'Temporal arteritis', 'Venous thrombosis']
-      },
-      {
-        id: 'intracranial',
-        name: 'Headache Attributed to Non-vascular Intracranial Disorder',
-        code: '7',
-        description: 'Due to increased ICP, low ICP, intracranial infection, etc.',
-        subtypes: ['Idiopathic intracranial hypertension', 'CSF leak', 'Meningitis', 'Brain tumor']
-      },
-      {
-        id: 'substance',
-        name: 'Headache Attributed to Substance',
-        code: '8',
-        description: ' Medication-induced or substance withdrawal',
-        subtypes: ['Medication-overuse headache', 'Carbon monoxide', 'Alcohol hangover']
-      },
-      {
-        id: 'infection',
-        name: 'Headache Attributed to Infection',
-        code: '9',
-        description: 'Systemic or intracranial infection',
-        subtypes: ['Meningitis', 'Encephalitis', 'Systemic infection', 'COVID-19 related']
+      
+      clinicalFeatures: {
+        pain: {
+          quality: 'Pressing, tightening, non-pulsating',
+          intensity: 'Usually mild to moderate',
+          location: 'Bilateral (both sides)',
+          worsening: 'NOT aggravated by physical activity'
+        },
+        associated: ['None or mildphotophobia/phonophobia', 'No nausea/vomiting']
       }
-    ]
+    },
+    
+    // CHAPTER 3: Trigeminal Autonomic Cephalalgias (TACs)
+    tac: {
+      id: 'tac',
+      name: 'Trigeminal Autonomic Cephalalgias',
+      code: '3',
+      description: 'Unilateral headache with prominent cranial autonomic symptoms',
+      
+      subtypes: {
+        '3.1': {
+          name: 'Cluster Headache',
+          description: 'Most severe headache; daily attacks for weeks/months',
+          nickname: 'Suicide headache',
+          
+          diagnosticCriteria: {
+            A: '≥5 attacks',
+            B: 'Severe unilateral orbital pain, 15-180 min',
+            C: 'Ipsilateral autonomic symptoms',
+            D: 'Daily to multiple daily attacks'
+          },
+          
+          clinicalFeatures: {
+            pain: {
+              location: 'Strictly unilateral (always same side)',
+              quality: 'Excruciating, burning, stabbing',
+              intensity: 'Severe to very severe'
+            },
+            autonomic: ['Red eye (ipsilateral)', 'Lacrimation', 'Nasal congestion', 'Ptosis', 'Eyelid edema', 'Facial sweating'],
+            pattern: 'Strict chronophagy (same time daily)',
+            seasonality: 'May occur in seasons'
+          },
+          
+          treatment: {
+            acute: ['100% oxygen', 'Sumatriptan injection', 'Zolmitriptan nasal spray'],
+            transitional: ['Corticosteroids', 'Greater occipital nerve block'],
+            preventive: ['Verapamil', 'Lithium', 'Galcanezumab']
+          },
+          
+          variants: {
+            episodic: 'Attack-free periods ≥3 months',
+            chronic: 'Remissions <3 months'
+          }
+        },
+        
+        '3.2': {
+          name: 'Paroxysmal Hemicrania',
+          description: 'Short attacks, multiple daily, indomethacin-responsive',
+          
+          diagnosticCriteria: {
+            A: '≥20 attacks',
+            B: 'Severe unilateral, 2-30 min',
+            C: 'Ipsilateral autonomic symptoms',
+            D: '>5 attacks daily',
+            E: 'Absolutely abolished by indomethacin'
+          },
+          
+          clinicalFeatures: {
+            frequency: 'Often 10-20+ attacks/day',
+            response: 'Dramatic response to indomethacin (diagnostic)',
+            autonomy: 'Prominent autonomic symptoms'
+          },
+          
+          treatment: {
+            acute: 'Indomethacin ( DOC)',
+            alternative: 'Other NSAIDs if indomethacin not tolerated'
+          }
+        },
+        
+        '3.3': {
+          name: 'SUNCT/SUNA',
+          code: '3.3',
+          description: 'Short-lasting unilateral neuralgiform headaches',
+          
+          subtypes: {
+            '3.3.1': 'SUNCT (with conjunctival injection and tearing)',
+            '3.3.2': 'SUNA (with cranial autonomic symptoms)'
+          },
+          
+          diagnosticCriteria: {
+            A: '≥20 attacks',
+            B: 'Moderate-severe, 1-600 sec',
+            C: 'Unilateral, orbital/superior temporal',
+            D: '≥3 daily',
+            E: 'Not relieved by indomethacin'
+          },
+          
+          clinicalFeatures: {
+            pain: 'Electric shock-like, stabbing',
+            duration: 'Very brief (seconds)',
+            frequency: '3-100+ attacks/day',
+            autonomic: 'Prominent lacrimation/red eye'
+          },
+          
+          treatment: {
+            acute: 'Limited options',
+            preventive: ['Lamotrigine', ' Gabapentin', 'Neuromodulation']
+          }
+        },
+        
+        '3.4': {
+          name: 'Hemicrania Continua',
+          description: 'Continuous unilateral headache, indomethacin-responsive',
+          
+          diagnosticCriteria: {
+            A: 'Continuous unilateral pain',
+            B: 'Absence of pain-free periods',
+            C: 'Ipsilateral autonomic symptoms (or allodynia)',
+            D: 'Completely abolished by indomethacin'
+          },
+          
+          clinicalFeatures: {
+            pain: 'Continuous, moderate',
+            sideEffects: 'Always same side',
+            exacerbations: 'Discrete exacerbations with autonomic features'
+          },
+          
+          treatment: {
+            drug: 'Indomethacin (definitive)',
+            alternative: 'Celebrex, other NSAIDs'
+          }
+        }
+      }
+    },
+    
+    // CHAPTER 4: Other Primary Headaches
+    other: {
+      id: 'other-primary',
+      name: 'Other Primary Headaches',
+      code: '4',
+      
+      subtypes: {
+        '4.1': {
+          name: 'Primary Cough Headache',
+          description: 'Headache brought on by coughing',
+          diagnosticCriteria: 'Sudden onset, brief (<1 min), triggered by coughing',
+          treatment: 'Indomethacin'
+        },
+        
+        '4.2': {
+          name: 'Primary Exertional Headache',
+          description: 'Headache brought on by physical exercise',
+          diagnosticCriteria: 'Bilateral, throbbing, during or after exertion',
+          treatment: 'Indomethacin prophylactic'
+        },
+        
+        '4.3': {
+          name: 'Primary Cold Stimulus Headache',
+          description: 'Ice cream headache - cold stimulus',
+          treatment: 'Avoid cold foods'
+        },
+        
+        '4.10': {
+          name: 'Medication-Overuse Headache',
+          code: '8.2',
+          description: 'Caused by frequent analgesic use',
+          
+          diagnosticCriteria: {
+            A: 'Headache ≥15 days/month',
+            B: 'Regular overuse >3 months',
+            C: 'Developed or worsened during overuse'
+          },
+          
+          riskMedications: ['Simple analgesics >15 days/mo', 'Triptans >10 days/mo', 'Opioids >10 days/mo'],
+          
+          treatment: {
+            withdraw: 'Withdraw medication (under supervision)',
+            bridge: 'Bridge therapy during withdrawal',
+            preventive: 'Start preventive if indicated'
+          }
+        }
+      }
+    }
   },
+  
+  // ============================================
+  // PART II: SECONDARY HEADACHES
+  // ============================================
+  
+  secondary: {
+    name: 'Secondary Headaches',
+    description: 'Headaches caused by underlying medical conditions',
+    
+    trauma: {
+      id: 'trauma',
+      name: 'Headache Attributed to Trauma',
+      code: '5',
+      
+      subtypes: {
+        '5.1': ' Acute post-traumatic headache',
+        '5.2': 'Chronic post-traumatic headache'
+      },
+      
+      diagnosticCriteria: 'Headache within 7 days of head injury, persisting',
+      features: ['May have whiplash', 'Can be migraine or TTH-like']
+    },
+    
+    vascular: {
+      id: 'vascular',
+      name: 'Headache Attributed to Vascular Disorder',
+      code: '6',
+      
+      subtypes: {
+        stroke: 'Ischemic stroke (6.1)',
+        hemorrhage: 'Intracranial hemorrhage (6.2)',
+        arteritis: 'Giant cell arteritis (6.3)',
+        aneurysm: 'Unruptured vascular malformation (6.7)'
+      },
+      
+      features: ['New onset', 'Sudden/worst ever', 'Neurological deficits', 'Age >50']
+    },
+    
+    nonVascular: {
+      id: 'nonVascular',
+      name: 'Non-vascular Intracranial Disorder',
+      code: '7',
+      
+      subtypes: {
+        iih: 'Idiopathic intracranial hypertension (7.1)',
+        lowPressure: 'Intracranial hypotension (7.2)',
+        infection: 'Intracranial infection (7.3)',
+        tumor: 'Brain tumor (7.4)'
+      }
+    },
+    
+    substance: {
+      id: 'substance',
+      name: 'Headache Attributed to Substance',
+      code: '8',
+      
+      moh: {
+        name: 'Medication-Overuse Headache',
+        code: '8.2',
+        triggers: ['Simple analgesics', 'Triptans', 'Opioids', 'Combination analgesics'],
+        management: ' medication withdrawal'
+      }
+    },
+    
+    infection: {
+      id: 'infection',
+      name: 'Headache Attributed to Infection',
+      code: '9',
+      
+      subtypes: ['Meningitis (9.1)', 'Encephalitis (9.2)', 'Systemic infection (9.3)'],
+      
+      redFlags: ['Fever', 'Neck stiffness', 'Altered consciousness']
+    },
+    
+    psychiatric: {
+      id: 'psychiatric',
+      name: 'Psychiatric Disorder',
+      code: '12',
+      
+      subtypes: ['Depression (12.1)', 'Anxiety (12.2)', 'Somatization (12.3)'],
+      
+      note: 'Usually co-existing, rarely cause isolated headache'
+    }
+  },
+  
+  // ============================================
+  // PART III: CRANIAL NEURALGIAS
+  // ============================================
+  
   cranial: {
     id: 'cranial',
     name: 'Cranial Neuralgias',
     description: 'Painful cranial neuropathies and facial pains',
-    subtypes: [
-      {
-        id: 'trigeminal-neuralgia',
-        name: 'Trigeminal Neuralgia',
-        code: '13.1',
-        description: 'Brief electric shock-like pains in trigeminal distribution',
-        criteria: {
-          A: { text: 'Paroxysmal attacks of pain lasting from fraction of second to 2 minutes', required: true },
-          B: { text: 'Pain has at least one of: triggered from trigger zones, characteristic quality', required: true },
-          C: { text: 'Attacks are not better accounted for by another ICHD-3 diagnosis', required: true }
-        }
+    
+    trigeminal: {
+      id: 'trigeminal',
+      name: 'Trigeminal Neuralgia',
+      code: '13.1',
+      description: 'Brief electric shock-like pains in trigeminal distribution',
+      
+      diagnosticCriteria: {
+        A: 'Paroxysmal attacks, fraction of second to 2 min',
+        B: 'Triggered from trigger zones OR characteristic quality',
+        C: 'Not better explained by another disorder'
       },
-      {
-        id: 'glossopharyngeal',
-        name: 'Glossopharyngeal Neuralgia',
-        code: '13.2',
-        description: 'Pain in the tonsillar region/angle of mandible'
+      
+      clinicalFeatures: {
+        pain: 'Electric shock-like, lightning brief',
+        triggers: ['Touch', 'Chewing', 'Speaking', 'Cold'],
+        location: 'V2 or V3 most common'
       },
-      {
-        id: 'occipital-neuralgia',
-        name: 'Occipital Neuralgia',
-        code: '13.3',
-        description: 'Pain along greater occipital nerve distribution'
+      
+      treatment: {
+        firstLine: 'Carbamazepine/Oxcarbazepine',
+        procedures: ['Radiofrequency rhizotomy', 'Gamma knife', 'MVD']
       }
-    ]
+    },
+    
+    glossopharyngeal: {
+      id: 'glossopharyngeal',
+      name: 'Glossopharyngeal Neuralgia',
+      code: '13.2',
+      description: 'Pain in tonsillar region, triggered by swallowing',
+      treatment: 'Carbamazepine, surgical if refractory'
+    },
+    
+    occipital: {
+      id: 'occipital',
+      name: 'Occipital Neuralgia',
+      code: '13.3',
+      description: 'Pain along greater occipital nerve',
+      clinicalFeatures: 'Pain from neck to vertex',
+      treatment: ' nerve blocks, medications'
+    }
   }
 };
 
-// Red flags requiring immediate medical attention
+// ============================================
+// RED FLAGS - Require urgent evaluation
+// ============================================
+
 export const RED_FLAGS = [
   {
-    id: 'sudden-severe',
-    text: 'Sudden severe "thunderclap" headache',
+    id: 'thunderclap',
+    text: 'Sudden severe "thunderclap" headache (worst of my life)',
     priority: 'emergency',
-    description: 'Could indicate subarachnoid hemorrhage'
+    description: 'Could indicate subarachnoid hemorrhage',
+    ichdCode: '6.2'
   },
   {
-    id: 'fever-neck-stiff',
+    id: 'fever-neck',
     text: 'Fever, neck stiffness, or rash',
     priority: 'emergency',
-    description: 'Could indicate meningitis'
+    description: 'Could indicate meningitis',
+    ichdCode: '9.1'
   },
   {
-    id: 'new-after-50',
-    text: 'First headache after age 50',
-    priority: 'warning',
-    description: 'Requires further investigation'
-  },
-  {
-    id: 'neurological-deficit',
-    text: 'New neurological symptoms (weakness, speech difficulty)',
+    id: 'neuro-deficit',
+    text: 'New neurological symptoms (weakness, speech difficulty, vision changes)',
     priority: 'emergency',
-    description: 'Could indicate stroke'
+    description: 'Could indicate stroke',
+    ichdCode: '6.'
   },
   {
     id: 'altered-consciousness',
-    text: 'Altered consciousness or confusion',
+    text: 'Altered consciousness, confusion, or seizures',
     priority: 'emergency',
     description: 'Requires immediate evaluation'
   },
   {
-    id: 'cognitive-change',
-    text: 'Cognitive changes or memory problems',
+    id: 'new-after-50',
+    text: 'First or worst headache after age 50',
     priority: 'warning',
-    description: 'Requires further investigation'
+    description: 'Requires further investigation (temporal arteritis?)'
   },
   {
-    id: 'weight-loss',
-    text: 'Unexplained weight loss',
+    id: 'progressive-worsening',
+    text: 'Progressively worsening headache over weeks-months',
     priority: 'warning',
-    description: 'Requires further investigation'
+    description: 'Requires neuroimaging'
   },
   {
     id: 'cancer-history',
@@ -241,87 +537,71 @@ export const RED_FLAGS = [
     text: 'New headache during pregnancy or postpartum',
     priority: 'warning',
     description: 'Requires careful evaluation'
+  },
+  {
+    id: 'immune-compromised',
+    text: 'Immunocompromised (HIV, chemotherapy, transplant)',
+    priority: 'warning',
+    description: 'Higher risk of serious secondary causes'
   }
 ];
 
-// Common headache locations
-export const PAIN_LOCATIONS = [
-  { id: 'unilateral-temporal', name: 'One side (temple)' },
-  { id: 'unilateral-frontal', name: 'One side (forehead)' },
-  { id: 'unilateral-ocular', name: 'One eye' },
-  { id: 'unilateral-occipital', name: 'One side (back of head)' },
-  { id: 'bilateral-temporal', name: 'Both temples' },
-  { id: 'bilateral-frontal', name: 'Forehead' },
-  { id: 'bilateral-occipital', name: 'Back of head' },
-  { id: 'vertex', name: 'Top of head' },
-  { id: 'diffuse', name: 'Throughout head' },
-  { id: 'neck', name: 'Neck pain' }
-];
+// ============================================
+// QUESTION FLOW GUIDANCE
+// Each key helps navigate which questions to ask
+// ============================================
 
-// Pain quality descriptors
-export const PAIN_QUALITIES = [
-  { id: 'pulsating', name: 'Pulsating/Throbbing', category: 'vascular' },
-  { id: 'pressing', name: 'Pressing/Tightening', category: 'tension' },
-  { id: 'stabbing', name: 'Sharp/Stabbing', category: 'neuralgic' },
-  { id: 'burning', name: 'Burning', category: 'neuropathic' },
-  { id: 'aching', name: 'Dull/Aching', category: 'tension' },
-  { id: 'electric', name: 'Electric shock-like', category: 'neuralgic' },
-  { id: 'pressure', name: 'Pressure/Squeezing', category: 'tension' }
-];
+export const QUESTION_FLOW = {
+  // Entry questions for ALL patients
+  essential: ['onset', 'frequency', 'duration', 'location', 'quality', 'intensity'],
+  
+  // Questions asked based on initial answers
+  conditional: {
+    ifUnilateral: ['autonomicSymptoms', 'worsening'],
+    ifBilateral: ['nausea', 'photophobia'],
+    ifFrequent: ['medicationUse'],
+    ifAura: ['auraSymptoms', 'auraDuration'],
+    ifShortDuration: ['indomethacin'],
+    ifAutonomic: ['indomethacinTrial']
+  },
+  
+  // Screening for secondary causes
+  secondary: ['recentTrauma', 'feverInfection', 'medicationOveruse'],
+  
+  // ALWAYS screen for red flags
+  safety: ['thunderclap', 'fever-neck', 'neuro-deficit', 'altered-consciousness']
+};
 
-// Associated symptoms
-export const ASSOCIATED_SYMPTOMS = [
-  { id: 'nausea', name: 'Nausea', category: 'gi' },
-  { id: 'vomiting', name: 'Vomiting', category: 'gi' },
-  { id: 'photophobia', name: 'Sensitivity to light (Photophobia)', category: 'sensory' },
-  { id: 'phonophobia', name: 'Sensitivity to sound (Phonophobia)', category: 'sensory' },
-  { id: 'osmophobia', name: 'Sensitivity to odors', category: 'sensory' },
-  { id: 'allodynia', name: 'Skin pain from gentle touch (Allodynia)', category: 'sensory' },
-  { id: 'vertigo', name: 'Dizziness/Vertigo', category: 'neurologic' },
-  { id: 'visual-disturbance', name: 'Visual disturbance', category: 'aura' },
-  { id: 'sensory-changes', name: 'Tingling/Numbness', category: 'aura' },
-  { id: 'speech-difficulty', name: 'Speech difficulty', category: 'aura' },
-  { id: 'weakness', name: 'Weakness', category: 'aura' },
-  // Autonomic
-  { id: 'lacrimation', name: 'Eye watering', category: 'autonomic' },
-  { id: 'conjunctival-injection', name: 'Red eye', category: 'autonomic' },
-  { id: 'nasal-congestion', name: 'Nasal congestion', category: 'autonomic' },
-  { id: 'rhinorrhea', name: 'Runny nose', category: 'autonomic' },
-  { id: 'ptosis', name: 'Drooping eyelid', category: 'autonomic' },
-  { id: 'sweating', name: 'Facial sweating', category: 'autonomic' },
-  { id: 'miosis', name: 'Small pupil', category: 'autonomic' }
-];
+// ============================================
+// RECOMMENDED QUESTIONNAIRE SEQUENCE
+// ============================================
 
-// Duration options adapted from ICHD-3
-export const DURATION_OPTIONS = [
-  { id: 'minutes-15', name: 'Less than 15 minutes', max: 15 },
-  { id: 'minutes-30', name: '15-30 minutes', max: 30 },
-  { id: 'minutes-60', name: '30-60 minutes (1 hour)', max: 60 },
-  { id: 'hours-2', name: '1-2 hours', max: 120 },
-  { id: 'hours-4', name: '2-4 hours', max: 240 },
-  { id: 'hours-12', name: '4-12 hours', max: 720 },
-  { id: 'hours-24', name: '12-24 hours', max: 1440 },
-  { id: 'hours-72', name: '24-72 hours (1-3 days)', max: 4320 },
-  { id: 'days-7', name: '3-7 days', max: 10080 },
-  { id: 'week-plus', name: 'More than 7 days', max: null }
-];
-
-// Frequency options
-export const FREQUENCY_OPTIONS = [
-  { id: 'rarely', name: 'Rarely (once a month or less)', value: 1 },
-  { id: 'few-month', name: 'A few times per month', value: 3 },
-  { id: 'weekly', name: 'Weekly', value: 4 },
-  { id: 'few-week', name: 'Several times per week', value: 6 },
-  { id: 'daily', name: 'Daily', value: 15 },
-  { id: 'multiple-daily', name: 'Multiple times daily', value: 30 },
-  { id: 'continuous', name: 'Constant/Daily', value: 30 }
-];
-
-// Intensity scale
-export const INTENSITY_SCALE = [
-  { value: 1, label: 'Mild', description: 'Noticeable but not interfering' },
-  { value: 2, label: 'Moderate', description: 'Somewhat interfering' },
-  { value: 3, label: 'Severe', description: 'Interfering with activity' },
-  { value: 4, label: 'Very Severe', description: 'Cannot do any activity' },
-  { value: 5, label: 'Maximum', description: 'Requires rest/bed rest' }
-];
+export function getRecommendedQuestions(answers) {
+  const questions = [];
+  
+  // Phase 1: Essential questions (for everyone)
+  questions.push(...['onset', 'frequency', 'duration', 'location', 'quality', 'intensity']);
+  
+  // Phase 2: Based on essential responses
+  if (answers.location?.includes('unilateral')) {
+    questions.push('worsening', 'autonomicSymptoms');
+  }
+  
+  if (answers.quality?.includes('pulsating') || answers.intensity >= 3) {
+    questions.push('nausea', 'photophobia', 'phonophobia');
+  }
+  
+  // Phase 3: Conditional questions
+  if (answers.frequency >= 10) {
+    questions.push('medicationUse');
+  }
+  
+  if (answers.autonomicSymptoms?.length > 0) {
+    questions.push('indomethacin');
+  }
+  
+  // Phase 4: Always screen safety
+  questions.push(...QUESTION_FLOW.safety);
+  
+  return questions;
+}
