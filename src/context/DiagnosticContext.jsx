@@ -1,59 +1,123 @@
 /**
- * Diagnostic Context - State management for wizard
+ * Diagnostic Context v2 — adaptive, multi-phase state management
+ *
+ * Phases:
+ *   screening   → universal questions for all patients
+ *   adaptive    → targeted follow-ups based on top candidate diagnoses
+ *   results     → final diagnosis display
+ *
+ * Each question can be answered and carries importance weight.
+ * The engine re-scores after each phase using all accumulated answers.
  */
 
-import { createContext, useContext, useReducer, useEffect } from 'react';
+import { createContext, useContext, useReducer, useCallback, useMemo } from 'react';
+import { runFullDiagnosis, getScreeningQuestions, getAdaptiveQuestions } from '../utils/diagnosticEngine';
 
 const DiagnosticContext = createContext(null);
 
+const PHASES = ['screening', 'adaptive', 'results'];
+
 const initialState = {
-  // Progress
-  currentStep: 0,
-  totalSteps: 8,
-  
-  // Responses
-  symptoms: {},
-  
+  phase: 'screening',          // screening → adaptive → results
+  answers: {},                 // all answers accumulated
+  screeningIndex: 0,           // current question index in screening phase
+  adaptiveIndex: 0,            // current question index in adaptive phase
+  screeningQuestions: [],      // cached screening question list
+  adaptiveQuestions: [],       // computed after screening completes
+
   // Results
-  diagnosis: null,
-  alternatives: [],
-  redFlags: [],
-  confidence: 0,
-  
-  // Meta
+  diagnosis: null,             // { topResult, alternatives, redFlags, scoredDiagnoses, ... }
+  recommendations: [],
+
+  // UI state
   startedAt: null,
   completedAt: null,
-  isComplete: false
+  isComplete: false,
+  isProcessing: false,
 };
 
 function reducer(state, action) {
   switch (action.type) {
-    case 'SET_STEP':
-      return { ...state, currentStep: action.payload };
-      
-    case 'SET_SYMPTOM':
+    case 'INIT': {
       return {
-        ...state,
-        symptoms: { ...state.symptoms, [action.payload.key]: action.payload.value }
+        ...initialState,
+        screeningQuestions: action.payload.questions,
+        startedAt: new Date().toISOString(),
       };
-      
-    case 'SET_SYMPTOMS':
-      return { ...state, symptoms: { ...state.symptoms, ...action.payload } };
-      
-    case 'SET_DIAGNOSIS':
+    }
+
+    case 'ANSWER_SCREENING': {
+      const newAnswers = { ...state.answers, ...action.payload };
+      return { ...state, answers: newAnswers };
+    }
+
+    case 'NEXT_SCREENING': {
+      const nextIdx = state.screeningIndex + 1;
+      if (nextIdx >= state.screeningQuestions.length) {
+        // Transition to adaptive phase
+        const adaptiveQ = getAdaptiveQuestions(state.answers);
+        return {
+          ...state,
+          screeningIndex: state.screeningQuestions.length,
+          phase: adaptiveQ.length > 0 ? 'adaptive' : 'results',
+          adaptiveQuestions: adaptiveQ,
+          adaptiveIndex: 0,
+          isProcessing: true,
+        };
+      }
+      return { ...state, screeningIndex: nextIdx };
+    }
+
+    case 'PREV_SCREENING': {
       return {
         ...state,
-        diagnosis: action.payload.diagnosis,
-        alternatives: action.payload.alternatives || [],
-        redFlags: action.payload.redFlags || [],
-        confidence: action.payload.confidence || 0,
+        screeningIndex: Math.max(0, state.screeningIndex - 1),
+      };
+    }
+
+    case 'ANSWER_ADAPTIVE': {
+      const newAnswers = { ...state.answers, ...action.payload };
+      return { ...state, answers: newAnswers };
+    }
+
+    case 'NEXT_ADAPTIVE': {
+      const nextIdx = state.adaptiveIndex + 1;
+      if (nextIdx >= state.adaptiveQuestions.length) {
+        return {
+          ...state,
+          adaptiveIndex: state.adaptiveQuestions.length,
+          phase: 'results',
+          isProcessing: true,
+        };
+      }
+      return { ...state, adaptiveIndex: nextIdx };
+    }
+
+    case 'PREV_ADAPTIVE': {
+      return {
+        ...state,
+        adaptiveIndex: Math.max(0, state.adaptiveIndex - 1),
+      };
+    }
+
+    case 'COMPUTE_RESULTS': {
+      const diagnosis = runFullDiagnosis(state.answers);
+      const recommendations = diagnosis.topResult
+        ? [] // computed in component
+        : [];
+      return {
+        ...state,
+        diagnosis,
         isComplete: true,
-        completedAt: new Date().toISOString()
+        completedAt: new Date().toISOString(),
+        isProcessing: false,
       };
-      
-    case 'RESET':
+    }
+
+    case 'RESET': {
       return { ...initialState, startedAt: new Date().toISOString() };
-      
+    }
+
     default:
       return state;
   }
@@ -62,18 +126,59 @@ function reducer(state, action) {
 export function DiagnosticProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
-    startedAt: new Date().toISOString()
+    startedAt: new Date().toISOString(),
   });
 
-  const value = {
+  const init = useCallback(() => {
+    dispatch({ type: 'INIT', payload: { questions: getScreeningQuestions() } });
+  }, []);
+
+  const answerScreening = useCallback((key, value) => {
+    dispatch({ type: 'ANSWER_SCREENING', payload: { [key]: value } });
+  }, []);
+
+  const nextScreening = useCallback(() => {
+    dispatch({ type: 'NEXT_SCREENING' });
+  }, []);
+
+  const prevScreening = useCallback(() => {
+    dispatch({ type: 'PREV_SCREENING' });
+  }, []);
+
+  const answerAdaptive = useCallback((key, value) => {
+    dispatch({ type: 'ANSWER_ADAPTIVE', payload: { [key]: value } });
+  }, []);
+
+  const nextAdaptive = useCallback(() => {
+    dispatch({ type: 'NEXT_ADAPTIVE' });
+  }, []);
+
+  const prevAdaptive = useCallback(() => {
+    dispatch({ type: 'PREV_ADAPTIVE' });
+  }, []);
+
+  const computeResults = useCallback(() => {
+    dispatch({ type: 'COMPUTE_RESULTS' });
+  }, []);
+
+  const reset = useCallback(() => {
+    dispatch({ type: 'RESET' });
+  }, []);
+
+  const value = useMemo(() => ({
     state,
     dispatch,
-    setStep: (step) => dispatch({ type: 'SET_STEP', payload: step }),
-    setSymptom: (key, value) => dispatch({ type: 'SET_SYMPTOM', payload: { key, value } }),
-    setSymptoms: (symptoms) => dispatch({ type: 'SET_SYMPTOMS', payload: symptoms }),
-    setDiagnosis: (diagnosis) => dispatch({ type: 'SET_DIAGNOSIS', payload: diagnosis }),
-    reset: () => dispatch({ type: 'RESET' })
-  };
+    init,
+    answerScreening,
+    nextScreening,
+    prevScreening,
+    answerAdaptive,
+    nextAdaptive,
+    prevAdaptive,
+    computeResults,
+    reset,
+  }), [state, init, answerScreening, nextScreening, prevScreening,
+      answerAdaptive, nextAdaptive, prevAdaptive, computeResults, reset]);
 
   return (
     <DiagnosticContext.Provider value={value}>
