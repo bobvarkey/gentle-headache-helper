@@ -174,7 +174,6 @@ function ScreeningPhase({ questions, index, answers, onAnswer, onNext, onPrev })
         <button
           className="next-btn"
           onClick={onNext}
-          disabled={answers[question.id] === undefined && question.type !== 'info'}
         >
           {index < questions.length - 1 ? 'Next →' : 'Analyze →'}
         </button>
@@ -211,7 +210,6 @@ function AdaptivePhase({ questions, index, answers, onAnswer, onNext, onPrev, on
         <button
           className="next-btn"
           onClick={index < questions.length - 1 ? onNext : onDone}
-          disabled={answers[question.key] === undefined && question.type !== 'info'}
         >
           {index < questions.length - 1 ? 'Next →' : 'Get Results'}
         </button>
