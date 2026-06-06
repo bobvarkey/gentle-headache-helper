@@ -655,11 +655,20 @@ const secondaryHeadaches = [
     description: 'Headache with fever, neck stiffness, and/or altered mental status. Consider meningitis, encephalitis.',
     category: 'secondary',
     isEmergency: true,
+    clinicalPearls: [
+      { id: 'meningitis', text: 'Meningitis: fever, neck stiffness, photophobia, altered consciousness — emergency LP needed' },
+      { id: 'encephalitis', text: 'Encephalitis: fever + altered mental status ± seizures — MRI/CSF needed' },
+      { id: 'skull-base-osteomyelitis', text: 'Skull base osteomyelitis: progressive cranial nerve palsies, diabetes/immunocompromise — think fungal (Aspergillus, Mucorales)' },
+      { id: 'sphenoid-sinusitis', text: 'Sphenoid sinusitis: vertex headache, retro-orbital pain, diplopia, CN VI palsy — high risk for cavernous sinus thrombosis' },
+    ],
     questions: [
       { key: 'fever', text: 'Do you have a fever?', type: 'boolean' },
       { key: 'neckStiffness', text: 'Do you have neck stiffness or difficulty touching chin to chest?', type: 'boolean' },
       { key: 'rash', text: 'Do you have a rash?', type: 'boolean' },
       { key: 'alteredMental', text: 'Are you confused, drowsy, or not yourself?', type: 'boolean' },
+      { key: 'diabetes', text: 'Do you have diabetes or immunocompromise?', type: 'boolean' },
+      { key: 'cranial-nerve', text: 'Any problems with eye movement, facial weakness, or hearing?', type: 'boolean' },
+      { key: 'sinus Pain', text: 'Do you have face pain near the nose or eyes?', type: 'boolean' },
     ],
   },
   {
