@@ -439,7 +439,153 @@ const primaryHeadaches = [
     ],
   },
 
-  // ── Medication-Overuse Headache ──────────────
+  // ── Vestibular Migraine (Appendix A1.6.6) ─────
+  {
+    id: 'vestibular-migraine',
+    name: 'Vestibular Migraine',
+    code: 'A1.6.6',
+    description: 'Recurrent episodes of vertigo/dizziness and balance disturbance associated with migraine features. Headache may be absent during attacks.',
+    category: 'primary',
+    parentId: 'migraine',
+    diagnosticCriteria: {
+      A: {
+        text: 'At least 5 episodes fulfilling criteria B–D',
+        required: true,
+        rule: 'count>=5',
+      },
+      B: {
+        text: 'Current or past history of migraine with or without aura',
+        required: true,
+        rule: 'migraineHistory',
+      },
+      C: {
+        text: 'At least 5 vestibular episodes of moderate-severe intensity, lasting 5 min to 72 hours',
+        required: true,
+        rule: 'duration',
+        minMinutes: 5,
+        maxMinutes: 4320,
+      },
+      D: {
+        text: 'At least half of vestibular episodes accompanied by at least one migraine feature',
+        required: true,
+        rule: 'migraineFeature',
+      },
+      E: {
+        text: 'Not better accounted for by another ICHD-3 diagnosis',
+        required: true,
+        rule: 'exclusion',
+      },
+    },
+    typicalDuration: { min: 5, max: 4320, unit: 'minutes' },
+    typicalFrequency: { label: 'Variable, often episodic' },
+    laterality: [LATERALITY.UNILATERAL, LATERALITY.BILATERAL],
+    quality: [QUALITY.PULSATING, QUALITY.PRESSING],
+    associated: ['vertigo', 'dizziness', 'nausea', 'photophobia', 'phonophobia', 'visualDisturbance'],
+    variants: [
+      { id: 'vestibular-migraine-definite', name: 'Definite Vestibular Migraine', code: 'A1.6.6' },
+      { id: 'vestibular-migraine-probable', name: 'Probable Vestibular Migraine', code: 'A1.6.6' },
+    ],
+    questions: [
+      { key: 'migraineHistory', text: 'Do you have a history of migraine headaches?', type: 'boolean' },
+      { key: 'vertigoEpisodes', text: 'How many vertigo/dizziness episodes have you had?', type: 'choice', options: ['Fewer than 5', '5 or more'] },
+      { key: 'vertigoDuration', text: 'How long do dizziness episodes typically last?', type: 'choice', options: ['Less than 5 minutes', '5 min to 1 hour', '1–24 hours', '24–72 hours', 'More than 72 hours'] },
+      { key: 'vertigoIntensity', text: 'How severe is the dizziness/vertigo?', type: 'choice', options: ['Mild — noticeable', 'Moderate — interferes', 'Severe — cannot continue'] },
+      { key: 'headacheWithVertigo', text: 'Do you have headache with the vertigo episodes?', type: 'boolean' },
+      { key: 'photophobiaVertigo', text: 'Are you sensitive to light during episodes?', type: 'boolean' },
+      { key: 'phonophobiaVertigo', text: 'Are you sensitive to sound during episodes?', type: 'boolean' },
+      { key: 'nauseaVertigo', text: 'Do you feel nauseous during episodes?', type: 'boolean' },
+      { key: 'visualVertigo', text: 'Does visual motion make it worse?', type: 'boolean' },
+      { key: 'motionTrigger', text: 'Does head motion trigger the dizziness?', type: 'boolean' },
+    ],
+  },
+
+  // ── Persistent Post-Traumatic Headache ────
+  {
+    id: 'post-traumatic-headache',
+    name: 'Persistent Post-Traumatic Headache',
+    code: '5.2',
+    description: 'Headache persisting for more than 3 months after head injury. May have migraine-like or tension-type features.',
+    category: 'secondary',
+    diagnosticCriteria: {
+      A: {
+        text: 'Headache of any type developing within 7 days of head trauma',
+        required: true,
+      },
+      B: {
+        text: 'Headache persists for more than 3 months after injury',
+        required: true,
+        rule: 'duration',
+        minDays: 90,
+      },
+      C: {
+        text: 'Headache not better explained by other causes',
+        required: true,
+        rule: 'exclusion',
+      },
+    },
+    typicalDuration: { min: null, max: null, unit: 'persistent' },
+    typicalFrequency: { label: 'Daily to intermittent' },
+    laterality: [LATERALITY.BILATERAL, LATERALITY.UNILATERAL],
+    quality: [QUALITY.PULSATING, QUALITY.PRESSING, QUALITY.DULL],
+    associated: ['concentration', 'memory', 'fatigue', 'photophobia', 'phonophobia'],
+    questions: [
+      { key: 'headInjury', text: 'Have you had a head injury in the past?', type: 'boolean' },
+      { key: 'injuryTime', text: 'How long ago was the injury?', type: 'choice', options: ['Less than 1 month', '1–3 months', 'More than 3 months'] },
+      { key: 'headacheAfterInjury', text: 'Did headache start within 7 days of the injury?', type: 'boolean' },
+      { key: 'headacheType', text: 'What does the headache feel like?', type: 'choice', options: ['Pulsating/throbbing', 'Pressing/tightening', 'Dull/aching', 'Mixed'] },
+      { key: 'concentration', text: 'Do you have trouble concentrating?', type: 'boolean' },
+      { key: 'memoryIssues', text: 'Do you have memory problems?', type: 'boolean' },
+      { key: 'fatigue', text: 'Do you feel unusually tired?', type: 'boolean' },
+      { key: 'lightSensitivity', text: 'Are you sensitive to light?', type: 'boolean' },
+      { key: 'soundSensitivity', text: 'Are you sensitive to sound?', type: 'boolean' },
+    ],
+  },
+
+  // ── COVID-19 Associated Headache ────────────
+  {
+    id: 'covid-headache',
+    name: 'Headache Attributed to COVID-19 Infection',
+    code: '9.4.4',
+    description: 'New headache beginning during COVID-19 infection or persisting afterward. Often has migraine-like features.',
+    category: 'secondary',
+    diagnosticCriteria: {
+      A: {
+        text: 'COVID-19 infection confirmed by test or clinically',
+        required: true,
+        rule: 'covidConfirmed',
+      },
+      B: {
+        text: 'Headache develops during infection or within 4 weeks afterward',
+        required: true,
+      },
+      C: {
+        text: 'Headache persists for more than 3 months or remains ongoing',
+        required: false,
+      },
+      D: {
+        text: 'Not better accounted for by another diagnosis',
+        required: true,
+        rule: 'exclusion',
+      },
+    },
+    typicalDuration: { min: null, max: null, unit: 'variable' },
+    typicalFrequency: { label: 'Often daily during acute phase' },
+    laterality: [LATERALITY.BILATERAL, LATERALITY.UNILATERAL],
+    quality: [QUALITY.PULSATING, QUALITY.PRESSING, QUALITY.DULL],
+    associated: ['fatigue', 'anosmia', 'ageusia', 'fever', 'cognitive'],
+    questions: [
+      { key: 'covidInfection', text: 'Have you had COVID-19 infection?', type: 'boolean' },
+      { key: 'covidTime', text: 'How long ago was the infection?', type: 'choice', options: ['Currently sick', '1–4 weeks ago', '1–3 months ago', 'More than 3 months ago'] },
+      { key: 'headacheDuringCovid', text: 'Did you have headache during the COVID infection?', type: 'boolean' },
+      { key: 'headacheQuality', text: 'What does/did the headache feel like?', type: 'choice-multi', options: ['Pulsating/throbbing', 'Pressing/tightening', 'Sharp/stabbing', 'Dull/aching'] },
+      { key: 'lossOfSmell', text: 'Did you lose your sense of smell?', type: 'boolean' },
+      { key: 'lossOfTaste', text: 'Did you lose your sense of taste?', type: 'boolean' },
+      { key: 'fatigueCovid', text: 'Do you still have fatigue after COVID?', type: 'boolean' },
+      { key: 'brainFog', text: 'Do you have "brain fog" or concentration problems?', type: 'boolean' },
+    ],
+  },
+
+  // ── Medication-Overuse Headache ───���─��────────
   {
     id: 'medication-overuse',
     name: 'Medication-Overuse Headache (MOH)',
