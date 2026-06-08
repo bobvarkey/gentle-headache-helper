@@ -228,7 +228,7 @@ function Index() {
                         <p className="text-sm text-[#1f2230]/70 mt-1">{diff.description}</p>
                       )}
                       {diff.recommendation && (
-                        <div className="mt-2 text-xs bg-[#f7f5ef] p-2 rounded">
+                        <div className="mt-2 text-xs bg-[#f7f5ef] p-2 rounded text-black">
                           💊 {diff.recommendation}
                         </div>
                       )}

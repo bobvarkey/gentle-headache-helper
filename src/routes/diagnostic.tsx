@@ -114,8 +114,8 @@ function DiagnosticPage() {
                     <h3 className="text-lg font-semibold">{diff.name}</h3>
                     <span className="rounded-full px-3 py-1 text-sm font-medium bg-[#22c55e] text-white">{diff.confidence}%</span>
                   </div>
-                  <p className="mb-2 text-sm text-[#1f2230]/60">ICHD-3: {diff.code}</p>
-                  {diff.recommendation && <div className="rounded-lg bg-[#f7f5ef] p-3 text-sm">{diff.recommendation}</div>}
+                  <p className="mb-2 text-sm text-black">ICHD-3: {diff.code}</p>
+                  {diff.recommendation && <div className="rounded-lg bg-[#f7f5ef] p-3 text-sm text-black">{diff.recommendation}</div>}
                 </div>
               ))}
               {results.differentials?.length === 0 && (
