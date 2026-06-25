@@ -1,12 +1,11 @@
 /**
- * Diagnostic Route - ICHD-3 Headache Diagnostic
+ * Diagnostic Route - ICHD-3 Headache Diagnostic (Claymorphism UI)
  */
 
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Brain, ArrowLeft, AlertTriangle, CheckCircle, XCircle } from "lucide-react";
+import { Brain, ArrowLeft, AlertTriangle, CheckCircle } from "lucide-react";
 import { diagnose, formatDifferentialResults } from "../utils/diagnostic-engine";
-import { HEADACHE_TYPES } from "../data/headacheData";
 
 export const Route = createFileRoute("/diagnostic")({
   head: () => ({
@@ -55,31 +54,40 @@ function DiagnosticPage() {
 
   if (!started) {
     return (
-      <div className="min-h-screen bg-[#f7f5ef] text-[#1f2230] p-6">
-        <div className="mx-auto max-w-2xl pt-10">
-          <div className="mb-8 flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#1f2230] text-[#f7f5ef]">
-              <Brain className="h-6 w-6" />
+      <div className="min-h-screen bg-[#ebe7df] text-[#2d2a33] p-6">
+        <div className="mx-auto max-w-2xl pt-12">
+          <div className="mb-10 flex items-center gap-4">
+            <div className="clay-icon h-14 w-14">
+              <Brain className="h-7 w-7" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold">Headache Diagnostic</h1>
-              <p className="text-sm text-[#1f2230]/60">Based on ICHD-3 Classification</p>
+              <h1 className="text-3xl font-bold">Headache Diagnostic</h1>
+              <p className="text-sm text-[#2d2a33]/60">Based on ICHD-3 Classification</p>
             </div>
           </div>
 
-          <div className="rounded-2xl bg-white p-6 shadow-sm">
-            <h2 className="mb-4 text-xl font-semibold">How it works</h2>
-            <ul className="space-y-3 text-[#1f2230]/80">
-              <li className="flex gap-3"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#1f2230] text-[#f7f5ef] text-sm">1</span>Answer questions about your headache symptoms</li>
-              <li className="flex gap-3"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#1f2230] text-[#f7f5ef] text-sm">2</span>Get evaluated against ICHD-3 criteria</li>
-              <li className="flex gap-3"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#1f2230] text-[#f7f5ef] text-sm">3</span>Receive diagnosis with treatment suggestions</li>
+          <div className="clay-card p-8">
+            <h2 className="mb-6 text-xl font-semibold">How it works</h2>
+            <ul className="space-y-4 text-[#2d2a33]/80">
+              <li className="flex gap-4 items-center">
+                <span className="clay-icon h-8 w-8 text-sm">1</span>
+                <span>Answer questions about your headache symptoms</span>
+              </li>
+              <li className="flex gap-4 items-center">
+                <span className="clay-icon h-8 w-8 text-sm">2</span>
+                <span>Get evaluated against ICHD-3 criteria</span>
+              </li>
+              <li className="flex gap-4 items-center">
+                <span className="clay-icon h-8 w-8 text-sm">3</span>
+                <span>Receive diagnosis with treatment suggestions</span>
+              </li>
             </ul>
 
-            <div className="mt-6 rounded-xl bg-[#fff3cd] p-4 text-sm text-[#856404]">
+            <div className="mt-8 clay-alert warning">
               <strong>⚕️ Disclaimer:</strong> This tool is for educational purposes only.
             </div>
 
-            <button onClick={startDiagnostic} className="mt-6 w-full rounded-xl bg-[#1f2230] py-4 text-lg font-medium text-[#f7f5ef]">
+            <button onClick={startDiagnostic} className="clay-button mt-8 w-full py-4 text-lg">
               Start Diagnostic Assessment
             </button>
           </div>
@@ -90,41 +98,45 @@ function DiagnosticPage() {
 
   if (results) {
     return (
-      <div className="min-h-screen bg-[#f7f5ef] text-[#1f2230] p-6">
+      <div className="min-h-screen bg-[#ebe7df] text-[#2d2a33] p-6">
         <div className="mx-auto max-w-2xl">
-          <button onClick={restart} className="mb-6 flex items-center gap-2 text-sm text-[#1f2230]/60">
+          <button onClick={restart} className="mb-8 flex items-center gap-2 text-sm text-[#2d2a33]/60 hover:text-[#2d2a33] transition-colors">
             <ArrowLeft className="h-4 w-4" /> Start new assessment
           </button>
 
           {results.priority === 'emergency' ? (
-            <div className="rounded-2xl border-2 border-red-500 bg-red-50 p-6">
+            <div className="clay-alert error p-8">
               <div className="mb-4 flex items-center gap-3">
-                <AlertTriangle className="h-8 w-8 text-red-600" />
-                <h2 className="text-2xl font-bold text-red-700">Seek Immediate Medical Care!</h2>
+                <AlertTriangle className="h-10 w-10" />
+                <h2 className="text-2xl font-bold">Seek Immediate Medical Care!</h2>
               </div>
-              <p className="mb-4 text-red-600">{results.content}</p>
-              <div className="rounded-xl bg-red-100 p-4 font-semibold text-red-800">{results.recommendation}</div>
+              <p className="mb-4 text-lg opacity-90">{results.content}</p>
+              <div className="clay-card p-4 font-semibold text-[#8a3a3a]">{results.recommendation}</div>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-5">
               <h2 className="text-2xl font-bold">{results.title}</h2>
               {results.differentials?.map((diff, i) => (
-                <div key={i} className="rounded-2xl bg-white p-5">
-                  <div className="mb-2 flex items-center justify-between">
+                <div key={i} className={`clay-result-card p-6 ${i === 0 ? 'highlight' : ''}`}>
+                  <div className="mb-3 flex items-center justify-between">
                     <h3 className="text-lg font-semibold">{diff.name}</h3>
-                    <span className="rounded-full px-3 py-1 text-sm font-medium bg-[#22c55e] text-white">{diff.confidence}%</span>
+                    <span className={`clay-badge ${diff.confidence >= 70 ? 'success' : diff.confidence >= 50 ? 'warning' : ''}`}>
+                      {diff.confidence}%
+                    </span>
                   </div>
-                  <p className="mb-2 text-sm text-black">ICHD-3: {diff.code}</p>
-                  {diff.recommendation && <div className="rounded-lg bg-[#f7f5ef] p-3 text-sm text-black">{diff.recommendation}</div>}
+                  <p className="mb-3 text-sm text-[#2d2a33]/60">ICHD-3: {diff.code}</p>
+                  {diff.recommendation && (
+                    <div className="clay-alert info text-sm">{diff.recommendation}</div>
+                  )}
                 </div>
               ))}
               {results.differentials?.length === 0 && (
-                <div className="rounded-2xl bg-white p-6 text-center">
-                  <h3 className="mb-2 text-lg font-semibold">No Clear Diagnosis</h3>
-                  <p className="text-[#1f2230]/60">Please consult a healthcare provider.</p>
+                <div className="clay-card p-8 text-center">
+                  <h3 className="mb-3 text-lg font-semibold">No Clear Diagnosis</h3>
+                  <p className="text-[#2d2a33]/60">Please consult a healthcare provider.</p>
                 </div>
               )}
-              <div className="mt-6 rounded-xl bg-[#fef3c7] p-4 text-sm text-[#92400e]">
+              <div className="mt-8 clay-alert warning">
                 <strong>⚕️ Disclaimer:</strong> Educational only. Verify with a healthcare provider.
               </div>
             </div>
@@ -137,33 +149,33 @@ function DiagnosticPage() {
   if (!currentQuestion) return null;
 
   return (
-    <div className="min-h-screen bg-[#f7f5ef] text-[#1f2230] p-6">
+    <div className="min-h-screen bg-[#ebe7df] text-[#2d2a33] p-6">
       <div className="mx-auto max-w-2xl">
-        <div className="mb-6 flex items-center gap-3">
-          <button onClick={() => setStarted(false)} className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm">
+        <div className="mb-8 flex items-center gap-4">
+          <button onClick={() => setStarted(false)} className="clay-icon h-11 w-11">
             <ArrowLeft className="h-5 w-5" />
           </button>
           <div>
             <h1 className="text-xl font-bold">Headache Diagnostic</h1>
-            <p className="text-sm text-[#1f2230]/60">Step {stepIndex + 1} of {totalSteps}</p>
+            <p className="text-sm text-[#2d2a33]/60">Step {stepIndex + 1} of {totalSteps}</p>
           </div>
         </div>
 
-        <div className="mb-8">
-          <div className="mb-2 h-2 rounded-full bg-gray-200">
-            <div className="h-2 rounded-full bg-[#1f2230]" style={{ width: `${((stepIndex + 1) / totalSteps) * 100}%` }} />
+        <div className="mb-10">
+          <div className="clay-progress-track">
+            <div className="clay-progress-fill" style={{ width: `${((stepIndex + 1) / totalSteps) * 100}%` }} />
           </div>
         </div>
 
-        <div className="rounded-2xl bg-white p-6 shadow-sm">
+        <div className="clay-card p-8">
           <h2 className="mb-2 text-xl font-semibold">{currentQuestion.title}</h2>
-          {currentQuestion.description && <p className="mb-6 text-[#1f2230]/60">{currentQuestion.description}</p>}
+          {currentQuestion.description && <p className="mb-6 text-[#2d2a33]/60">{currentQuestion.description}</p>}
 
           {(currentQuestion.type === 'yes-no' || currentQuestion.type === 'multiple-choice') && (
             <div className="space-y-3">
               {currentQuestion.options.map((opt, i) => (
                 <button key={i} onClick={() => handleAnswer(currentQuestion.id, opt.value)}
-                  className={`w-full rounded-xl p-4 text-left transition ${answers[currentQuestion.id] === opt.value ? 'bg-[#1f2230] text-[#f7f5ef]' : 'bg-[#f7f5ef]'}`}>
+                  className={`clay-pill w-full text-left ${answers[currentQuestion.id] === opt.value ? 'selected' : ''}`}>
                   {opt.label}
                 </button>
               ))}
@@ -180,11 +192,13 @@ function DiagnosticPage() {
                     const updated = selected ? current.filter(id => id !== opt.id) : [...current, opt.id];
                     handleAnswer(currentQuestion.id, updated);
                   }}
-                  className={`flex w-full items-center gap-3 rounded-xl p-4 text-left transition ${selected ? 'bg-[#1f2230] text-[#f7f5ef]' : 'bg-[#f7f5ef]'}`}>
-                    <span className={`flex h-6 w-6 items-center justify-center rounded border-2 ${selected ? 'border-white bg-white/20' : 'border-gray-400'}`}>
-                      {selected && <CheckCircle className="h-4 w-4" />}
-                    </span>
-                    {opt.label || opt.name}
+                  className={`clay-pill w-full text-left ${selected ? 'selected' : ''}`}>
+                    <div className="flex items-center gap-3">
+                      <span className={`flex h-6 w-6 items-center justify-center rounded-lg border-2 transition ${selected ? 'border-white bg-white/20' : 'border-[#2d2a33]/30'}`}>
+                        {selected && <CheckCircle className="h-4 w-4" />}
+                      </span>
+                      {opt.label || opt.name}
+                    </div>
                   </button>
                 );
               })}
@@ -195,9 +209,9 @@ function DiagnosticPage() {
             <div className="flex gap-2">
               {currentQuestion.options.map((opt, i) => (
                 <button key={i} onClick={() => handleAnswer(currentQuestion.id, opt.value)}
-                  className={`flex-1 rounded-xl py-4 text-center transition ${answers[currentQuestion.id] === opt.value ? 'bg-[#1f2230] text-[#f7f5ef]' : 'bg-[#f7f5ef]'}`}>
+                  className={`clay-pill flex-1 text-center ${answers[currentQuestion.id] === opt.value ? 'selected' : ''}`}>
                   <div className="text-2xl font-bold">{opt.value}</div>
-                  <div className="text-xs">{opt.label}</div>
+                  <div className="text-xs opacity-70">{opt.label}</div>
                 </button>
               ))}
             </div>

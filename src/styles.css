@@ -5,17 +5,13 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Design system definition.
+ * Claymorphism Design System
  *
- * The @theme inline block maps CSS custom properties to Tailwind utility
- * classes (e.g. --color-primary -> bg-primary, text-primary).
- *
- * The :root and .dark blocks define the actual color values using oklch.
- * All colors MUST use oklch format.
- *
- * To add a new semantic color:
- * 1. Add the variable to :root (light value) and .dark (dark value)
- * 2. Register it in @theme inline as --color-<name>: var(--<name>)
+ * Claymorphism creates soft, clay-like UI elements with:
+ * - Layered shadows (outer shadow + inset highlight)
+ * - Soft, rounded shapes
+ * - Subtle gradients for depth
+ * - Light reflection effects
  */
 
 @theme inline {
@@ -62,74 +58,92 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: #f7f5ef;
-  --foreground: #1f2230;
-  --card: #f7f5ef;
-  --card-foreground: #1f2230;
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: #1f2230;
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: #1f2230;
-  --accent: #e07856;
-  --accent-foreground: #1f2230;
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: #e5e0d4;
-  --input: #e5e0d4;
-  --ring: oklch(0.704 0.04 256.788);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
-  --sidebar-primary: oklch(0.208 0.042 265.755);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.704 0.04 256.788);
+  --radius: 0.75rem;
+  
+  /* Warm, soft clay base colors */
+  --background: #ebe7df;
+  --foreground: #2d2a33;
+  --card: #f5f2ec;
+  --card-foreground: #2d2a33;
+  --popover: #f5f2ec;
+  --popover-foreground: #2d2a33;
+  
+  /* Primary - soft teal/clay */
+  --primary: #5a7f7a;
+  --primary-foreground: #f5f2ec;
+  
+  /* Secondary - muted clay */
+  --secondary: #d8d2c8;
+  --secondary-foreground: #2d2a33;
+  
+  /* Muted - soft neutral */
+  --muted: #d8d2c8;
+  --muted-foreground: #5a5660;
+  
+  /* Accent - warm coral */
+  --accent: #c4785c;
+  --accent-foreground: #f5f2ec;
+  
+  /* Destructive - soft red */
+  --destructive: #c45c5c;
+  --destructive-foreground: #f5f2ec;
+  
+  /* Borders - soft */
+  --border: #c8c4bc;
+  --input: #c8c4bc;
+  --ring: #5a7f7a;
+  
+  /* Charts */
+  --chart-1: #5a7f7a;
+  --chart-2: #c4785c;
+  --chart-3: #7a6b5a;
+  --chart-4: #8fa4a0;
+  --chart-5: #a67c52;
+  
+  /* Sidebar */
+  --sidebar: #f0ece4;
+  --sidebar-foreground: #2d2a33;
+  --sidebar-primary: #5a7f7a;
+  --sidebar-primary-foreground: #f5f2ec;
+  --sidebar-accent: #d8d2c8;
+  --sidebar-accent-foreground: #2d2a33;
+  --sidebar-border: #c8c4bc;
+  --sidebar-ring: #5a7f7a;
 }
 
 .dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
+  --background: #2d2a33;
+  --foreground: #f5f2ec;
+  --card: #3a3742;
+  --card-foreground: #f5f2ec;
+  --popover: #3a3742;
+  --popover-foreground: #f5f2ec;
+  --primary: #8fa4a0;
+  --primary-foreground: #2d2a33;
+  --secondary: #4a4652;
+  --secondary-foreground: #f5f2ec;
+  --muted: #4a4652;
+  --muted-foreground: #a8a4ac;
+  --accent: #c4785c;
+  --accent-foreground: #f5f2ec;
+  --destructive: #c45c5c;
+  --destructive-foreground: #f5f2ec;
+  --border: #4a4652;
+  --input: #4a4652;
+  --ring: #8fa4a0;
+  --chart-1: #8fa4a0;
+  --chart-2: #c4785c;
+  --chart-3: #a8a4ac;
+  --chart-4: #5a7f7a;
+  --chart-5: #d4a574;
+  --sidebar: #3a3742;
+  --sidebar-foreground: #f5f2ec;
+  --sidebar-primary: #8fa4a0;
+  --sidebar-primary-foreground: #2d2a33;
+  --sidebar-accent: #4a4652;
+  --sidebar-accent-foreground: #f5f2ec;
+  --sidebar-border: #4a4652;
+  --sidebar-ring: #8fa4a0;
 }
 
 @layer base {
@@ -141,4 +155,377 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
+}
+
+/* =============================================
+   CLAYMORPHISM COMPONENT STYLES
+   ============================================= */
+
+/* Clay Card - soft, raised appearance */
+.clay-card {
+  background: linear-gradient(145deg, 
+    var(--card) 0%, 
+    color-mix(in oklch, var(--card) 95%, var(--primary) 5%) 100%
+  );
+  border-radius: var(--radius-xl);
+  box-shadow: 
+    /* Outer shadow - depth */
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.1),
+    /* Soft bottom shadow */
+    0 10px 20px -5px rgba(0, 0, 0, 0.08),
+    /* Inset highlight - light from top */
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Clay Button - interactive clay */
+.clay-button {
+  background: linear-gradient(145deg, 
+    color-mix(in oklch, var(--primary) 100%, white 10%) 0%,
+    var(--primary) 50%,
+    color-mix(in oklch, var(--primary) 95%, black 5%) 100%
+  );
+  border-radius: var(--radius-lg);
+  box-shadow: 
+    0 4px 8px -2px rgba(0, 0, 0, 0.15),
+    0 2px 4px -1px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+  color: var(--primary-foreground);
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.clay-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 
+    0 6px 12px -3px rgba(0, 0, 0, 0.2),
+    0 4px 6px -2px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.clay-button:active {
+  transform: translateY(1px);
+  box-shadow: 
+    0 2px 4px -1px rgba(0, 0, 0, 0.1),
+    inset 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Clay Input - inset appearance */
+.clay-input {
+  background: linear-gradient(145deg, 
+    color-mix(in oklch, var(--background) 95%, black 5%) 0%,
+    var(--background) 100%
+  );
+  border-radius: var(--radius-md);
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 2px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border);
+  transition: all 0.2s ease;
+}
+
+.clay-input:focus {
+  outline: none;
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.1),
+    0 0 0 3px color-mix(in oklch, var(--primary) 30%, transparent);
+  border-color: var(--primary);
+}
+
+/* Clay Pill Button - for selections */
+.clay-pill {
+  background: var(--card);
+  border-radius: var(--radius-2xl);
+  box-shadow: 
+    0 2px 4px -1px rgba(0, 0, 0, 0.08),
+    0 1px 2px -1px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0.75rem 1.5rem;
+}
+
+.clay-pill:hover {
+  border-color: var(--border);
+  transform: translateY(-1px);
+  box-shadow: 
+    0 4px 8px -2px rgba(0, 0, 0, 0.12),
+    0 2px 4px -1px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.clay-pill.selected {
+  background: linear-gradient(145deg, var(--primary), color-mix(in oklch, var(--primary) 95%, black 5%));
+  color: var(--primary-foreground);
+  box-shadow: 
+    0 3px 6px -2px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+  border-color: transparent;
+}
+
+/* Clay Badge - soft pill */
+.clay-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-2xl);
+  background: linear-gradient(145deg, var(--primary), color-mix(in oklch, var(--primary) 92%, black 8%));
+  color: var(--primary-foreground);
+  font-size: 0.75rem;
+  font-weight: 600;
+  box-shadow: 
+    0 2px 3px -1px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Clay Success Badge */
+.clay-badge.success {
+  background: linear-gradient(145deg, #4a9a6d, #3d8a5d);
+}
+
+/* Clay Warning Badge */
+.clay-badge.warning {
+  background: linear-gradient(145deg, #c49a5c, #b08a4c);
+}
+
+/* Clay Alert - for warnings/disclaimers */
+.clay-alert {
+  border-radius: var(--radius-xl);
+  padding: 1rem 1.25rem;
+  box-shadow: 
+    0 2px 4px -1px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.clay-alert.warning {
+  background: linear-gradient(145deg, #fde8c8, #f5d9b0);
+  border: 1px solid #e8c99a;
+  color: #7a5a32;
+}
+
+.clay-alert.error {
+  background: linear-gradient(145deg, #f8d4d4, #eec4c4);
+  border: 1px solid #d4a8a8;
+  color: #8a3a3a;
+}
+
+.clay-alert.info {
+  background: linear-gradient(145deg, #d4e8e4, #c4d8d4);
+  border: 1px solid #a8c4bc;
+  color: #3a5a52;
+}
+
+/* Clay Progress Bar */
+.clay-progress-track {
+  background: linear-gradient(145deg, 
+    color-mix(in oklch, var(--background) 95%, black 5%),
+    var(--background)
+  );
+  border-radius: var(--radius-2xl);
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 2px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  height: 0.5rem;
+}
+
+.clay-progress-fill {
+  background: linear-gradient(90deg, var(--primary), color-mix(in oklch, var(--primary) 80%, white 20%));
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 0 8px rgba(var(--primary), 0.3);
+  border-radius: var(--radius-2xl);
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+/* Clay Step Indicator */
+.clay-step {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--card);
+  box-shadow: 
+    0 2px 4px -1px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+
+.clay-step.active {
+  background: linear-gradient(145deg, var(--primary), color-mix(in oklch, var(--primary) 90%, black 10%));
+  color: var(--primary-foreground);
+  box-shadow: 
+    0 3px 6px -2px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* Clay Result Card */
+.clay-result-card {
+  background: linear-gradient(145deg, var(--card), color-mix(in oklch, var(--card) 97%, white 3%));
+  border-radius: var(--radius-xl);
+  box-shadow: 
+    0 4px 8px -2px rgba(0, 0, 0, 0.08),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+}
+
+.clay-result-card.highlight {
+  background: linear-gradient(145deg, 
+    color-mix(in oklch, var(--card) 95%, var(--primary) 5%),
+    var(--card)
+  );
+  border-left: 4px solid var(--primary);
+}
+
+/* Clay Confidence Meter */
+.clay-confidence-meter {
+  height: 0.5rem;
+  background: linear-gradient(145deg, 
+    color-mix(in oklch, var(--background) 95%, black 5%),
+    var(--background)
+  );
+  border-radius: var(--radius-2xl);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.clay-confidence-fill {
+  height: 100%;
+  border-radius: var(--radius-2xl);
+  transition: width 0.5s ease;
+}
+
+.clay-confidence-fill.high {
+  background: linear-gradient(90deg, #4a9a6d, #5aaa7d);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.clay-confidence-fill.medium {
+  background: linear-gradient(90deg, #c49a5c, #d4aa6c);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.clay-confidence-fill.low {
+  background: linear-gradient(90deg, #8a7a6a, #9a8a7a);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Clay FAQ Accordion */
+.clay-faq {
+  background: var(--card);
+  border-radius: var(--radius-xl);
+  box-shadow: 
+    0 2px 4px -1px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clay-faq:hover {
+  box-shadow: 
+    0 4px 8px -2px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.clay-faq[open] {
+  background: linear-gradient(145deg, var(--card), color-mix(in oklch, var(--card) 98%, white 2%));
+}
+
+/* Clay Header */
+.clay-header {
+  background: linear-gradient(180deg, var(--card), color-mix(in oklch, var(--card) 95%, transparent 5%));
+  box-shadow: 
+    0 2px 8px -2px rgba(0, 0, 0, 0.08),
+    inset 0 -1px 0 var(--border);
+  backdrop-filter: blur(8px);
+}
+
+/* Clay Icon Container */
+.clay-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, 
+    color-mix(in oklch, var(--primary) 100%, white 5%),
+    var(--primary)
+  );
+  border-radius: 50%;
+  box-shadow: 
+    0 3px 6px -2px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+  color: var(--primary-foreground);
+}
+
+/* Clay Link Button */
+.clay-link-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(145deg, 
+    color-mix(in oklch, var(--primary) 100%, white 8%),
+    var(--primary)
+  );
+  color: var(--primary-foreground);
+  padding: 0.875rem 1.5rem;
+  border-radius: var(--radius-2xl);
+  font-weight: 600;
+  box-shadow: 
+    0 4px 8px -2px rgba(0, 0, 0, 0.15),
+    0 2px 4px -1px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.clay-link-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 12px -3px rgba(0, 0, 0, 0.2),
+    0 4px 6px -2px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Clay Footer */
+.clay-footer {
+  background: var(--card);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 -2px 8px -4px rgba(0, 0, 0, 0.08);
+}
+
+/* Animation utilities */
+@keyframes clay-press {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(2px); }
+}
+
+@keyframes clay-pop {
+  0% { transform: scale(0.95); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-clay-press {
+  animation: clay-press 0.15s ease-out;
+}
+
+.animate-clay-pop {
+  animation: clay-pop 0.3s ease-out;
 }
