@@ -5,7 +5,7 @@
  * Each headache type is matched against the user's responses
  */
 
-import { HEADACHE_TYPES, RED_FLAGS } from '../data/headacheData';
+import { RED_FLAGS } from '../data/headacheData';
 
 /**
  * Main diagnostic function - processes all answers and returns differential diagnoses
