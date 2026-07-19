@@ -63,6 +63,7 @@ function Index() {
   const [done, setDone] = useState(false);
   const [computing, setComputing] = useState(false);
   const [tappedKey, setTappedKey] = useState(null);
+  const [showPreview, setShowPreview] = useState(false);
 
   const step = STEPS[stepIdx];
   const progress = Math.round(((stepIdx + (done ? 1 : 0)) / STEPS.length) * 100);
