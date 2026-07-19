@@ -515,7 +515,12 @@ function StepHeader({ n, title, tone }) {
 }
 
 function TxCard({ tx, tone }) {
-  const border = tone === "a" ? "border-[#4b8b6b]/40" : "border-[#d69838]/40";
+  const border =
+    tone === "a"
+      ? "border-[#4b8b6b]/40"
+      : tone === "c"
+      ? "border-[#c8391a]/30"
+      : "border-[#d69838]/40";
   return (
     <div className={`rounded-xl border ${border} bg-white/60 p-4`}>
       <div className="flex items-center gap-2 mb-1">
@@ -524,8 +529,18 @@ function TxCard({ tx, tone }) {
           {tx.name} <span className="text-[#2d2a33]/60 font-normal">({tx.route})</span>
         </p>
       </div>
-      <p className="text-sm text-[#2d2a33]/80">{tx.dose}</p>
-      {tx.notes && <p className="text-xs text-[#2d2a33]/60 mt-1">{tx.notes}</p>}
+      <p className="text-sm text-[#2d2a33]/80"><span className="font-medium">Dose:</span> {tx.dose}</p>
+      {tx.contra && (
+        <p className="text-xs text-[#c8391a] mt-1">
+          <span className="font-semibold">Contraindications:</span> {tx.contra}
+        </p>
+      )}
+      {tx.adverse && (
+        <p className="text-xs text-[#7a5312] mt-1">
+          <span className="font-semibold">Adverse effects:</span> {tx.adverse}
+        </p>
+      )}
+      {tx.notes && <p className="text-xs text-[#2d2a33]/60 mt-1 italic">{tx.notes}</p>}
     </div>
   );
 }
