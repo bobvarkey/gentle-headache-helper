@@ -468,3 +468,55 @@ function CitationList({ citations, className = "" }) {
   );
 }
 
+function EvidenceMatrix({ matrix }) {
+  const rows = Object.keys(matrix);
+  return (
+    <div className="overflow-x-auto rounded-xl border border-[#2d2a33]/10 bg-white/60">
+      <table className="w-full min-w-[720px] border-collapse text-xs">
+        <thead>
+          <tr className="bg-[#0b3d5c]/8 text-left">
+            <th className="p-2 font-semibold text-[#2d2a33]/70 w-32">
+              Strength ↓ / Quality →
+            </th>
+            {QUALITY_COLS.map((q) => (
+              <th key={q} className="p-2 font-semibold text-[#0b3d5c]">
+                {q}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => {
+            const strong = row.startsWith("Strong");
+            return (
+              <tr key={row} className="border-t border-[#2d2a33]/10 align-top">
+                <td
+                  className={`p-2 font-semibold ${
+                    strong ? "text-[#4b8b6b]" : "text-[#d69838]"
+                  }`}
+                >
+                  {row}
+                </td>
+                {matrix[row].map((cell, i) => (
+                  <td key={i} className="p-2 text-[#2d2a33]/85">
+                    {cell.length === 0 ? (
+                      <span className="text-[#2d2a33]/30">—</span>
+                    ) : (
+                      <ul className="space-y-1 list-disc pl-4">
+                        {cell.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </td>
+                ))}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+
