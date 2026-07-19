@@ -133,13 +133,10 @@ function Index() {
               <span>ICHD-3 · AHS 2025 · NICE CG150</span>
             </div>
             <h1 className="text-5xl md:text-6xl font-bold leading-[1.05] tracking-tight mb-5">
-              Understand your{" "}
-              <span className="text-sunset">headache</span>{" "}
-              in a minute.
+              A clinician's guide to{" "}
+              <span className="text-sunset">headache</span>
             </h1>
-            <p className="text-lg text-[#1a1330]/70 mb-8 max-w-md leading-relaxed">
-              Five friendly questions. A clear read on what might be going on — plus what to do next, grounded in real clinical guidelines.
-            </p>
+
             <div className="flex flex-wrap gap-3">
               <a href="#diagnose" className="sunset-btn">
                 Start the check-in <ArrowRight className="h-4 w-4" />
