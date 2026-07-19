@@ -329,6 +329,23 @@ function Prophylaxis() {
           </div>
         </Section>
 
+        {/* EVIDENCE MATRICES */}
+        <Section
+          icon={<TableIcon className="h-5 w-5" />}
+          title="Prevention evidence matrix"
+          subtitle="Rows = strength of recommendation; columns = quality of evidence. Adapted from the international preventive migraine treatment guideline (Tables 1.4 & 1.5)."
+        >
+          <SubHeading label="Episodic migraine (Table 1.4)" />
+          <EvidenceMatrix matrix={EPISODIC_MATRIX} />
+
+          <div className="mt-6">
+            <SubHeading label="Chronic migraine (Table 1.5)" />
+            <EvidenceMatrix matrix={CHRONIC_MATRIX} />
+          </div>
+
+          <CitationList citations={MATRIX_CITATIONS} className="mt-4" />
+        </Section>
+
         {/* STOPPING RULES */}
         <div className="clay-card p-6 mb-8">
           <div className="flex items-center gap-3 mb-4">
