@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Brain, Shield, AlertTriangle, CheckCircle, ArrowRight, Stethoscope } from "lucide-react";
 import { diagnose, formatDifferentialResults } from "../utils/diagnostic-engine";
@@ -49,6 +49,7 @@ function Index() {
         </div>
         <nav className="flex gap-6 text-sm font-medium">
           <a href="#diagnose" className="text-[#2d2a33]/70 hover:text-[#2d2a33] transition-colors">Diagnostic</a>
+          <Link to="/ed-migraine" className="text-[#2d2a33]/70 hover:text-[#2d2a33] transition-colors">ED Algorithm</Link>
           <a href="#about" className="text-[#2d2a33]/70 hover:text-[#2d2a33] transition-colors">About</a>
         </nav>
       </header>
