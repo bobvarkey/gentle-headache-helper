@@ -366,6 +366,26 @@ function DrugCard({ tx, tone }) {
       {tx.notes && (
         <p className="text-xs text-[#2d2a33]/60 mt-1 italic">{tx.notes}</p>
       )}
+      {tx.citations && <CitationList citations={tx.citations} className="mt-2" />}
     </div>
   );
 }
+
+function CitationList({ citations, className = "" }) {
+  return (
+    <div className={`flex flex-wrap gap-1.5 ${className}`}>
+      {citations.map((c) => (
+        <a
+          key={c.href}
+          href={c.href}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-1 rounded-full border border-[#0b3d5c]/25 bg-[#0b3d5c]/5 px-2 py-0.5 text-[10px] font-medium text-[#0b3d5c] hover:bg-[#0b3d5c]/10"
+        >
+          {c.label} <ExternalLink className="h-2.5 w-2.5" />
+        </a>
+      ))}
+    </div>
+  );
+}
+
