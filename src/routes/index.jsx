@@ -136,6 +136,10 @@ function Index() {
               A clinician's guide to{" "}
               <span className="text-sunset">headache</span>
             </h1>
+            <p className="text-lg text-[#1a1330]/70 mb-8 max-w-md leading-relaxed">
+              In one minute: an ICHD-3 pattern read, red-flag screen, and clear next steps — with AHS and NICE guidance built in.
+            </p>
+
 
             <div className="flex flex-wrap gap-3">
               <a href="#diagnose" className="sunset-btn">
