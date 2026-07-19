@@ -562,3 +562,106 @@
 .clay-pill:active { transform: translateY(1px) scale(0.98); transition: transform 0.08s ease; }
 .clay-button-press { transition: transform 0.12s ease, box-shadow 0.12s ease; }
 .clay-button-press:active { transform: translateY(1px) scale(0.98); }
+
+/* ============================================
+   SUNSET BLAZE PALETTE + GLOW UTILITIES
+   ============================================ */
+:root {
+  --sb-coral: #ff6b35;
+  --sb-amber: #f7931e;
+  --sb-magenta: #e84393;
+  --sb-violet: #6c5ce7;
+  --sb-ink: #1a1330;
+  --sb-ink-soft: #2a1f4a;
+  --sb-cream: #fff7f0;
+  --gradient-sunset: linear-gradient(120deg, var(--sb-coral) 0%, var(--sb-amber) 30%, var(--sb-magenta) 65%, var(--sb-violet) 100%);
+  --gradient-sunset-soft: linear-gradient(135deg, color-mix(in oklab, var(--sb-coral) 12%, transparent), color-mix(in oklab, var(--sb-violet) 14%, transparent));
+}
+
+.bg-sunset { background: var(--gradient-sunset); }
+.text-sunset {
+  background: var(--gradient-sunset);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.glass-header {
+  background: color-mix(in oklab, var(--sb-cream) 55%, transparent);
+  backdrop-filter: blur(18px) saturate(160%);
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+  box-shadow: 0 6px 24px -12px rgba(232, 67, 147, 0.18);
+}
+
+.sunset-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1.6rem;
+  border-radius: 999px;
+  color: white;
+  font-weight: 600;
+  background: var(--gradient-sunset);
+  background-size: 200% 200%;
+  box-shadow: 0 10px 30px -8px rgba(232, 67, 147, 0.55), inset 0 1px 0 rgba(255,255,255,0.3);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-position 0.4s ease;
+  border: none;
+  cursor: pointer;
+}
+.sunset-btn:hover { transform: translateY(-2px); background-position: 100% 50%; box-shadow: 0 16px 40px -8px rgba(232,67,147,0.65); }
+.sunset-btn:active { transform: translateY(1px) scale(0.98); }
+
+.feature-card {
+  position: relative;
+  border-radius: 24px;
+  padding: 1.5rem;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.7);
+  box-shadow: 0 8px 24px -12px rgba(26, 19, 48, 0.15);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  overflow: hidden;
+}
+.feature-card::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: var(--gradient-sunset);
+  opacity: 0; transition: opacity 0.3s ease;
+  z-index: 0;
+}
+.feature-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -12px rgba(232,67,147,0.3); }
+.feature-card > * { position: relative; z-index: 1; }
+
+.feature-icon {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--gradient-sunset);
+  color: white;
+  box-shadow: 0 8px 20px -6px rgba(232, 67, 147, 0.5), inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.hero-glow {
+  position: absolute; inset: -10%;
+  background: radial-gradient(circle at 50% 45%, rgba(255,107,53,0.5), rgba(232,67,147,0.35) 40%, transparent 70%);
+  filter: blur(40px);
+  z-index: 0;
+  animation: soft-float 6s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%,100% { filter: drop-shadow(0 0 30px rgba(255,107,53,0.5)) drop-shadow(0 0 60px rgba(232,67,147,0.35)); }
+  50% { filter: drop-shadow(0 0 45px rgba(247,147,30,0.6)) drop-shadow(0 0 80px rgba(108,92,231,0.4)); }
+}
+.animate-pulse-glow { animation: pulse-glow 4s ease-in-out infinite; }
+
+.skeleton-line { height: 14px; border-radius: 8px; }
+.skeleton-block { border-radius: 16px; }
+
+@keyframes button-tap {
+  0% { transform: scale(1); }
+  40% { transform: scale(0.94); }
+  100% { transform: scale(1); }
+}
+.animate-tap { animation: button-tap 0.22s ease-out; }

@@ -1,10 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Brain, Shield, AlertTriangle, CheckCircle2, ArrowRight, ArrowLeft,
-  Stethoscope, Sparkles, Clock, MapPin, Waves, Sun, Flame, RotateCcw, Heart,
+  Stethoscope, Sparkles, Clock, MapPin, Waves, Sun, Flame, RotateCcw,
+  Activity, Pill, Siren, BookOpen, Zap,
 } from "lucide-react";
 import { diagnose, formatDifferentialResults } from "../utils/diagnostic-engine";
+import heroImage from "../assets/hero-headache-glow.png.asset.json";
+import { SkeletonResults } from "../components/Skeleton";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -19,71 +22,47 @@ export const Route = createFileRoute("/")({
 });
 
 const STEPS = [
-  {
-    id: "duration",
-    icon: Clock,
-    title: "How long does it usually last?",
-    hint: "A rough idea is perfect — pick the closest.",
+  { id: "duration", icon: Clock, title: "How long does it usually last?", hint: "A rough idea is perfect — pick the closest.",
     options: [
-      { value: "minutes_15", label: "Under 15 min" },
-      { value: "minutes_30", label: "15–30 min" },
-      { value: "hours_2", label: "30 min – 2 hr" },
-      { value: "hours_4", label: "2–4 hr" },
-      { value: "hours_24", label: "4–24 hr" },
-      { value: "hours_72", label: "1–3 days" },
-    ],
-  },
-  {
-    id: "location",
-    icon: MapPin,
-    title: "Where do you feel it most?",
-    hint: "Wherever it lands hardest.",
+      { value: "minutes_15", label: "Under 15 min" }, { value: "minutes_30", label: "15–30 min" },
+      { value: "hours_2", label: "30 min – 2 hr" }, { value: "hours_4", label: "2–4 hr" },
+      { value: "hours_24", label: "4–24 hr" }, { value: "hours_72", label: "1–3 days" },
+    ] },
+  { id: "location", icon: MapPin, title: "Where do you feel it most?", hint: "Wherever it lands hardest.",
     options: [
-      { value: "unilateral", label: "One side" },
-      { value: "bilateral", label: "Both sides" },
-      { value: "orbit", label: "Around an eye" },
-      { value: "diffuse", label: "All over" },
-    ],
-  },
-  {
-    id: "nausea",
-    icon: Waves,
-    title: "Any nausea or vomiting?",
-    hint: "Even mild queasiness counts.",
+      { value: "unilateral", label: "One side" }, { value: "bilateral", label: "Both sides" },
+      { value: "orbit", label: "Around an eye" }, { value: "diffuse", label: "All over" },
+    ] },
+  { id: "nausea", icon: Waves, title: "Any nausea or vomiting?", hint: "Even mild queasiness counts.",
+    options: [{ value: true, label: "Yes" }, { value: false, label: "Not really" }] },
+  { id: "photophobia", icon: Sun, title: "Is light bothering you?", hint: "Bright rooms, screens, sunlight.",
+    options: [{ value: true, label: "Yes" }, { value: false, label: "No" }] },
+  { id: "intensity", icon: Flame, title: "How intense is the pain?", hint: "Trust your gut.",
     options: [
-      { value: true, label: "Yes" },
-      { value: false, label: "Not really" },
-    ],
-  },
-  {
-    id: "photophobia",
-    icon: Sun,
-    title: "Is light bothering you?",
-    hint: "Bright rooms, screens, sunlight.",
-    options: [
-      { value: true, label: "Yes" },
-      { value: false, label: "No" },
-    ],
-  },
-  {
-    id: "intensity",
-    icon: Flame,
-    title: "How intense is the pain?",
-    hint: "Trust your gut.",
-    options: [
-      { value: 1, label: "Mild" },
-      { value: 2, label: "Moderate" },
-      { value: 3, label: "Bad" },
-      { value: 4, label: "Severe" },
-      { value: 5, label: "The worst" },
-    ],
-  },
+      { value: 1, label: "Mild" }, { value: 2, label: "Moderate" }, { value: 3, label: "Bad" },
+      { value: 4, label: "Severe" }, { value: 5, label: "The worst" },
+    ] },
+];
+
+const MINI_APPS = [
+  { to: "/ed-migraine", icon: Siren, title: "ED Acute Algorithm", desc: "AHS 2025 step-by-step pathway for acute migraine in the emergency department.", tag: "For clinicians" },
+  { to: "/prophylaxis", icon: Pill, title: "Prophylaxis Guide", desc: "NICE CG150 preventive options with dose, contraindications, and stopping rules.", tag: "NICE CG150" },
+  { to: "/diagnostic", icon: Activity, title: "Full ICHD-3 Check-in", desc: "A deeper diagnostic wizard with red-flag screening and differential ranking.", tag: "ICHD-3" },
+];
+
+const FEATURES = [
+  { icon: Zap, title: "60-second read", desc: "Five questions, one clear picture — no medical jargon required." },
+  { icon: Brain, title: "ICHD-3 grounded", desc: "Built on the International Classification of Headache Disorders, 3rd edition." },
+  { icon: Shield, title: "Red-flag aware", desc: "Flags SNOOP10 warning signs so you know when to seek urgent care." },
+  { icon: BookOpen, title: "Evidence linked", desc: "Every recommendation cites the AHS or NICE guideline it came from." },
 ];
 
 function Index() {
   const [stepIdx, setStepIdx] = useState(0);
   const [answers, setAnswers] = useState({});
   const [done, setDone] = useState(false);
+  const [computing, setComputing] = useState(false);
+  const [tappedKey, setTappedKey] = useState(null);
 
   const step = STEPS[stepIdx];
   const progress = Math.round(((stepIdx + (done ? 1 : 0)) / STEPS.length) * 100);
@@ -94,61 +73,118 @@ function Index() {
   }, [done, answers]);
 
   const pick = (value) => {
+    const key = `${step.id}:${String(value)}`;
+    setTappedKey(key);
     const next = { ...answers, [step.id]: value };
     setAnswers(next);
-    // Feels instant, then advance
     setTimeout(() => {
       if (stepIdx < STEPS.length - 1) {
         setStepIdx(stepIdx + 1);
+        setTappedKey(null);
       } else {
-        setDone(true);
-        // Smooth scroll to results
+        setComputing(true);
+        // Show skeleton so results feel immediate, then reveal
         setTimeout(() => {
-          document.getElementById("results")?.scrollIntoView({ behavior: "smooth", block: "start" });
-        }, 100);
+          setDone(true);
+          setComputing(false);
+          setTimeout(() => {
+            document.getElementById("results")?.scrollIntoView({ behavior: "smooth", block: "start" });
+          }, 60);
+        }, 450);
       }
-    }, 220);
+    }, 200);
   };
 
-  const back = () => {
-    if (stepIdx > 0) setStepIdx(stepIdx - 1);
-  };
-
+  const back = () => { if (stepIdx > 0) setStepIdx(stepIdx - 1); };
   const restart = () => {
-    setAnswers({});
-    setStepIdx(0);
-    setDone(false);
+    setAnswers({}); setStepIdx(0); setDone(false); setComputing(false);
     document.getElementById("diagnose")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
-    <div className="min-h-screen bg-[#ebe7df] text-[#2d2a33]">
-      <header className="clay-header sticky top-0 z-10 mx-auto flex max-w-4xl items-center justify-between px-4 py-4">
-        <div className="flex items-center gap-3">
-          <div className="clay-icon h-10 w-10 animate-soft-float">
-            <Brain className="h-5 w-5" strokeWidth={2.25} />
-          </div>
-          <span className="text-xl font-semibold">Mira</span>
+    <div className="min-h-screen text-[#1a1330]" style={{ background: "linear-gradient(180deg, #fff7f0 0%, #fde5d3 40%, #f9d6e8 100%)" }}>
+      {/* STICKY GLASS HEADER */}
+      <header className="glass-header sticky top-0 z-20">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+          <Link to="/" className="flex items-center gap-2.5">
+            <div className="feature-icon" style={{ width: 36, height: 36, borderRadius: 12 }}>
+              <Brain className="h-4.5 w-4.5" strokeWidth={2.5} />
+            </div>
+            <span className="text-lg font-bold tracking-tight">Mira</span>
+          </Link>
+          <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+            <a href="#diagnose" className="text-[#1a1330]/70 hover:text-[#e84393] transition-colors">Check-in</a>
+            <a href="#mini-apps" className="text-[#1a1330]/70 hover:text-[#e84393] transition-colors">Tools</a>
+            <Link to="/ed-migraine" className="text-[#1a1330]/70 hover:text-[#e84393] transition-colors">ED</Link>
+            <Link to="/prophylaxis" className="text-[#1a1330]/70 hover:text-[#e84393] transition-colors">Prophylaxis</Link>
+          </nav>
+          <a href="#diagnose" className="sunset-btn text-sm" style={{ padding: "0.55rem 1.1rem" }}>
+            Start <ArrowRight className="h-4 w-4" />
+          </a>
         </div>
-        <nav className="flex gap-6 text-sm font-medium">
-          <a href="#diagnose" className="text-[#2d2a33]/70 hover:text-[#2d2a33] transition-colors">Check-in</a>
-          <Link to="/ed-migraine" className="text-[#2d2a33]/70 hover:text-[#2d2a33] transition-colors">ED Algorithm</Link>
-          <Link to="/prophylaxis" className="text-[#2d2a33]/70 hover:text-[#2d2a33] transition-colors">Prophylaxis</Link>
-        </nav>
       </header>
 
-      <section className="mx-auto max-w-3xl px-4 pt-10 pb-8">
-        <div className="text-center mb-8 animate-clay-pop">
-          <div className="inline-flex items-center gap-2 clay-badge mb-4">
-            <Sparkles className="h-3.5 w-3.5" strokeWidth={2.5} />
-            <span>Takes about a minute</span>
+      {/* HERO */}
+      <section className="relative overflow-hidden">
+        <div className="mx-auto max-w-6xl px-4 pt-14 pb-16 md:pt-20 md:pb-24 grid md:grid-cols-2 gap-10 items-center">
+          <div className="animate-clay-pop relative z-10">
+            <div className="inline-flex items-center gap-2 clay-badge mb-5 bg-sunset" style={{ background: "var(--gradient-sunset)" }}>
+              <Sparkles className="h-3.5 w-3.5" strokeWidth={2.5} />
+              <span>ICHD-3 · AHS 2025 · NICE CG150</span>
+            </div>
+            <h1 className="text-5xl md:text-6xl font-bold leading-[1.05] tracking-tight mb-5">
+              Understand your{" "}
+              <span className="text-sunset">headache</span>{" "}
+              in a minute.
+            </h1>
+            <p className="text-lg text-[#1a1330]/70 mb-8 max-w-md leading-relaxed">
+              Five friendly questions. A clear read on what might be going on — plus what to do next, grounded in real clinical guidelines.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <a href="#diagnose" className="sunset-btn">
+                Start the check-in <ArrowRight className="h-4 w-4" />
+              </a>
+              <a href="#mini-apps" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-semibold text-[#1a1330] bg-white/60 backdrop-blur border border-white/70 hover:bg-white/80 transition-all">
+                Browse tools
+              </a>
+            </div>
+            <div className="mt-8 flex items-center gap-5 text-xs text-[#1a1330]/60">
+              <span className="flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5 text-[#e84393]" fill="currentColor" /> Private</span>
+              <span className="flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5 text-[#e84393]" fill="currentColor" /> Evidence-based</span>
+              <span className="flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5 text-[#e84393]" fill="currentColor" /> Free</span>
+            </div>
           </div>
-          <h1 className="text-4xl font-bold md:text-5xl mb-3 leading-tight">Let's figure out<br/>what's going on.</h1>
-          <p className="text-base text-[#2d2a33]/60 max-w-md mx-auto">
-            Five quick questions. Honest, private, and grounded in the ICHD-3 clinical criteria.
-          </p>
-        </div>
 
+          <div className="relative aspect-square max-w-md mx-auto w-full">
+            <div className="hero-glow" />
+            <img
+              src={heroImage.url}
+              alt="Glowing profile silhouette illustrating headache energy"
+              width={1024}
+              height={1024}
+              className="relative z-10 w-full h-full object-contain animate-pulse-glow"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* FEATURES */}
+      <section className="mx-auto max-w-6xl px-4 pb-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {FEATURES.map((f, i) => (
+            <div key={f.title} className="feature-card animate-step-in" style={{ animationDelay: `${i * 60}ms`, animationFillMode: "both" }}>
+              <div className="feature-icon mb-4">
+                <f.icon className="h-5 w-5" strokeWidth={2.25} />
+              </div>
+              <h3 className="font-semibold text-base mb-1.5 leading-tight">{f.title}</h3>
+              <p className="text-sm text-[#1a1330]/65 leading-relaxed">{f.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CHECK-IN */}
+      <section className="mx-auto max-w-3xl px-4 pb-12">
         <div className="clay-alert warning mb-6 text-sm">
           <div className="flex items-start gap-2.5">
             <Shield className="h-4 w-4 shrink-0 mt-0.5" strokeWidth={2.25} />
@@ -156,42 +192,40 @@ function Index() {
           </div>
         </div>
 
-        {/* ONBOARDING FLOW */}
         <div id="diagnose" className="scroll-mt-24 clay-card p-6 md:p-8">
-          {!done && (
+          {!done && !computing && (
             <>
-              {/* Progress */}
               <div className="mb-6">
-                <div className="flex items-center justify-between text-xs font-medium text-[#2d2a33]/60 mb-2">
+                <div className="flex items-center justify-between text-xs font-medium text-[#1a1330]/60 mb-2">
                   <span>Question {stepIdx + 1} of {STEPS.length}</span>
                   <span>{progress}%</span>
                 </div>
                 <div className="clay-progress-track">
-                  <div
-                    className="clay-progress-fill transition-all duration-500 ease-out"
-                    style={{ width: `${progress}%` }}
-                  />
+                  <div className="clay-progress-fill transition-all duration-500 ease-out"
+                    style={{ width: `${progress}%`, background: "var(--gradient-sunset)" }} />
                 </div>
               </div>
 
-              {/* Step */}
               <div key={step.id} className="animate-step-in">
                 <div className="flex items-center gap-3 mb-1">
-                  <div className="clay-icon h-9 w-9">
+                  <div className="feature-icon" style={{ width: 36, height: 36, borderRadius: 12 }}>
                     <step.icon className="h-4.5 w-4.5" strokeWidth={2.25} />
                   </div>
                   <h2 className="text-lg md:text-xl font-semibold">{step.title}</h2>
                 </div>
-                <p className="text-sm text-[#2d2a33]/55 mb-5 ml-12">{step.hint}</p>
+                <p className="text-sm text-[#1a1330]/55 mb-5 ml-12">{step.hint}</p>
 
                 <div className={`grid gap-2 ${step.options.length > 4 ? "grid-cols-2 md:grid-cols-3" : "grid-cols-2"}`}>
                   {step.options.map((opt) => {
                     const selected = answers[step.id] === opt.value;
+                    const key = `${step.id}:${String(opt.value)}`;
+                    const isTapped = tappedKey === key;
                     return (
                       <button
                         key={String(opt.value)}
                         onClick={() => pick(opt.value)}
-                        className={`clay-pill clay-button-press text-sm font-medium ${selected ? "selected" : ""}`}
+                        className={`clay-pill clay-button-press text-sm font-medium ${selected ? "selected" : ""} ${isTapped ? "animate-tap" : ""}`}
+                        style={selected ? { background: "var(--gradient-sunset)", color: "white" } : undefined}
                       >
                         <span className="inline-flex items-center gap-2 justify-center w-full">
                           {selected && <CheckCircle2 className="h-4 w-4 animate-checkmark" strokeWidth={2.5} fill="currentColor" />}
@@ -203,21 +237,29 @@ function Index() {
                 </div>
               </div>
 
-              {/* Nav */}
               <div className="mt-6 flex items-center justify-between">
-                <button
-                  onClick={back}
-                  disabled={stepIdx === 0}
-                  className="inline-flex items-center gap-1.5 text-sm font-medium text-[#2d2a33]/60 hover:text-[#2d2a33] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                >
+                <button onClick={back} disabled={stepIdx === 0}
+                  className="inline-flex items-center gap-1.5 text-sm font-medium text-[#1a1330]/60 hover:text-[#1a1330] disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
                   <ArrowLeft className="h-4 w-4" /> Back
                 </button>
-                <span className="text-xs text-[#2d2a33]/40">Tap an answer to continue</span>
+                <span className="text-xs text-[#1a1330]/40">Tap an answer to continue</span>
               </div>
             </>
           )}
 
-          {/* RESULTS */}
+          {computing && (
+            <div className="animate-step-in">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="feature-icon animate-pulse-glow"><Sparkles className="h-5 w-5" strokeWidth={2.25} /></div>
+                <div>
+                  <h2 className="text-lg font-semibold">Reading your answers…</h2>
+                  <p className="text-xs text-[#1a1330]/55">Matching against ICHD-3 patterns.</p>
+                </div>
+              </div>
+              <SkeletonResults />
+            </div>
+          )}
+
           {done && results && (
             <div id="results" className="animate-step-in">
               <ResultsView results={results} onRestart={restart} />
@@ -226,26 +268,38 @@ function Index() {
         </div>
       </section>
 
-      {/* WHAT COMES NEXT */}
-      {!done && (
-        <section className="mx-auto max-w-3xl px-4 pb-12">
-          <div className="clay-card p-6 md:p-8 text-center">
-            <div className="mx-auto mb-4 w-16 h-16 rounded-full bg-white/50 flex items-center justify-center animate-soft-float">
-              <Heart className="h-7 w-7 text-[#c76a4a]" strokeWidth={2} fill="currentColor" />
-            </div>
-            <h3 className="font-semibold text-lg mb-1">You're doing great.</h3>
-            <p className="text-sm text-[#2d2a33]/60 max-w-md mx-auto">
-              When you finish the five questions, you'll see the most likely headache types, red flags to watch for, and what to do next.
-            </p>
-          </div>
-        </section>
-      )}
+      {/* MINI-APPS */}
+      <section id="mini-apps" className="mx-auto max-w-6xl px-4 pb-20 scroll-mt-24">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold mb-2">
+            More <span className="text-sunset">tools</span>
+          </h2>
+          <p className="text-[#1a1330]/60 max-w-md mx-auto">Clinician-grade algorithms and prescriber references, always a tap away.</p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-4">
+          {MINI_APPS.map((m, i) => (
+            <Link to={m.to} key={m.to}
+              className="feature-card group animate-step-in block"
+              style={{ animationDelay: `${i * 80}ms`, animationFillMode: "both" }}>
+              <div className="flex items-start justify-between mb-4">
+                <div className="feature-icon"><m.icon className="h-5 w-5" strokeWidth={2.25} /></div>
+                <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-full bg-white/70 text-[#e84393] border border-[#e84393]/20">{m.tag}</span>
+              </div>
+              <h3 className="font-semibold text-lg mb-1.5 leading-tight">{m.title}</h3>
+              <p className="text-sm text-[#1a1330]/65 leading-relaxed mb-4">{m.desc}</p>
+              <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#e84393] group-hover:gap-2.5 transition-all">
+                Open <ArrowRight className="h-4 w-4" />
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
 
-      <footer id="about" className="clay-footer py-10 mt-4">
-        <div className="mx-auto max-w-4xl px-4 text-center text-sm text-[#2d2a33]/50">
-          <p className="font-medium text-[#2d2a33]/70">Mira</p>
-          <p className="mt-1">Grounded in the International Classification of Headache Disorders (ICHD-3).</p>
-          <p className="mt-2">For education, not diagnosis. When in doubt, call your clinician.</p>
+      <footer className="py-10 mt-4" style={{ background: "linear-gradient(180deg, transparent, rgba(26,19,48,0.05))" }}>
+        <div className="mx-auto max-w-4xl px-4 text-center text-sm text-[#1a1330]/60">
+          <p className="font-semibold text-[#1a1330]">Mira</p>
+          <p className="mt-1">Grounded in ICHD-3, AHS 2025, and NICE CG150.</p>
+          <p className="mt-2 text-xs">For education, not diagnosis. When in doubt, call your clinician.</p>
         </div>
       </footer>
     </div>
@@ -274,34 +328,34 @@ function ResultsView({ results, onRestart }) {
       )}
 
       <div className="flex items-center gap-3 mb-5">
-        <div className="clay-icon h-9 w-9">
-          <Stethoscope className="h-4.5 w-4.5" strokeWidth={2.25} />
-        </div>
+        <div className="feature-icon"><Stethoscope className="h-5 w-5" strokeWidth={2.25} /></div>
         <div>
           <h2 className="text-xl font-semibold">Here's what stood out</h2>
-          <p className="text-xs text-[#2d2a33]/55">Ranked by how well your answers matched each pattern.</p>
+          <p className="text-xs text-[#1a1330]/55">Ranked by how well your answers matched each pattern.</p>
         </div>
       </div>
 
       {hasDiffs ? (
         <div className="space-y-3">
           {results.differentials.slice(0, 3).map((diff, i) => (
-            <div
-              key={i}
+            <div key={i}
               className={`clay-result-card p-5 ${i === 0 ? "highlight" : ""} animate-step-in`}
-              style={{ animationDelay: `${i * 80}ms`, animationFillMode: "both" }}
-            >
+              style={{ animationDelay: `${i * 80}ms`, animationFillMode: "both", ...(i === 0 ? { borderLeft: "4px solid #e84393" } : {}) }}>
               <div className="flex justify-between items-start mb-2 gap-3">
                 <div>
                   <p className="font-semibold text-lg leading-tight">{diff.name}</p>
-                  <p className="text-xs text-[#2d2a33]/50 mt-0.5">ICHD-3 · {diff.code}</p>
+                  <p className="text-xs text-[#1a1330]/50 mt-0.5">ICHD-3 · {diff.code}</p>
                 </div>
-                <span className={`clay-badge ${diff.confidence >= 70 ? "success" : diff.confidence >= 50 ? "warning" : ""}`}>
+                <span className="clay-badge" style={{
+                  background: diff.confidence >= 70 ? "linear-gradient(145deg,#4a9a6d,#3d8a5d)"
+                    : diff.confidence >= 50 ? "var(--gradient-sunset)"
+                    : "linear-gradient(145deg,#8a7a6a,#9a8a7a)"
+                }}>
                   {diff.confidence}% match
                 </span>
               </div>
               {diff.description && (
-                <p className="text-sm text-[#2d2a33]/70 mt-2 leading-relaxed">{diff.description}</p>
+                <p className="text-sm text-[#1a1330]/70 mt-2 leading-relaxed">{diff.description}</p>
               )}
               {diff.recommendation && (
                 <div className="mt-3 text-sm clay-alert info">
@@ -312,32 +366,29 @@ function ResultsView({ results, onRestart }) {
           ))}
         </div>
       ) : (
-        // Empty-but-friendly state
         <div className="text-center py-8">
-          <div className="mx-auto mb-4 w-16 h-16 rounded-full bg-white/60 flex items-center justify-center animate-soft-float">
-            <Sparkles className="h-7 w-7 text-[#c76a4a]" strokeWidth={2} />
+          <div className="mx-auto mb-4 feature-icon animate-soft-float" style={{ width: 64, height: 64, borderRadius: 20 }}>
+            <Sparkles className="h-7 w-7" strokeWidth={2} />
           </div>
           <h3 className="font-semibold mb-1">No clear pattern yet.</h3>
-          <p className="text-sm text-[#2d2a33]/60 max-w-sm mx-auto mb-5">
+          <p className="text-sm text-[#1a1330]/60 max-w-sm mx-auto mb-5">
             Your answers don't line up neatly with a single type — that's actually pretty common. A full assessment can dig deeper.
           </p>
-          <a href="/diagnostic" className="clay-link-button clay-button-press">
+          <Link to="/diagnostic" className="sunset-btn">
             Take the full check-in <ArrowRight className="h-4 w-4" />
-          </a>
+          </Link>
         </div>
       )}
 
       <div className="mt-6 flex flex-wrap gap-3 items-center justify-between">
-        <button
-          onClick={onRestart}
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-[#2d2a33]/60 hover:text-[#2d2a33] transition-colors"
-        >
+        <button onClick={onRestart}
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-[#1a1330]/60 hover:text-[#1a1330] transition-colors">
           <RotateCcw className="h-4 w-4" /> Start over
         </button>
         {hasDiffs && (
-          <a href="/diagnostic" className="clay-link-button clay-button-press">
+          <Link to="/diagnostic" className="sunset-btn">
             Take the full check-in <ArrowRight className="h-4 w-4" />
-          </a>
+          </Link>
         )}
       </div>
     </>
