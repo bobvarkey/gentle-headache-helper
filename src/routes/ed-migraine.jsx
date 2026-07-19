@@ -142,6 +142,14 @@ const LEVEL_C = [
     adverse: "Dizziness, nausea, hepatotoxicity, teratogenicity.",
   },
   {
+    name: "Ketamine infusion (KIT)",
+    route: "IV",
+    dose: "Low-dose ketamine 0.5 mg/kg IV infused over 40 min, daily × 5 consecutive days. Pre-medicate with ondansetron 8 mg IV for nausea. Monitor 30 min post-infusion, then discharge with a known driver.",
+    contra: "Uncontrolled hypertension, unstable cardiovascular disease, active psychosis, severe hepatic impairment, pregnancy, elevated ICP or intraocular pressure.",
+    adverse: "Perceptual/dissociative symptoms, nausea, dizziness, transient BP/HR changes, rarely respiratory depression.",
+    notes: "Infusion suite with full resuscitation equipment. Continuous ECG, SpO₂, and BP every 15 min. Stop KIT and call the medical emergency team for new bradycardia, tachycardia, atrial fibrillation, symptomatic hypertension/hypotension, or any vital-sign change >20% from baseline.",
+  },
+  {
     name: "Acetylsalicylic acid",
     route: "IV",
     dose: "1000 mg IV",
