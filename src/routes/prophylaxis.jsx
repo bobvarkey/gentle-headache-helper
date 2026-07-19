@@ -39,6 +39,10 @@ const FIRST_LINE = [
     adverse: "Fatigue, cold extremities, sleep disturbance, bradycardia, bronchospasm.",
     notes:
       "Use caution — MHRA/HSIB flagged toxicity and rapid deterioration in overdose. Screen for depression/self-harm risk before prescribing.",
+    citations: [
+      { label: "NICE CG150 §1.3.6 (prophylaxis first-line)", href: "https://www.nice.org.uk/guidance/cg150/chapter/Recommendations#migraine-2" },
+      { label: "MHRA — propranolol overdose safety update", href: "https://www.gov.uk/drug-safety-update/propranolol-risk-of-serious-harm-and-death-in-overdose" },
+    ],
   },
   {
     name: "Topiramate",
@@ -47,18 +51,22 @@ const FIRST_LINE = [
       "Pregnancy and women of childbearing potential unless the Pregnancy Prevention Programme conditions are met; history of nephrolithiasis; narrow-angle glaucoma.",
     adverse:
       "Paraesthesia, cognitive slowing, weight loss, mood change, nephrolithiasis, metabolic acidosis, teratogenicity.",
-    notes:
-      "Follow MHRA 2024 safety measures. Off-label in children/young people.",
+    notes: "Follow MHRA 2024 safety measures. Off-label in children/young people.",
+    citations: [
+      { label: "NICE CG150 §1.3.6 (prophylaxis first-line)", href: "https://www.nice.org.uk/guidance/cg150/chapter/Recommendations#migraine-2" },
+      { label: "MHRA — topiramate new safety measures (2024)", href: "https://www.gov.uk/drug-safety-update/topiramate-topamax-introduction-of-new-safety-measures-including-a-pregnancy-prevention-programme" },
+    ],
   },
   {
     name: "Amitriptyline",
     dose: "Start 10 mg PO nocte; titrate to 25–75 mg nocte (usual effective 25–50 mg)",
-    contra:
-      "Recent MI, arrhythmias, severe hepatic impairment, mania, concurrent MAOI.",
+    contra: "Recent MI, arrhythmias, severe hepatic impairment, mania, concurrent MAOI.",
     adverse:
       "Sedation, dry mouth, constipation, weight gain, orthostatic hypotension, QT prolongation.",
-    notes:
-      "Off-label for migraine. Follow NICE guidance on antidepressant dependence/withdrawal.",
+    notes: "Off-label for migraine. Follow NICE guidance on antidepressant dependence/withdrawal.",
+    citations: [
+      { label: "NICE CG150 §1.3.7 (amitriptyline — off-label)", href: "https://www.nice.org.uk/guidance/cg150/chapter/Recommendations#migraine-2" },
+    ],
   },
 ];
 
@@ -69,6 +77,10 @@ const FURTHER_EPISODIC = [
     indication: "Episodic migraine — ≥4 and <15 attacks/month",
     contra: "Severe hepatic impairment; concomitant strong CYP3A4 inhibitors.",
     adverse: "Nausea, hypersensitivity, rare rash.",
+    citations: [
+      { label: "NICE TA906 — rimegepant for preventing migraine (2023)", href: "https://www.nice.org.uk/guidance/ta906" },
+      { label: "NICE CG150 §1.3.9 (further options)", href: "https://www.nice.org.uk/guidance/cg150/chapter/Recommendations#migraine-2" },
+    ],
   },
 ];
 
@@ -78,30 +90,45 @@ const FURTHER_EPISODIC_OR_CHRONIC = [
     dose: "10–60 mg PO once daily",
     contra: "Severe hepatic impairment; strong CYP3A4 inducers reduce efficacy.",
     adverse: "Nausea, constipation, fatigue, decreased appetite.",
+    citations: [
+      { label: "NICE TA973 — atogepant for preventing migraine (2024)", href: "https://www.nice.org.uk/guidance/ta973" },
+    ],
   },
   {
     name: "Eptinezumab (TA871)",
     dose: "100 mg IV infusion every 12 weeks (may increase to 300 mg)",
     contra: "Hypersensitivity to CGRP monoclonal antibodies.",
     adverse: "Nasopharyngitis, infusion reactions, hypersensitivity.",
+    citations: [
+      { label: "NICE TA871 — eptinezumab for preventing migraine (2023)", href: "https://www.nice.org.uk/guidance/ta871" },
+    ],
   },
   {
     name: "Fremanezumab (TA764)",
     dose: "225 mg SC monthly or 675 mg SC every 3 months",
     contra: "Hypersensitivity to CGRP mAbs; caution in severe cardiovascular disease.",
     adverse: "Injection-site reactions, hypersensitivity.",
+    citations: [
+      { label: "NICE TA764 — fremanezumab for preventing migraine (2022)", href: "https://www.nice.org.uk/guidance/ta764" },
+    ],
   },
   {
     name: "Erenumab (TA682)",
     dose: "140 mg SC every 4 weeks (140 mg dose only per NICE)",
     contra: "Hypersensitivity; caution — post-marketing reports of hypertension and constipation.",
     adverse: "Constipation (may be severe), injection-site reactions, hypertension, muscle spasm.",
+    citations: [
+      { label: "NICE TA682 — erenumab for preventing migraine (2021)", href: "https://www.nice.org.uk/guidance/ta682" },
+    ],
   },
   {
     name: "Galcanezumab (TA659)",
     dose: "240 mg SC loading dose, then 120 mg SC monthly",
     contra: "Hypersensitivity to CGRP mAbs.",
     adverse: "Injection-site reactions, hypersensitivity, constipation.",
+    citations: [
+      { label: "NICE TA659 — galcanezumab for preventing migraine (2020)", href: "https://www.nice.org.uk/guidance/ta659" },
+    ],
   },
 ];
 
@@ -113,6 +140,9 @@ const CHRONIC = [
     contra:
       "Infection at injection sites; neuromuscular junction disorders (myasthenia, Lambert-Eaton, ALS); pregnancy.",
     adverse: "Neck pain, muscle weakness, ptosis, injection-site pain, headache.",
+    citations: [
+      { label: "NICE TA260 — botulinum toxin type A for chronic migraine (2012)", href: "https://www.nice.org.uk/guidance/ta260" },
+    ],
   },
 ];
 
@@ -123,7 +153,15 @@ const ALTERNATIVE = [
     contra: "Bleeding disorders, anticoagulation (relative), local skin infection.",
     adverse: "Local bruising, transient soreness, rare pneumothorax.",
     notes: "Suitable for both adults and children.",
+    citations: [
+      { label: "NICE CG150 §1.3.8 (acupuncture)", href: "https://www.nice.org.uk/guidance/cg150/chapter/Recommendations#migraine-2" },
+    ],
   },
+];
+
+const STOPPING_CITATIONS = [
+  { label: "NICE CG150 §1.3.10 (review & stopping rules)", href: "https://www.nice.org.uk/guidance/cg150/chapter/Recommendations#migraine-2" },
+  { label: "NICE CG150 visual summary (PDF)", href: "https://www.nice.org.uk/guidance/cg150/resources/visual-summary-on-prophylaxis-of-migraine-with-or-without-aura-pdf-15363542125" },
 ];
 
 function Prophylaxis() {
