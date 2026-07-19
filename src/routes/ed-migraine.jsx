@@ -145,8 +145,21 @@ const LEVEL_C = [
     name: "Ketamine infusion (KIT)",
     route: "IV",
     dose: "Low-dose ketamine 0.5 mg/kg IV infused over 40 min, daily × 5 consecutive days. Pre-medicate with ondansetron 8 mg IV for nausea. Monitor 30 min post-infusion, then discharge with a known driver.",
-    contra: "Uncontrolled hypertension, unstable cardiovascular disease, active psychosis, severe hepatic impairment, pregnancy, elevated ICP or intraocular pressure.",
-    adverse: "Perceptual/dissociative symptoms, nausea, dizziness, transient BP/HR changes, rarely respiratory depression.",
+    contra: "Uncontrolled or severe hypertension, unstable/active cardiovascular disease (ischemia, arrhythmia, decompensated HF), severe aortic disease or aneurysm, elevated intracranial or intraocular pressure, active psychosis or poorly-controlled schizophrenia/bipolar disorder, current substance use disorder involving ketamine or dissociatives, severe hepatic impairment, pregnancy or breastfeeding, known hypersensitivity to ketamine.",
+    adverse: "Perceptual/dissociative symptoms, nausea/vomiting, dizziness, transient BP/HR changes, emergence reactions, rarely respiratory depression or laryngospasm.",
+    eligibilityTitle: "KIT eligibility checklist",
+    eligibility: [
+      "Refractory migraine or chronic daily headache failing ≥2 preventive classes",
+      "Age ≥18 years, able to consent",
+      "Baseline BP <160/100 and HR 50–110; no active chest pain",
+      "No unstable cardiac, cerebrovascular, or aneurysmal disease",
+      "No active psychosis, mania, or uncontrolled severe psychiatric illness",
+      "No history of ketamine/dissociative misuse",
+      "Not pregnant or breastfeeding; effective contraception if applicable",
+      "Hepatic and renal function acceptable for repeat dosing",
+      "Fasting per local sedation policy; IV access secured",
+      "Known driver arranged; no driving or safety-critical tasks for 24 h",
+    ],
     notes: "Infusion suite with full resuscitation equipment. Continuous ECG, SpO₂, and BP every 15 min. Stop KIT and call the medical emergency team for new bradycardia, tachycardia, atrial fibrillation, symptomatic hypertension/hypotension, or any vital-sign change >20% from baseline.",
   },
   {
@@ -577,6 +590,21 @@ function TxCard({ tx, tone }) {
         <p className="text-xs text-[#7a5312] mt-1">
           <span className="font-semibold">Adverse effects:</span> {tx.adverse}
         </p>
+      )}
+      {tx.eligibility && tx.eligibility.length > 0 && (
+        <div className="mt-3 rounded-lg border border-[#4b8b6b]/30 bg-[#4b8b6b]/8 p-3">
+          <p className="text-xs font-semibold text-[#2f5c46] mb-1.5">
+            {tx.eligibilityTitle || "Eligibility checklist"}
+          </p>
+          <ul className="space-y-1">
+            {tx.eligibility.map((item) => (
+              <li key={item} className="flex items-start gap-2 text-xs text-[#2d2a33]/80">
+                <span className="mt-0.5 inline-block h-3.5 w-3.5 rounded border border-[#4b8b6b]/60 shrink-0" aria-hidden="true" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
       {tx.notes && <p className="text-xs text-[#2d2a33]/60 mt-1 italic">{tx.notes}</p>}
     </div>
