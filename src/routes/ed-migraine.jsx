@@ -227,6 +227,34 @@ function EDMigraine() {
           </div>
         </div>
 
+        {/* VISUAL REFERENCE CHARTS */}
+        <div className="clay-card p-4 md:p-6 mb-8">
+          <h2 className="text-lg font-semibold mb-1">Visual reference</h2>
+          <p className="text-sm text-[#2d2a33]/60 mb-5">Printable at-a-glance charts for the ED and discharge.</p>
+          <figure className="mb-6">
+            <img
+              src={edAcuteTreatmentAsset.url}
+              alt="Migraine attack acute treatment in the ED — first-line medications, reassessment steps, and nerve block options"
+              className="w-full h-auto rounded-2xl shadow-sm border border-black/5"
+              loading="lazy"
+            />
+            <figcaption className="mt-2 text-xs text-[#2d2a33]/55 text-center">
+              Acute treatment pathway — first- to third-line therapy and nerve blocks.
+            </figcaption>
+          </figure>
+          <figure>
+            <img
+              src={edDischargePrescriptionsAsset.url}
+              alt="Discharge prescriptions — acute options, preventive indications, preventive medications, and nutraceuticals"
+              className="w-full h-auto rounded-2xl shadow-sm border border-black/5"
+              loading="lazy"
+            />
+            <figcaption className="mt-2 text-xs text-[#2d2a33]/55 text-center">
+              Discharge prescriptions — acute, preventive, and nutraceutical options.
+            </figcaption>
+          </figure>
+        </div>
+
         {/* STEP FLOW */}
         <div className="clay-card p-6 mb-8">
           <div className="flex items-center justify-between mb-5">
