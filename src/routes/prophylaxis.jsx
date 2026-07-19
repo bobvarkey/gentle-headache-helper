@@ -9,6 +9,7 @@ import {
   AlertTriangle,
   RotateCcw,
   ExternalLink,
+  Table as TableIcon,
 } from "lucide-react";
 
 export const Route = createFileRoute("/prophylaxis")({
