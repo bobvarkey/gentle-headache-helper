@@ -160,6 +160,49 @@ const LEVEL_C = [
       "Fasting per local sedation policy; IV access secured",
       "Known driver arranged; no driving or safety-critical tasks for 24 h",
     ],
+    readinessTitle: "Pre-infusion readiness (each session)",
+    readinessGroups: [
+      {
+        heading: "Baseline tests & workup",
+        items: [
+          "12-lead ECG within 12 months (repeat if new cardiac symptoms); no QTc prolongation or significant arrhythmia",
+          "Baseline vitals recorded: BP, HR, RR, SpO₂, temperature",
+          "LFTs and renal panel within 3 months; TFTs if clinically indicated",
+          "Urine β-hCG on day 1 for people of childbearing potential",
+          "Urine drug screen if history suggests substance use",
+          "Weight recorded today for accurate mg/kg dosing",
+          "Medication reconciliation: hold benzodiazepines and stimulants where possible; review serotonergic and antihypertensive agents",
+        ],
+      },
+      {
+        heading: "Consent & psychological readiness",
+        items: [
+          "Written informed consent signed for KIT protocol (risks, benefits, dissociation, off-label use)",
+          "Patient understands 5-day daily schedule and can commit",
+          "PHQ-9 / GAD-7 baseline documented; suicidality screen negative or safety plan in place",
+          "Support person contact recorded",
+        ],
+      },
+      {
+        heading: "Day-of readiness",
+        items: [
+          "NPO per local sedation policy (typically 6 h solids / 2 h clears)",
+          "IV access patent; ondansetron 8 mg IV given for nausea prophylaxis",
+          "Resuscitation trolley, suction, and reversal agents checked and in room",
+          "Monitoring set: continuous ECG, SpO₂, BP cuff cycling every 15 min",
+        ],
+      },
+      {
+        heading: "Driver & discharge arrangements",
+        items: [
+          "Named driver confirmed and present at discharge (no taxi/rideshare alone)",
+          "Responsible adult available at home for the evening",
+          "Patient agrees: no driving, machinery, legal or financial decisions for 24 h",
+          "Written post-infusion instructions given; 24/7 contact number provided",
+          "Next session date/time confirmed and added to patient record",
+        ],
+      },
+    ],
     notes: "Infusion suite with full resuscitation equipment. Continuous ECG, SpO₂, and BP every 15 min. Stop KIT and call the medical emergency team for new bradycardia, tachycardia, atrial fibrillation, symptomatic hypertension/hypotension, or any vital-sign change >20% from baseline.",
   },
   {
@@ -604,6 +647,28 @@ function TxCard({ tx, tone }) {
               </li>
             ))}
           </ul>
+        </div>
+      )}
+      {tx.readinessGroups && tx.readinessGroups.length > 0 && (
+        <div className="mt-3 rounded-lg border border-[#3a6ea5]/30 bg-[#3a6ea5]/8 p-3">
+          <p className="text-xs font-semibold text-[#1f4571] mb-2">
+            {tx.readinessTitle || "Pre-infusion readiness checklist"}
+          </p>
+          <div className="space-y-3">
+            {tx.readinessGroups.map((g) => (
+              <div key={g.heading}>
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-[#1f4571]/80 mb-1">{g.heading}</p>
+                <ul className="space-y-1">
+                  {g.items.map((item) => (
+                    <li key={item} className="flex items-start gap-2 text-xs text-[#2d2a33]/80">
+                      <span className="mt-0.5 inline-block h-3.5 w-3.5 rounded border border-[#3a6ea5]/60 shrink-0" aria-hidden="true" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
       )}
       {tx.notes && <p className="text-xs text-[#2d2a33]/60 mt-1 italic">{tx.notes}</p>}
