@@ -686,6 +686,16 @@ function EDMigraine() {
   );
 }
 
+function MedList({ items }) {
+  return (
+    <ul className="space-y-1">
+      {items.map((it) => (
+        <li key={it} className="leading-snug">{it}</li>
+      ))}
+    </ul>
+  );
+}
+
 function StepHeader({ n, title, tone }) {
   const bg =
     tone === "error"
