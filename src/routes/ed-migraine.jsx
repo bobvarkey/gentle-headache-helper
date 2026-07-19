@@ -584,8 +584,115 @@ function EDMigraine() {
             nalbuphine, propofol, promethazine, tramadol, SPG blocks, eptinezumab, and others.
           </p>
         </div>
+
+        {/* ACUTE MIGRAINE MEDICATIONS MATRIX */}
+        <div className="clay-card p-6 mt-8">
+          <h2 className="text-lg font-semibold mb-1">Acute migraine medications — evidence matrix</h2>
+          <p className="text-xs text-[#2d2a33]/60 mb-4">
+            Rows = strength of recommendation. Columns = quality of evidence.
+          </p>
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs border-collapse">
+              <thead>
+                <tr className="bg-[#2d2a33]/5">
+                  <th className="py-2 px-3 text-left font-semibold border border-[#2d2a33]/10 w-32">Strength</th>
+                  <th className="py-2 px-3 text-left font-semibold border border-[#2d2a33]/10">High</th>
+                  <th className="py-2 px-3 text-left font-semibold border border-[#2d2a33]/10">Moderate</th>
+                  <th className="py-2 px-3 text-left font-semibold border border-[#2d2a33]/10">Low</th>
+                  <th className="py-2 px-3 text-left font-semibold border border-[#2d2a33]/10">Very low</th>
+                </tr>
+              </thead>
+              <tbody className="align-top">
+                <tr>
+                  <td className="py-2 px-3 border border-[#2d2a33]/10 font-semibold bg-[#4b8b6b]/15 text-[#2f5c46]">
+                    Strong in favor
+                  </td>
+                  <td className="py-2 px-3 border border-[#2d2a33]/10">
+                    <MedList items={[
+                      "Paracetamol 1000 mg PO",
+                      "Almotriptan 12.5 mg PO",
+                      "Eletriptan 20 / 40 mg PO",
+                      "Frovatriptan 2.5 mg PO",
+                      "Naratriptan 1 / 2.5 mg PO",
+                      "Rizatriptan 5 / 10 mg PO",
+                      "Sumatriptan 50 / 100 mg PO",
+                      "Sumatriptan 6 mg/mL SC",
+                      "Sumatriptan 10 / 20 mg IN",
+                      "Zolmitriptan 2.5 mg PO",
+                      "ASA 500 mg + Paracetamol 500 mg + Caffeine 130 mg PO",
+                      "Lasmiditan 50 / 100 / 200 mg PO",
+                      "Rimegepant 75 mg PO",
+                      "Ubrogepant 50 / 100 mg PO",
+                      "Zavegepant 10 mg IN",
+                    ]} />
+                  </td>
+                  <td className="py-2 px-3 border border-[#2d2a33]/10">
+                    <MedList items={[
+                      "ASA 1000 mg PO",
+                      "Diclofenac 50 mg PO",
+                      "ASA 900 mg + Metoclopramide 10 mg PO",
+                    ]} />
+                  </td>
+                  <td className="py-2 px-3 border border-[#2d2a33]/10">
+                    <MedList items={[
+                      "Ibuprofen 200 / 400 / 600 mg PO",
+                      "Sumatriptan 85 mg + Naproxen 500 mg PO",
+                      "Rizatriptan 10 mg + Paracetamol 1000 mg PO",
+                    ]} />
+                  </td>
+                  <td className="py-2 px-3 border border-[#2d2a33]/10">
+                    <MedList items={["Naproxen 500 / 825 mg PO"]} />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="py-2 px-3 border border-[#2d2a33]/10 font-semibold bg-[#d69838]/15 text-[#7a5312]">
+                    Weak in favor
+                  </td>
+                  <td className="py-2 px-3 border border-[#2d2a33]/10 text-[#2d2a33]/40">—</td>
+                  <td className="py-2 px-3 border border-[#2d2a33]/10">
+                    <MedList items={[
+                      "Celecoxib 120 mg PO",
+                      "Paracetamol 650 mg + Tramadol 75 mg PO",
+                      "Zavegepant 20 mg IN",
+                    ]} />
+                  </td>
+                  <td className="py-2 px-3 border border-[#2d2a33]/10">
+                    <MedList items={[
+                      "Diclofenac 50 mg SC",
+                      "Ketorolac 31.5 mg IN",
+                      "Ergotamine 2 mg + Caffeine 200 mg PO",
+                    ]} />
+                  </td>
+                  <td className="py-2 px-3 border border-[#2d2a33]/10">
+                    <MedList items={[
+                      "Dexketoprofen 50 mg PO",
+                      "Paracetamol 400 mg + Codeine 25 mg PO",
+                      "Butorphanol 1 mg IN",
+                    ]} />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-[#2d2a33]/60 mt-4">
+            PO = oral · SC = subcutaneous · IN = intranasal. Use lowest effective dose; avoid opioids and
+            butalbital-containing combinations where possible. Screen for medication-overuse headache when
+            acute use exceeds 10 days/month (triptans, ergots, opioids, combinations) or 15 days/month
+            (simple analgesics).
+          </p>
+        </div>
       </main>
     </div>
+  );
+}
+
+function MedList({ items }) {
+  return (
+    <ul className="space-y-1">
+      {items.map((it) => (
+        <li key={it} className="leading-snug">{it}</li>
+      ))}
+    </ul>
   );
 }
 
