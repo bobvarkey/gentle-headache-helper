@@ -397,13 +397,12 @@ function EDMigraine() {
             <div>
               <StepHeader n={4} title="Refractory migraine — Level C options" tone="warn" />
               <p className="text-sm mb-3 text-[#2d2a33]/70">
-                Consider (single agent, weigh side-effects):
+                Choose a single agent based on comorbidities and prior response. Do not stack multiple
+                QT-prolonging or dopamine-antagonist drugs.
               </p>
-              <div className="flex flex-wrap gap-2 mb-5">
-                {LEVEL_C.map((c) => (
-                  <span key={c} className="clay-pill">
-                    {c}
-                  </span>
+              <div className="grid sm:grid-cols-2 gap-3 mb-5">
+                {LEVEL_C.map((tx) => (
+                  <TxCard key={tx.name} tx={tx} tone="c" />
                 ))}
               </div>
               <p className="text-sm mb-3">
