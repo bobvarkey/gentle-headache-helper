@@ -3,8 +3,35 @@ import { useEffect, useMemo, useState } from "react";
 import {
   Brain, Shield, AlertTriangle, CheckCircle2, ArrowRight, ArrowLeft,
   Stethoscope, Sparkles, Clock, MapPin, Waves, Sun, Flame, RotateCcw,
-  Activity, Pill, Siren, BookOpen, Zap,
+  Activity, Pill, Siren, BookOpen, Zap, Lightbulb, Droplet, CloudRain, Syringe, Sparkle,
 } from "lucide-react";
+
+const TIPS = [
+  {
+    icon: Sparkle,
+    tag: "New evidence",
+    title: "Suzetrigine for headache pain",
+    body: "In a single-center retrospective cohort, 67.5% of patients had improvement in headache symptoms on the newly approved non-opioid suzetrigine, with only 6.3% reporting worsening — side effects were tolerable.",
+  },
+  {
+    icon: CloudRain,
+    tag: "Prevention",
+    title: "Fremanezumab & weather-triggered attacks",
+    body: "The CGRP monoclonal antibody fremanezumab appears to reduce the risk of weather-related attacks in some patients with episodic migraine — worth considering for weather-sensitive phenotypes.",
+  },
+  {
+    icon: Droplet,
+    tag: "Lifestyle",
+    title: "Saline instead of toothpaste",
+    body: "Brushing with saline instead of toothpaste for 4 weeks cut weekly migraine frequency from 3 to 1, dropped median intensity to 0/10, and gave nearly a third complete freedom from migraine. Also ask about Vicks, balms, and other strong topical scents.",
+  },
+  {
+    icon: Syringe,
+    tag: "GLP-1 signals",
+    title: "GLP-1 RAs vs topiramate in chronic migraine",
+    body: "Retrospective TriNetX study (AHS 2026): starting a GLP-1 within a year of migraine diagnosis was linked to 17% lower ED visits (RR 0.83), 13% lower hospitalization (RR 0.87), 25% less nerve-block use, 20% fewer triptan starts, and roughly half the rate of new antidepressant, gepant, valproate, or CGRP mAb prescriptions vs topiramate. Signals only — no headache-frequency or adherence data; RCTs still needed.",
+  },
+];
 import { diagnose, formatDifferentialResults } from "../utils/diagnostic-engine";
 import heroImage from "../assets/hero-headache-glow.png.asset.json";
 import { SkeletonResults } from "../components/Skeleton";
