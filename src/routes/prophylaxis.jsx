@@ -587,8 +587,194 @@ function CitationList({ citations, className = "" }) {
   );
 }
 
-function EvidenceMatrix({ matrix }) {
-  const rows = Object.keys(matrix);
+function EvidenceMatrixSection() {
+  const [query, setQuery] = useState("");
+  const [condition, setCondition] = useState("all"); // all | episodic | chronic
+  const [strengthFilter, setStrengthFilter] = useState("all");
+  const [classFilter, setClassFilter] = useState("all");
+  const [selected, setSelected] = useState(null);
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return MATRIX_ENTRIES.filter((e) => {
+      if (condition !== "all" && e.condition !== condition) return false;
+      if (strengthFilter !== "all" && e.strength !== strengthFilter) return false;
+      if (classFilter !== "all" && e.cls !== classFilter) return false;
+      if (!q) return true;
+      return (
+        e.drug.toLowerCase().includes(q) ||
+        e.label.toLowerCase().includes(q) ||
+        e.cls.toLowerCase().includes(q) ||
+        e.route.toLowerCase().includes(q) ||
+        (e.notes || "").toLowerCase().includes(q)
+      );
+    });
+  }, [query, condition, strengthFilter, classFilter]);
+
+  const activeFilters =
+    (condition !== "all" ? 1 : 0) +
+    (strengthFilter !== "all" ? 1 : 0) +
+    (classFilter !== "all" ? 1 : 0);
+
+  const showEpisodic = condition !== "chronic";
+  const showChronic = condition !== "episodic";
+
+  const episodicMatches = filtered.filter((e) => e.condition === "episodic");
+  const chronicMatches = filtered.filter((e) => e.condition === "chronic");
+
+  return (
+    <>
+      <Section
+        icon={<TableIcon className="h-5 w-5" />}
+        title="Prevention evidence matrix"
+        subtitle="Rows = strength of recommendation; columns = quality of evidence. Click any entry for full dosing and safety detail."
+      >
+        {/* Search + filters */}
+        <div className="mb-4 space-y-3">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#2d2a33]/40" />
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search drug, class, route, or notes…"
+              className="w-full rounded-full border border-[#2d2a33]/15 bg-white/80 py-2 pl-9 pr-9 text-sm focus:border-[#0b3d5c] focus:outline-none focus:ring-2 focus:ring-[#0b3d5c]/20"
+            />
+            {query && (
+              <button
+                onClick={() => setQuery("")}
+                aria-label="Clear search"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-[#2d2a33]/50 hover:bg-[#2d2a33]/10"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 text-xs">
+            <span className="inline-flex items-center gap-1 text-[#2d2a33]/60">
+              <Filter className="h-3.5 w-3.5" /> Filters:
+            </span>
+            <FilterChipGroup
+              label="Condition"
+              value={condition}
+              onChange={setCondition}
+              options={[
+                { v: "all", l: "All" },
+                { v: "episodic", l: "Episodic" },
+                { v: "chronic", l: "Chronic" },
+              ]}
+            />
+            <FilterChipGroup
+              label="Strength"
+              value={strengthFilter}
+              onChange={setStrengthFilter}
+              options={[
+                { v: "all", l: "All" },
+                ...STRENGTH_ROWS.map((s) => ({ v: s, l: s.replace(" in favor", "") })),
+              ]}
+            />
+            <FilterChipGroup
+              label="Class"
+              value={classFilter}
+              onChange={setClassFilter}
+              options={[
+                { v: "all", l: "All classes" },
+                ...DRUG_CLASSES.map((c) => ({ v: c, l: c })),
+              ]}
+            />
+            {(activeFilters > 0 || query) && (
+              <button
+                onClick={() => {
+                  setQuery("");
+                  setCondition("all");
+                  setStrengthFilter("all");
+                  setClassFilter("all");
+                }}
+                className="ml-auto rounded-full border border-[#c8391a]/25 bg-[#c8391a]/5 px-2.5 py-1 text-[11px] font-medium text-[#c8391a] hover:bg-[#c8391a]/10"
+              >
+                Reset
+              </button>
+            )}
+          </div>
+
+          <p className="text-[11px] text-[#2d2a33]/50">
+            {filtered.length} {filtered.length === 1 ? "entry" : "entries"} match
+          </p>
+        </div>
+
+        {showEpisodic && (
+          <>
+            <SubHeading label="Episodic migraine (Table 1.4)" />
+            <EvidenceMatrix
+              entries={episodicMatches}
+              onSelect={setSelected}
+              highlight={query.trim()}
+            />
+          </>
+        )}
+
+        {showChronic && (
+          <div className={showEpisodic ? "mt-6" : ""}>
+            <SubHeading label="Chronic migraine (Table 1.5)" />
+            <EvidenceMatrix
+              entries={chronicMatches}
+              onSelect={setSelected}
+              highlight={query.trim()}
+            />
+          </div>
+        )}
+
+        <CitationList citations={MATRIX_CITATIONS} className="mt-4" />
+      </Section>
+
+      <Sheet open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
+        <SheetContent className="w-full sm:max-w-md overflow-y-auto bg-[#f6f2ea]">
+          {selected && <EntryDetail entry={selected} />}
+        </SheetContent>
+      </Sheet>
+    </>
+  );
+}
+
+function FilterChipGroup({ label, value, onChange, options }) {
+  return (
+    <div className="inline-flex items-center gap-1 rounded-full bg-[#2d2a33]/5 p-0.5">
+      <span className="px-2 text-[10px] font-semibold uppercase tracking-wide text-[#2d2a33]/50">
+        {label}
+      </span>
+      {options.map((o) => (
+        <button
+          key={o.v}
+          onClick={() => onChange(o.v)}
+          className={`rounded-full px-2.5 py-1 text-[11px] font-medium transition ${
+            value === o.v
+              ? "bg-[#0b3d5c] text-white shadow-sm"
+              : "text-[#2d2a33]/70 hover:bg-white"
+          }`}
+        >
+          {o.l}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function EvidenceMatrix({ entries, onSelect, highlight }) {
+  const byCell = useMemo(() => {
+    const map = {};
+    for (const s of STRENGTH_ROWS) map[s] = {};
+    for (const s of STRENGTH_ROWS) for (const q of QUALITY_COLS) map[s][q] = [];
+    for (const e of entries) {
+      if (map[e.strength] && map[e.strength][e.quality]) {
+        map[e.strength][e.quality].push(e);
+      }
+    }
+    return map;
+  }, [entries]);
+
+  const empty = entries.length === 0;
+
   return (
     <div className="overflow-x-auto rounded-xl border border-[#2d2a33]/10 bg-white/60">
       <table className="w-full min-w-[720px] border-collapse text-xs">
@@ -605,7 +791,7 @@ function EvidenceMatrix({ matrix }) {
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => {
+          {STRENGTH_ROWS.map((row) => {
             const strong = row.startsWith("Strong");
             return (
               <tr key={row} className="border-t border-[#2d2a33]/10 align-top">
@@ -616,26 +802,138 @@ function EvidenceMatrix({ matrix }) {
                 >
                   {row}
                 </td>
-                {matrix[row].map((cell, i) => (
-                  <td key={i} className="p-2 text-[#2d2a33]/85">
-                    {cell.length === 0 ? (
-                      <span className="text-[#2d2a33]/30">—</span>
-                    ) : (
-                      <ul className="space-y-1 list-disc pl-4">
-                        {cell.map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
-                      </ul>
-                    )}
-                  </td>
-                ))}
+                {QUALITY_COLS.map((q) => {
+                  const cell = byCell[row][q];
+                  return (
+                    <td key={q} className="p-2 text-[#2d2a33]/85">
+                      {cell.length === 0 ? (
+                        <span className="text-[#2d2a33]/25">—</span>
+                      ) : (
+                        <ul className="space-y-1">
+                          {cell.map((e) => (
+                            <li key={e.id}>
+                              <button
+                                onClick={() => onSelect(e)}
+                                className="group inline-flex w-full items-start gap-1 rounded-md border border-transparent px-1.5 py-1 text-left hover:border-[#0b3d5c]/25 hover:bg-[#0b3d5c]/5"
+                              >
+                                <span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-[#0b3d5c]/50 group-hover:bg-[#0b3d5c]" />
+                                <span>{highlightText(e.label, highlight)}</span>
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </td>
+                  );
+                })}
               </tr>
             );
           })}
         </tbody>
       </table>
+      {empty && (
+        <div className="p-4 text-center text-xs text-[#2d2a33]/50">
+          No entries match. Try clearing filters or a different search term.
+        </div>
+      )}
     </div>
   );
 }
+
+function highlightText(text, q) {
+  if (!q) return text;
+  const idx = text.toLowerCase().indexOf(q.toLowerCase());
+  if (idx === -1) return text;
+  return (
+    <>
+      {text.slice(0, idx)}
+      <mark className="rounded bg-[#d69838]/40 px-0.5 text-[#2d2a33]">
+        {text.slice(idx, idx + q.length)}
+      </mark>
+      {text.slice(idx + q.length)}
+    </>
+  );
+}
+
+function EntryDetail({ entry }) {
+  const strong = entry.strength.startsWith("Strong");
+  return (
+    <div className="text-[#2d2a33]">
+      <SheetHeader className="text-left">
+        <div className="flex flex-wrap gap-1.5 mb-2">
+          <Tag color={entry.condition === "chronic" ? "#c8391a" : "#0b3d5c"}>
+            {entry.condition === "chronic" ? "Chronic migraine" : "Episodic migraine"}
+          </Tag>
+          <Tag color={strong ? "#4b8b6b" : "#d69838"}>{entry.strength}</Tag>
+          <Tag color="#0b3d5c">Quality: {entry.quality}</Tag>
+          <Tag color="#2d2a33">{entry.cls}</Tag>
+          <Tag color="#2d2a33">{entry.route}</Tag>
+        </div>
+        <SheetTitle className="text-xl">{entry.drug}</SheetTitle>
+        <SheetDescription className="text-[#2d2a33]/70">
+          {entry.label}
+        </SheetDescription>
+      </SheetHeader>
+
+      <div className="mt-5 space-y-4 text-sm">
+        <DetailBlock title="Dose">{entry.dose}</DetailBlock>
+        {entry.notes && (
+          <DetailBlock title="Clinical notes">{entry.notes}</DetailBlock>
+        )}
+        {entry.contra && (
+          <DetailBlock title="Contraindications" tone="danger">
+            {entry.contra}
+          </DetailBlock>
+        )}
+        {entry.adverse && (
+          <DetailBlock title="Key adverse effects" tone="warn">
+            {entry.adverse}
+          </DetailBlock>
+        )}
+        {entry.citations && entry.citations.length > 0 && (
+          <div>
+            <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-[#2d2a33]/50">
+              Citations
+            </p>
+            <CitationList citations={entry.citations} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Tag({ color, children }) {
+  return (
+    <span
+      className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold"
+      style={{
+        color,
+        backgroundColor: `${color}15`,
+        border: `1px solid ${color}40`,
+      }}
+    >
+      {children}
+    </span>
+  );
+}
+
+function DetailBlock({ title, tone, children }) {
+  const toneClass =
+    tone === "danger"
+      ? "border-[#c8391a]/25 bg-[#c8391a]/5 text-[#c8391a]"
+      : tone === "warn"
+      ? "border-[#d69838]/30 bg-[#d69838]/5 text-[#7a5312]"
+      : "border-[#2d2a33]/10 bg-white/70 text-[#2d2a33]/85";
+  return (
+    <div className={`rounded-lg border p-3 ${toneClass}`}>
+      <p className="mb-1 text-[10px] font-semibold uppercase tracking-wide opacity-80">
+        {title}
+      </p>
+      <p className="text-sm leading-relaxed">{children}</p>
+    </div>
+  );
+}
+
 
 
