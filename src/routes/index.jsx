@@ -184,6 +184,59 @@ function Index() {
         </div>
       </section>
 
+      {/* QUESTION PREVIEW */}
+      <section className="mx-auto max-w-3xl px-4 pb-10">
+        <div className="clay-card p-5 md:p-6">
+          <button
+            onClick={() => setShowPreview((v) => !v)}
+            className="w-full flex items-center justify-between gap-3 text-left"
+            aria-expanded={showPreview}
+          >
+            <div className="flex items-center gap-3">
+              <div className="feature-icon" style={{ width: 36, height: 36, borderRadius: 12 }}>
+                <BookOpen className="h-4.5 w-4.5" strokeWidth={2.25} />
+              </div>
+              <div>
+                <h3 className="font-semibold text-base leading-tight">Peek at the questions</h3>
+                <p className="text-xs text-[#1a1330]/55">See all 5 before you start — no commitment.</p>
+              </div>
+            </div>
+            <span className="text-xs font-semibold text-[#e84393] shrink-0">
+              {showPreview ? "Hide" : "Preview"}
+            </span>
+          </button>
+
+          {showPreview && (
+            <ol className="mt-5 space-y-2.5 animate-step-in">
+              {STEPS.map((s, i) => (
+                <li
+                  key={s.id}
+                  className="flex items-start gap-3 p-3 rounded-2xl bg-white/50 border border-white/60"
+                >
+                  <div className="feature-icon shrink-0" style={{ width: 32, height: 32, borderRadius: 10 }}>
+                    <s.icon className="h-4 w-4" strokeWidth={2.25} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold leading-tight">
+                      <span className="text-[#1a1330]/40 mr-1.5">{i + 1}.</span>
+                      {s.title}
+                    </p>
+                    <p className="text-xs text-[#1a1330]/55 mt-1">
+                      {s.options.map((o) => o.label).join(" · ")}
+                    </p>
+                  </div>
+                </li>
+              ))}
+              <li className="pt-2 flex justify-end">
+                <a href="#diagnose" className="sunset-btn text-sm" style={{ padding: "0.55rem 1.1rem" }}>
+                  Start the check-in <ArrowRight className="h-4 w-4" />
+                </a>
+              </li>
+            </ol>
+          )}
+        </div>
+      </section>
+
       {/* CHECK-IN */}
       <section className="mx-auto max-w-3xl px-4 pb-12">
         <div className="clay-alert warning mb-6 text-sm">
