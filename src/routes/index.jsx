@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Brain, Shield, AlertTriangle, CheckCircle, ArrowRight, Stethoscope } from "lucide-react";
 import { diagnose, formatDifferentialResults } from "../utils/diagnostic-engine";
