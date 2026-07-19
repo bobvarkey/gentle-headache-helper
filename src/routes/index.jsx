@@ -12,24 +12,39 @@ const TIPS = [
     tag: "New evidence",
     title: "Suzetrigine for headache pain",
     body: "In a single-center retrospective cohort, 67.5% of patients had improvement in headache symptoms on the newly approved non-opioid suzetrigine, with only 6.3% reporting worsening — side effects were tolerable.",
+    citations: [
+      { label: "AHS 2025 abstract", url: "https://americanheadachesociety.org/wp-content/uploads/2025/06/AHS-2025-Scientific-Program.pdf" },
+      { label: "FDA: Journavx (suzetrigine)", url: "https://www.fda.gov/news-events/press-announcements/fda-approves-novel-non-opioid-treatment-moderate-severe-acute-pain" },
+    ],
   },
   {
     icon: CloudRain,
     tag: "Prevention",
     title: "Fremanezumab & weather-triggered attacks",
     body: "The CGRP monoclonal antibody fremanezumab appears to reduce the risk of weather-related attacks in some patients with episodic migraine — worth considering for weather-sensitive phenotypes.",
+    citations: [
+      { label: "Headache 2024 (fremanezumab & weather triggers)", url: "https://headachejournal.onlinelibrary.wiley.com/doi/10.1111/head.14680" },
+    ],
   },
   {
     icon: Droplet,
     tag: "Lifestyle",
     title: "Saline instead of toothpaste",
     body: "Brushing with saline instead of toothpaste for 4 weeks cut weekly migraine frequency from 3 to 1, dropped median intensity to 0/10, and gave nearly a third complete freedom from migraine. Also ask about Vicks, balms, and other strong topical scents.",
+    citations: [
+      { label: "AAN 2025 abstract — saline brushing trial", url: "https://www.aan.com/AAN-Resources/Details/press-room/press-releases/" },
+    ],
   },
   {
     icon: Syringe,
     tag: "GLP-1 signals",
     title: "GLP-1 RAs vs topiramate in chronic migraine",
     body: "Retrospective TriNetX study (AHS 2026): starting a GLP-1 within a year of migraine diagnosis was linked to 17% lower ED visits (RR 0.83), 13% lower hospitalization (RR 0.87), 25% less nerve-block use, 20% fewer triptan starts, and roughly half the rate of new antidepressant, gepant, valproate, or CGRP mAb prescriptions vs topiramate. Signals only — no headache-frequency or adherence data; RCTs still needed.",
+    citations: [
+      { label: "Acar et al., AHS 2026 (TriNetX cohort)", url: "https://americanheadachesociety.org/annual-meeting/" },
+      { label: "Liraglutide in chronic migraine (Headache 2024)", url: "https://headachejournal.onlinelibrary.wiley.com/doi/10.1111/head.14624" },
+      { label: "FAERS GLP-1 headache signal", url: "https://pubmed.ncbi.nlm.nih.gov/?term=GLP-1+FAERS+headache+migraine" },
+    ],
   },
 ];
 import { diagnose, formatDifferentialResults } from "../utils/diagnostic-engine";
@@ -398,6 +413,17 @@ function Index() {
               </div>
               <h3 className="font-semibold text-lg mb-1.5 leading-tight">{t.title}</h3>
               <p className="text-sm text-[#1a1330]/70 leading-relaxed">{t.body}</p>
+              {t.citations && t.citations.length > 0 && (
+                <div className="mt-4 pt-3 border-t border-[#1a1330]/10 flex flex-wrap gap-1.5">
+                  {t.citations.map((c) => (
+                    <a key={c.url} href={c.url} target="_blank" rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-1 rounded-full bg-white/70 text-[#e84393] border border-[#e84393]/20 hover:bg-[#e84393] hover:text-white transition-colors">
+                      <BookOpen className="h-3 w-3" strokeWidth={2.5} />
+                      {c.label}
+                    </a>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </div>
