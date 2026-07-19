@@ -591,6 +591,21 @@ function TxCard({ tx, tone }) {
           <span className="font-semibold">Adverse effects:</span> {tx.adverse}
         </p>
       )}
+      {tx.eligibility && tx.eligibility.length > 0 && (
+        <div className="mt-3 rounded-lg border border-[#4b8b6b]/30 bg-[#4b8b6b]/8 p-3">
+          <p className="text-xs font-semibold text-[#2f5c46] mb-1.5">
+            {tx.eligibilityTitle || "Eligibility checklist"}
+          </p>
+          <ul className="space-y-1">
+            {tx.eligibility.map((item) => (
+              <li key={item} className="flex items-start gap-2 text-xs text-[#2d2a33]/80">
+                <span className="mt-0.5 inline-block h-3.5 w-3.5 rounded border border-[#4b8b6b]/60 shrink-0" aria-hidden="true" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       {tx.notes && <p className="text-xs text-[#2d2a33]/60 mt-1 italic">{tx.notes}</p>}
     </div>
   );
