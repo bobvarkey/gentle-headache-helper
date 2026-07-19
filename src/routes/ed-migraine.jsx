@@ -160,6 +160,49 @@ const LEVEL_C = [
       "Fasting per local sedation policy; IV access secured",
       "Known driver arranged; no driving or safety-critical tasks for 24 h",
     ],
+    readinessTitle: "Pre-infusion readiness (each session)",
+    readinessGroups: [
+      {
+        heading: "Baseline tests & workup",
+        items: [
+          "12-lead ECG within 12 months (repeat if new cardiac symptoms); no QTc prolongation or significant arrhythmia",
+          "Baseline vitals recorded: BP, HR, RR, SpO₂, temperature",
+          "LFTs and renal panel within 3 months; TFTs if clinically indicated",
+          "Urine β-hCG on day 1 for people of childbearing potential",
+          "Urine drug screen if history suggests substance use",
+          "Weight recorded today for accurate mg/kg dosing",
+          "Medication reconciliation: hold benzodiazepines and stimulants where possible; review serotonergic and antihypertensive agents",
+        ],
+      },
+      {
+        heading: "Consent & psychological readiness",
+        items: [
+          "Written informed consent signed for KIT protocol (risks, benefits, dissociation, off-label use)",
+          "Patient understands 5-day daily schedule and can commit",
+          "PHQ-9 / GAD-7 baseline documented; suicidality screen negative or safety plan in place",
+          "Support person contact recorded",
+        ],
+      },
+      {
+        heading: "Day-of readiness",
+        items: [
+          "NPO per local sedation policy (typically 6 h solids / 2 h clears)",
+          "IV access patent; ondansetron 8 mg IV given for nausea prophylaxis",
+          "Resuscitation trolley, suction, and reversal agents checked and in room",
+          "Monitoring set: continuous ECG, SpO₂, BP cuff cycling every 15 min",
+        ],
+      },
+      {
+        heading: "Driver & discharge arrangements",
+        items: [
+          "Named driver confirmed and present at discharge (no taxi/rideshare alone)",
+          "Responsible adult available at home for the evening",
+          "Patient agrees: no driving, machinery, legal or financial decisions for 24 h",
+          "Written post-infusion instructions given; 24/7 contact number provided",
+          "Next session date/time confirmed and added to patient record",
+        ],
+      },
+    ],
     notes: "Infusion suite with full resuscitation equipment. Continuous ECG, SpO₂, and BP every 15 min. Stop KIT and call the medical emergency team for new bradycardia, tachycardia, atrial fibrillation, symptomatic hypertension/hypotension, or any vital-sign change >20% from baseline.",
   },
   {
