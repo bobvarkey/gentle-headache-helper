@@ -48,34 +48,119 @@ const LEVEL_A = [
   {
     name: "Prochlorperazine",
     route: "IV",
-    dose: "10 mg IV over 2 min",
-    notes: "Co-administer diphenhydramine 25 mg IV to reduce akathisia.",
+    dose: "10 mg IV over 2 min (may repeat once at 30 min; max 20 mg)",
+    contra: "QT prolongation, Parkinson disease, known phenothiazine hypersensitivity, children <2 y.",
+    adverse: "Akathisia, dystonia, sedation, hypotension, QT prolongation.",
+    notes: "Pre-treat with diphenhydramine 25 mg IV to reduce akathisia. Infuse slowly to limit hypotension.",
   },
   {
     name: "Greater Occipital Nerve Block",
     route: "Injection",
-    dose: "Bupivacaine 0.5% or lidocaine 1–2%, 2–3 mL per side",
-    notes: "Bilateral; landmark 1/3 distance from occipital protuberance to mastoid.",
+    dose: "Bupivacaine 0.5% or lidocaine 1–2%, 2–3 mL per side (bilateral)",
+    contra: "Local infection or skull defect at injection site, local anesthetic allergy, coagulopathy.",
+    adverse: "Local pain, transient dizziness, alopecia (with steroid), rare intravascular injection.",
+    notes: "Landmark: 1/3 the distance from occipital protuberance to mastoid; aspirate before injection.",
   },
 ];
 
 const LEVEL_B = [
-  { name: "Metoclopramide", route: "IV", dose: "10 mg IV over 2 min (may repeat)" },
-  { name: "Sumatriptan", route: "SC", dose: "6 mg SC" },
-  { name: "Ketorolac", route: "IV", dose: "15–30 mg IV" },
-  { name: "Dexketoprofen", route: "IV", dose: "50 mg IV" },
-  { name: "Supraorbital Nerve Block", route: "Injection", dose: "Lidocaine/bupivacaine 1–2 mL per side" },
+  {
+    name: "Metoclopramide",
+    route: "IV",
+    dose: "10 mg IV over ≥2 min (may repeat q30 min; max 30 mg)",
+    contra: "GI obstruction/perforation, pheochromocytoma, seizure disorder, Parkinson disease.",
+    adverse: "Akathisia, dystonia, drowsiness, diarrhea, rare NMS.",
+  },
+  {
+    name: "Sumatriptan",
+    route: "SC",
+    dose: "6 mg SC (may repeat once after 1 h; max 12 mg/24 h)",
+    contra: "CAD, uncontrolled HTN, prior stroke/TIA, hemiplegic or basilar migraine, pregnancy, ergot/MAOI within 24 h.",
+    adverse: "Chest/throat tightness, flushing, paresthesias, injection-site reaction.",
+  },
+  {
+    name: "Ketorolac",
+    route: "IV",
+    dose: "15–30 mg IV (max 60 mg/day; 15 mg if >65 y or <50 kg)",
+    contra: "Active bleeding, peptic ulcer, renal impairment, NSAID allergy, 3rd-trimester pregnancy, perioperative CABG.",
+    adverse: "GI bleeding, AKI, platelet dysfunction, bronchospasm.",
+  },
+  {
+    name: "Dexketoprofen",
+    route: "IV",
+    dose: "50 mg IV over 15 min (may repeat q8h; max 150 mg/day)",
+    contra: "Same NSAID class contraindications as ketorolac.",
+    adverse: "Dyspepsia, AKI, bronchospasm, bleeding risk.",
+  },
+  {
+    name: "Supraorbital Nerve Block",
+    route: "Injection",
+    dose: "Lidocaine 1–2% or bupivacaine 0.5%, 1–2 mL per side",
+    contra: "Local infection, anesthetic allergy, coagulopathy.",
+    adverse: "Local bruising, transient forehead numbness, rare vascular injection.",
+  },
 ];
 
 const LEVEL_C = [
-  "Acetylsalicylic acid IV",
-  "Chlorpromazine IV",
-  "Dexamethasone IV (10 mg — reduces 24–72 h recurrence)",
-  "Diclofenac IM",
-  "Dipyrone IV",
-  "Droperidol IM",
-  "Haloperidol IV",
-  "Valproate IV",
+  {
+    name: "Dexamethasone",
+    route: "IV",
+    dose: "10 mg IV single dose (range 4–24 mg) at discharge",
+    contra: "Systemic fungal infection, live-vaccine administration, uncontrolled diabetes.",
+    adverse: "Transient hyperglycemia, insomnia, facial flushing, mood change.",
+    notes: "Reduces 24–72 h headache recurrence; give once, not scheduled.",
+  },
+  {
+    name: "Chlorpromazine",
+    route: "IV",
+    dose: "0.1 mg/kg IV (typically 12.5 mg) q15 min; max 37.5 mg",
+    contra: "QT prolongation, hypotension, Parkinson disease, phenothiazine allergy.",
+    adverse: "Orthostatic hypotension, sedation, EPS, QT prolongation.",
+    notes: "Pre-load 500 mL NS to blunt hypotension.",
+  },
+  {
+    name: "Haloperidol",
+    route: "IV",
+    dose: "2.5–5 mg IV in 100 mL NS over 15 min",
+    contra: "QT prolongation, Parkinson disease, severe CNS depression.",
+    adverse: "Akathisia, dystonia, QT prolongation, sedation.",
+  },
+  {
+    name: "Droperidol",
+    route: "IM/IV",
+    dose: "2.5 mg IM/IV (may repeat once)",
+    contra: "QTc >450 ms, known arrhythmia. Black-box warning for QT.",
+    adverse: "Akathisia, sedation, hypotension, QT prolongation.",
+  },
+  {
+    name: "Valproate sodium",
+    route: "IV",
+    dose: "500–1000 mg IV over 10 min",
+    contra: "Pregnancy, hepatic disease, urea-cycle disorders, thrombocytopenia.",
+    adverse: "Dizziness, nausea, hepatotoxicity, teratogenicity.",
+  },
+  {
+    name: "Acetylsalicylic acid",
+    route: "IV",
+    dose: "1000 mg IV",
+    contra: "Active bleeding, peptic ulcer, aspirin allergy, children (Reye).",
+    adverse: "GI bleeding, bronchospasm, tinnitus.",
+  },
+  {
+    name: "Diclofenac",
+    route: "IM",
+    dose: "75 mg IM",
+    contra: "NSAID class contraindications (see ketorolac).",
+    adverse: "Injection-site pain, GI upset, AKI.",
+  },
+  {
+    name: "Dipyrone (metamizole)",
+    route: "IV",
+    dose: "1–2 g IV over 15 min",
+    contra: "Prior agranulocytosis, G6PD deficiency, pregnancy (3rd trimester).",
+    adverse: "Rare agranulocytosis, hypotension with rapid infusion, hypersensitivity.",
+    notes: "Not available in the US.",
+  },
 ];
 
 const AVOID = [
@@ -312,13 +397,12 @@ function EDMigraine() {
             <div>
               <StepHeader n={4} title="Refractory migraine — Level C options" tone="warn" />
               <p className="text-sm mb-3 text-[#2d2a33]/70">
-                Consider (single agent, weigh side-effects):
+                Choose a single agent based on comorbidities and prior response. Do not stack multiple
+                QT-prolonging or dopamine-antagonist drugs.
               </p>
-              <div className="flex flex-wrap gap-2 mb-5">
-                {LEVEL_C.map((c) => (
-                  <span key={c} className="clay-pill">
-                    {c}
-                  </span>
+              <div className="grid sm:grid-cols-2 gap-3 mb-5">
+                {LEVEL_C.map((tx) => (
+                  <TxCard key={tx.name} tx={tx} tone="c" />
                 ))}
               </div>
               <p className="text-sm mb-3">
@@ -431,7 +515,12 @@ function StepHeader({ n, title, tone }) {
 }
 
 function TxCard({ tx, tone }) {
-  const border = tone === "a" ? "border-[#4b8b6b]/40" : "border-[#d69838]/40";
+  const border =
+    tone === "a"
+      ? "border-[#4b8b6b]/40"
+      : tone === "c"
+      ? "border-[#c8391a]/30"
+      : "border-[#d69838]/40";
   return (
     <div className={`rounded-xl border ${border} bg-white/60 p-4`}>
       <div className="flex items-center gap-2 mb-1">
@@ -440,8 +529,18 @@ function TxCard({ tx, tone }) {
           {tx.name} <span className="text-[#2d2a33]/60 font-normal">({tx.route})</span>
         </p>
       </div>
-      <p className="text-sm text-[#2d2a33]/80">{tx.dose}</p>
-      {tx.notes && <p className="text-xs text-[#2d2a33]/60 mt-1">{tx.notes}</p>}
+      <p className="text-sm text-[#2d2a33]/80"><span className="font-medium">Dose:</span> {tx.dose}</p>
+      {tx.contra && (
+        <p className="text-xs text-[#c8391a] mt-1">
+          <span className="font-semibold">Contraindications:</span> {tx.contra}
+        </p>
+      )}
+      {tx.adverse && (
+        <p className="text-xs text-[#7a5312] mt-1">
+          <span className="font-semibold">Adverse effects:</span> {tx.adverse}
+        </p>
+      )}
+      {tx.notes && <p className="text-xs text-[#2d2a33]/60 mt-1 italic">{tx.notes}</p>}
     </div>
   );
 }
