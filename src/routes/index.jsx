@@ -3,8 +3,35 @@ import { useEffect, useMemo, useState } from "react";
 import {
   Brain, Shield, AlertTriangle, CheckCircle2, ArrowRight, ArrowLeft,
   Stethoscope, Sparkles, Clock, MapPin, Waves, Sun, Flame, RotateCcw,
-  Activity, Pill, Siren, BookOpen, Zap,
+  Activity, Pill, Siren, BookOpen, Zap, Lightbulb, Droplet, CloudRain, Syringe, Sparkle,
 } from "lucide-react";
+
+const TIPS = [
+  {
+    icon: Sparkle,
+    tag: "New evidence",
+    title: "Suzetrigine for headache pain",
+    body: "In a single-center retrospective cohort, 67.5% of patients had improvement in headache symptoms on the newly approved non-opioid suzetrigine, with only 6.3% reporting worsening — side effects were tolerable.",
+  },
+  {
+    icon: CloudRain,
+    tag: "Prevention",
+    title: "Fremanezumab & weather-triggered attacks",
+    body: "The CGRP monoclonal antibody fremanezumab appears to reduce the risk of weather-related attacks in some patients with episodic migraine — worth considering for weather-sensitive phenotypes.",
+  },
+  {
+    icon: Droplet,
+    tag: "Lifestyle",
+    title: "Saline instead of toothpaste",
+    body: "Brushing with saline instead of toothpaste for 4 weeks cut weekly migraine frequency from 3 to 1, dropped median intensity to 0/10, and gave nearly a third complete freedom from migraine. Also ask about Vicks, balms, and other strong topical scents.",
+  },
+  {
+    icon: Syringe,
+    tag: "GLP-1 signals",
+    title: "GLP-1 RAs vs topiramate in chronic migraine",
+    body: "Retrospective TriNetX study (AHS 2026): starting a GLP-1 within a year of migraine diagnosis was linked to 17% lower ED visits (RR 0.83), 13% lower hospitalization (RR 0.87), 25% less nerve-block use, 20% fewer triptan starts, and roughly half the rate of new antidepressant, gepant, valproate, or CGRP mAb prescriptions vs topiramate. Signals only — no headache-frequency or adherence data; RCTs still needed.",
+  },
+];
 import { diagnose, formatDifferentialResults } from "../utils/diagnostic-engine";
 import heroImage from "../assets/hero-headache-glow.png.asset.json";
 import { SkeletonResults } from "../components/Skeleton";
@@ -350,7 +377,34 @@ function Index() {
         </div>
       </section>
 
+      {/* RESEARCH TIPS */}
+      <section id="tips" className="mx-auto max-w-6xl px-4 pb-20 scroll-mt-24">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 border border-white/70 text-xs font-semibold uppercase tracking-wider text-[#e84393] mb-3">
+            <Lightbulb className="h-3.5 w-3.5" strokeWidth={2.5} /> Tips & fresh evidence
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold mb-2">
+            Headache & migraine <span className="text-sunset">notes</span>
+          </h2>
+          <p className="text-[#1a1330]/60 max-w-lg mx-auto">Bite-size updates from recent studies and meetings — worth remembering in clinic.</p>
+        </div>
+        <div className="grid md:grid-cols-2 gap-4">
+          {TIPS.map((t, i) => (
+            <div key={t.title} className="feature-card animate-step-in"
+              style={{ animationDelay: `${i * 70}ms`, animationFillMode: "both" }}>
+              <div className="flex items-start justify-between mb-3">
+                <div className="feature-icon"><t.icon className="h-5 w-5" strokeWidth={2.25} /></div>
+                <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-full bg-white/70 text-[#e84393] border border-[#e84393]/20">{t.tag}</span>
+              </div>
+              <h3 className="font-semibold text-lg mb-1.5 leading-tight">{t.title}</h3>
+              <p className="text-sm text-[#1a1330]/70 leading-relaxed">{t.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <footer className="py-10 mt-4" style={{ background: "linear-gradient(180deg, transparent, rgba(26,19,48,0.05))" }}>
+
         <div className="mx-auto max-w-4xl px-4 text-center text-sm text-[#1a1330]/60">
           <p className="font-semibold text-[#1a1330]">Mira</p>
           <p className="mt-1">Grounded in ICHD-3, AHS 2025, and NICE CG150.</p>
