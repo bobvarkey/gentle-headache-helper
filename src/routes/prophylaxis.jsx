@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Brain,
@@ -10,7 +11,17 @@ import {
   RotateCcw,
   ExternalLink,
   Table as TableIcon,
+  Search,
+  X,
+  Filter,
 } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 
 export const Route = createFileRoute("/prophylaxis")({
   head: () => ({
@@ -168,63 +179,184 @@ const STOPPING_CITATIONS = [
 // Evidence matrices (International guideline — Table 1.4 episodic, Table 1.5 chronic).
 // Rows = strength of recommendation, columns = quality of evidence.
 const QUALITY_COLS = ["High", "Moderate", "Low", "Very low"];
+const STRENGTH_ROWS = ["Strong in favor", "Weak in favor"];
+const DRUG_CLASSES = ["CGRP", "Gepant", "Beta-blocker", "Antiepileptic", "TCA", "ARB/ACEi", "Toxin", "Other"];
 
-const EPISODIC_MATRIX = {
-  "Strong in favor": [
-    [
-      "Atogepant 60 mg oral",
-      "Erenumab 70 & 140 mg SC every 4 weeks",
-      "Fremanezumab 225 mg monthly / 675 mg quarterly SC",
-      "Galcanezumab 120 mg monthly SC",
-    ],
-    ["Topiramate 100 & 200 mg oral", "Eptinezumab 100 & 300 mg IV quarterly"],
-    [],
-    [],
-  ],
-  "Weak in favor": [
-    [],
-    ["Amitriptyline 25 mg oral", "Candesartan 16 mg oral"],
-    [
-      "Topiramate 50 mg oral",
-      "Lisinopril 20 mg oral",
-      "Propranolol 160 mg oral",
-    ],
-    [
-      "Valproate 750 & 1500 mg oral",
-      "Lamotrigine 50 mg oral",
-      "Levetiracetam 1000 mg oral",
-    ],
-  ],
-};
+// Flat entries drive both matrices AND the detail sheet.
+const MATRIX_ENTRIES = [
+  // ===== EPISODIC — STRONG =====
+  { id: "e-atogepant", condition: "episodic", strength: "Strong in favor", quality: "High",
+    drug: "Atogepant", label: "Atogepant 60 mg oral", cls: "Gepant", route: "Oral",
+    dose: "60 mg PO once daily.",
+    notes: "Oral small-molecule CGRP receptor antagonist. Onset within first month; assess at 12 weeks.",
+    adverse: "Nausea, constipation, fatigue, decreased appetite.",
+    contra: "Severe hepatic impairment; strong CYP3A4 inducers reduce efficacy.",
+    citations: [{ label: "NICE TA973 — atogepant", href: "https://www.nice.org.uk/guidance/ta973" }] },
+  { id: "e-erenumab", condition: "episodic", strength: "Strong in favor", quality: "High",
+    drug: "Erenumab", label: "Erenumab 70 & 140 mg SC every 4 weeks", cls: "CGRP", route: "SC",
+    dose: "70 mg or 140 mg SC every 4 weeks (NICE funds 140 mg).",
+    notes: "Anti-CGRP receptor mAb. Review response at 12 weeks; stop if <50% reduction (episodic).",
+    adverse: "Constipation (may be severe), injection-site reactions, hypertension, muscle spasm.",
+    contra: "Hypersensitivity; caution in severe cardiovascular disease.",
+    citations: [{ label: "NICE TA682 — erenumab", href: "https://www.nice.org.uk/guidance/ta682" }] },
+  { id: "e-fremanezumab", condition: "episodic", strength: "Strong in favor", quality: "High",
+    drug: "Fremanezumab", label: "Fremanezumab 225 mg monthly / 675 mg quarterly SC", cls: "CGRP", route: "SC",
+    dose: "225 mg SC monthly, or 675 mg SC every 3 months.",
+    notes: "Anti-CGRP ligand mAb. Stop at 12 weeks if response inadequate.",
+    adverse: "Injection-site reactions, hypersensitivity.",
+    contra: "Hypersensitivity to CGRP mAbs.",
+    citations: [{ label: "NICE TA764 — fremanezumab", href: "https://www.nice.org.uk/guidance/ta764" }] },
+  { id: "e-galcanezumab", condition: "episodic", strength: "Strong in favor", quality: "High",
+    drug: "Galcanezumab", label: "Galcanezumab 120 mg monthly SC", cls: "CGRP", route: "SC",
+    dose: "240 mg SC loading, then 120 mg SC monthly.",
+    notes: "Anti-CGRP ligand mAb. Reassess at 12 weeks.",
+    adverse: "Injection-site reactions, hypersensitivity, constipation.",
+    contra: "Hypersensitivity to CGRP mAbs.",
+    citations: [{ label: "NICE TA659 — galcanezumab", href: "https://www.nice.org.uk/guidance/ta659" }] },
+  { id: "e-topiramate-high", condition: "episodic", strength: "Strong in favor", quality: "Moderate",
+    drug: "Topiramate", label: "Topiramate 100 & 200 mg oral", cls: "Antiepileptic", route: "Oral",
+    dose: "Target 100 mg/day (some evidence up to 200 mg/day); titrate 25 mg/week.",
+    notes: "Follow MHRA 2024 Pregnancy Prevention Programme requirements.",
+    adverse: "Paraesthesia, cognitive slowing, weight loss, mood change, nephrolithiasis, teratogenicity.",
+    contra: "Pregnancy/childbearing potential without PPP; nephrolithiasis; narrow-angle glaucoma.",
+    citations: [{ label: "MHRA — topiramate safety measures", href: "https://www.gov.uk/drug-safety-update/topiramate-topamax-introduction-of-new-safety-measures-including-a-pregnancy-prevention-programme" }] },
+  { id: "e-eptinezumab", condition: "episodic", strength: "Strong in favor", quality: "Moderate",
+    drug: "Eptinezumab", label: "Eptinezumab 100 & 300 mg IV quarterly", cls: "CGRP", route: "IV",
+    dose: "100 mg IV every 12 weeks (may increase to 300 mg).",
+    notes: "Only IV CGRP mAb — useful when adherence to SC dosing is a barrier.",
+    adverse: "Nasopharyngitis, infusion reactions, hypersensitivity.",
+    contra: "Hypersensitivity to CGRP mAbs.",
+    citations: [{ label: "NICE TA871 — eptinezumab", href: "https://www.nice.org.uk/guidance/ta871" }] },
+  // ===== EPISODIC — WEAK =====
+  { id: "e-amitriptyline", condition: "episodic", strength: "Weak in favor", quality: "Moderate",
+    drug: "Amitriptyline", label: "Amitriptyline 25 mg oral", cls: "TCA", route: "Oral",
+    dose: "10 mg PO nocte, titrate to 25–75 mg (usual 25–50 mg).",
+    notes: "Off-label for migraine; useful with comorbid tension-type headache or insomnia.",
+    adverse: "Sedation, dry mouth, constipation, weight gain, orthostatic hypotension, QT prolongation.",
+    contra: "Recent MI, arrhythmias, severe hepatic impairment, mania, concurrent MAOI.",
+    citations: [{ label: "NICE CG150 §1.3.7", href: "https://www.nice.org.uk/guidance/cg150/chapter/Recommendations#migraine-2" }] },
+  { id: "e-candesartan", condition: "episodic", strength: "Weak in favor", quality: "Moderate",
+    drug: "Candesartan", label: "Candesartan 16 mg oral", cls: "ARB/ACEi", route: "Oral",
+    dose: "16 mg PO once daily (start 4–8 mg, titrate).",
+    notes: "Off-label; consider if propranolol contraindicated or when hypertension coexists.",
+    adverse: "Dizziness, hypotension, hyperkalaemia, renal impairment.",
+    contra: "Pregnancy, bilateral renal artery stenosis, severe hepatic impairment.",
+    citations: [{ label: "EHF/EAN guideline", href: "https://thejournalofheadacheandpain.biomedcentral.com/articles/10.1186/s10194-023-01541-0" }] },
+  { id: "e-topiramate-low", condition: "episodic", strength: "Weak in favor", quality: "Low",
+    drug: "Topiramate", label: "Topiramate 50 mg oral", cls: "Antiepileptic", route: "Oral",
+    dose: "50 mg/day — lower dose option when 100 mg not tolerated.",
+    notes: "Same MHRA PPP requirements apply.",
+    adverse: "Paraesthesia, cognitive slowing, weight loss, mood change.",
+    contra: "Pregnancy without PPP; nephrolithiasis.",
+    citations: [{ label: "MHRA — topiramate safety measures", href: "https://www.gov.uk/drug-safety-update/topiramate-topamax-introduction-of-new-safety-measures-including-a-pregnancy-prevention-programme" }] },
+  { id: "e-lisinopril", condition: "episodic", strength: "Weak in favor", quality: "Low",
+    drug: "Lisinopril", label: "Lisinopril 20 mg oral", cls: "ARB/ACEi", route: "Oral",
+    dose: "20 mg PO once daily (start 10 mg).",
+    notes: "Off-label; consider with comorbid hypertension.",
+    adverse: "Dry cough, hyperkalaemia, angio-oedema, hypotension.",
+    contra: "Pregnancy, angio-oedema history, bilateral renal artery stenosis.",
+    citations: [{ label: "EHF/EAN guideline", href: "https://thejournalofheadacheandpain.biomedcentral.com/articles/10.1186/s10194-023-01541-0" }] },
+  { id: "e-propranolol", condition: "episodic", strength: "Weak in favor", quality: "Low",
+    drug: "Propranolol", label: "Propranolol 160 mg oral", cls: "Beta-blocker", route: "Oral",
+    dose: "Target 160 mg/day (range 80–240 mg/day) in divided doses.",
+    notes: "Screen for depression/self-harm risk; MHRA flagged overdose toxicity.",
+    adverse: "Fatigue, cold extremities, bradycardia, bronchospasm, sleep disturbance.",
+    contra: "Asthma, uncontrolled heart failure, bradycardia, heart block, hypotension, Raynaud's.",
+    citations: [{ label: "MHRA — propranolol overdose", href: "https://www.gov.uk/drug-safety-update/propranolol-risk-of-serious-harm-and-death-in-overdose" }] },
+  { id: "e-valproate", condition: "episodic", strength: "Weak in favor", quality: "Very low",
+    drug: "Valproate", label: "Valproate 750 & 1500 mg oral", cls: "Antiepileptic", route: "Oral",
+    dose: "750–1500 mg/day in divided doses.",
+    notes: "MHRA: contraindicated in anyone of childbearing potential unless Pregnancy Prevention Programme met; new patients <55 need two-specialist sign-off.",
+    adverse: "Weight gain, tremor, hair loss, hepatotoxicity, thrombocytopenia, teratogenicity.",
+    contra: "Pregnancy, hepatic impairment, urea cycle disorders, mitochondrial disease.",
+    citations: [{ label: "MHRA — valproate", href: "https://www.gov.uk/drug-safety-update/valproate-medicines-organisational-and-clinical-guidance-on-new-regulatory-measures-effective-from-31-january-2024" }] },
+  { id: "e-lamotrigine", condition: "episodic", strength: "Weak in favor", quality: "Very low",
+    drug: "Lamotrigine", label: "Lamotrigine 50 mg oral", cls: "Antiepileptic", route: "Oral",
+    dose: "50 mg/day; slow titration to reduce rash risk.",
+    notes: "Some evidence for migraine with aura specifically.",
+    adverse: "Rash (including Stevens–Johnson), dizziness, diplopia, headache.",
+    contra: "Hypersensitivity; caution with valproate (increases levels).",
+    citations: [{ label: "EHF/EAN guideline", href: "https://thejournalofheadacheandpain.biomedcentral.com/articles/10.1186/s10194-023-01541-0" }] },
+  { id: "e-levetiracetam", condition: "episodic", strength: "Weak in favor", quality: "Very low",
+    drug: "Levetiracetam", label: "Levetiracetam 1000 mg oral", cls: "Antiepileptic", route: "Oral",
+    dose: "1000 mg/day in divided doses.",
+    notes: "Limited evidence; consider only if better-supported options unsuitable.",
+    adverse: "Somnolence, irritability, mood change, behavioural disturbance.",
+    contra: "Hypersensitivity; caution with psychiatric history.",
+    citations: [{ label: "EHF/EAN guideline", href: "https://thejournalofheadacheandpain.biomedcentral.com/articles/10.1186/s10194-023-01541-0" }] },
 
-const CHRONIC_MATRIX = {
-  "Strong in favor": [
-    [
-      "OnabotulinumtoxinA 155–195 IU IM",
-      "Atogepant 60 mg oral",
-      "Eptinezumab 100 & 300 mg IV quarterly",
-      "Fremanezumab 675 mg quarterly SC",
-      "Galcanezumab 120 mg monthly SC",
-    ],
-    [
-      "Erenumab 70 & 140 mg SC every 4 weeks",
-      "Fremanezumab 225 mg monthly SC",
-    ],
-    [],
-    [],
-  ],
-  "Weak in favor": [
-    [],
-    [],
-    ["Topiramate 200 mg oral"],
-    ["Topiramate 50 mg oral"],
-  ],
-};
+  // ===== CHRONIC — STRONG =====
+  { id: "c-botox", condition: "chronic", strength: "Strong in favor", quality: "High",
+    drug: "OnabotulinumtoxinA", label: "OnabotulinumtoxinA 155–195 IU IM", cls: "Toxin", route: "IM",
+    dose: "155–195 units IM across 31–39 sites (PREEMPT protocol) every 12 weeks.",
+    notes: "Chronic migraine only (≥15 headache days/month, ≥8 migrainous). Stop if <30% reduction after 2 cycles.",
+    adverse: "Neck pain, muscle weakness, ptosis, injection-site pain, headache.",
+    contra: "Infection at sites; neuromuscular junction disorders; pregnancy.",
+    citations: [{ label: "NICE TA260 — botulinum toxin A", href: "https://www.nice.org.uk/guidance/ta260" }] },
+  { id: "c-atogepant", condition: "chronic", strength: "Strong in favor", quality: "High",
+    drug: "Atogepant", label: "Atogepant 60 mg oral", cls: "Gepant", route: "Oral",
+    dose: "60 mg PO once daily.",
+    notes: "Also licensed for chronic migraine (TA973).",
+    adverse: "Nausea, constipation, fatigue, decreased appetite.",
+    contra: "Severe hepatic impairment; strong CYP3A4 inducers.",
+    citations: [{ label: "NICE TA973 — atogepant", href: "https://www.nice.org.uk/guidance/ta973" }] },
+  { id: "c-eptinezumab", condition: "chronic", strength: "Strong in favor", quality: "High",
+    drug: "Eptinezumab", label: "Eptinezumab 100 & 300 mg IV quarterly", cls: "CGRP", route: "IV",
+    dose: "100 mg IV every 12 weeks (may escalate to 300 mg).",
+    notes: "IV CGRP mAb; useful for adherence.",
+    adverse: "Nasopharyngitis, infusion reactions.",
+    contra: "Hypersensitivity to CGRP mAbs.",
+    citations: [{ label: "NICE TA871 — eptinezumab", href: "https://www.nice.org.uk/guidance/ta871" }] },
+  { id: "c-fremanezumab-q", condition: "chronic", strength: "Strong in favor", quality: "High",
+    drug: "Fremanezumab", label: "Fremanezumab 675 mg quarterly SC", cls: "CGRP", route: "SC",
+    dose: "675 mg SC every 3 months (chronic migraine dose).",
+    notes: "Alternative monthly regimen also effective.",
+    adverse: "Injection-site reactions, hypersensitivity.",
+    contra: "Hypersensitivity.",
+    citations: [{ label: "NICE TA764 — fremanezumab", href: "https://www.nice.org.uk/guidance/ta764" }] },
+  { id: "c-galcanezumab", condition: "chronic", strength: "Strong in favor", quality: "High",
+    drug: "Galcanezumab", label: "Galcanezumab 120 mg monthly SC", cls: "CGRP", route: "SC",
+    dose: "240 mg SC loading, then 120 mg SC monthly.",
+    notes: "Also licensed for chronic migraine.",
+    adverse: "Injection-site reactions, constipation.",
+    contra: "Hypersensitivity.",
+    citations: [{ label: "NICE TA659 — galcanezumab", href: "https://www.nice.org.uk/guidance/ta659" }] },
+  { id: "c-erenumab", condition: "chronic", strength: "Strong in favor", quality: "Moderate",
+    drug: "Erenumab", label: "Erenumab 70 & 140 mg SC every 4 weeks", cls: "CGRP", route: "SC",
+    dose: "70 or 140 mg SC every 4 weeks.",
+    notes: "Chronic migraine: stop if <30% reduction at 12 weeks.",
+    adverse: "Constipation, hypertension, injection-site reactions.",
+    contra: "Hypersensitivity; caution in severe CV disease.",
+    citations: [{ label: "NICE TA682 — erenumab", href: "https://www.nice.org.uk/guidance/ta682" }] },
+  { id: "c-fremanezumab-m", condition: "chronic", strength: "Strong in favor", quality: "Moderate",
+    drug: "Fremanezumab", label: "Fremanezumab 225 mg monthly SC", cls: "CGRP", route: "SC",
+    dose: "225 mg SC monthly.",
+    notes: "Monthly regimen for chronic migraine.",
+    adverse: "Injection-site reactions, hypersensitivity.",
+    contra: "Hypersensitivity.",
+    citations: [{ label: "NICE TA764 — fremanezumab", href: "https://www.nice.org.uk/guidance/ta764" }] },
+  // ===== CHRONIC — WEAK =====
+  { id: "c-topiramate-200", condition: "chronic", strength: "Weak in favor", quality: "Low",
+    drug: "Topiramate", label: "Topiramate 200 mg oral", cls: "Antiepileptic", route: "Oral",
+    dose: "200 mg/day; titrate slowly.",
+    notes: "MHRA PPP required.",
+    adverse: "Paraesthesia, cognitive slowing, weight loss, teratogenicity.",
+    contra: "Pregnancy without PPP; nephrolithiasis.",
+    citations: [{ label: "MHRA — topiramate", href: "https://www.gov.uk/drug-safety-update/topiramate-topamax-introduction-of-new-safety-measures-including-a-pregnancy-prevention-programme" }] },
+  { id: "c-topiramate-50", condition: "chronic", strength: "Weak in favor", quality: "Very low",
+    drug: "Topiramate", label: "Topiramate 50 mg oral", cls: "Antiepileptic", route: "Oral",
+    dose: "50 mg/day — lower dose option.",
+    notes: "MHRA PPP required.",
+    adverse: "Paraesthesia, cognitive slowing, weight loss.",
+    contra: "Pregnancy without PPP; nephrolithiasis.",
+    citations: [{ label: "MHRA — topiramate", href: "https://www.gov.uk/drug-safety-update/topiramate-topamax-introduction-of-new-safety-measures-including-a-pregnancy-prevention-programme" }] },
+];
 
 const MATRIX_CITATIONS = [
   { label: "NICE CG150 (context)", href: "https://www.nice.org.uk/guidance/cg150" },
   { label: "EHF/EAN guideline on preventive migraine treatment", href: "https://thejournalofheadacheandpain.biomedcentral.com/articles/10.1186/s10194-023-01541-0" },
 ];
+
 
 function Prophylaxis() {
   return (
@@ -330,21 +462,8 @@ function Prophylaxis() {
         </Section>
 
         {/* EVIDENCE MATRICES */}
-        <Section
-          icon={<TableIcon className="h-5 w-5" />}
-          title="Prevention evidence matrix"
-          subtitle="Rows = strength of recommendation; columns = quality of evidence. Adapted from the international preventive migraine treatment guideline (Tables 1.4 & 1.5)."
-        >
-          <SubHeading label="Episodic migraine (Table 1.4)" />
-          <EvidenceMatrix matrix={EPISODIC_MATRIX} />
+        <EvidenceMatrixSection />
 
-          <div className="mt-6">
-            <SubHeading label="Chronic migraine (Table 1.5)" />
-            <EvidenceMatrix matrix={CHRONIC_MATRIX} />
-          </div>
-
-          <CitationList citations={MATRIX_CITATIONS} className="mt-4" />
-        </Section>
 
         {/* STOPPING RULES */}
         <div className="clay-card p-6 mb-8">
@@ -468,8 +587,194 @@ function CitationList({ citations, className = "" }) {
   );
 }
 
-function EvidenceMatrix({ matrix }) {
-  const rows = Object.keys(matrix);
+function EvidenceMatrixSection() {
+  const [query, setQuery] = useState("");
+  const [condition, setCondition] = useState("all"); // all | episodic | chronic
+  const [strengthFilter, setStrengthFilter] = useState("all");
+  const [classFilter, setClassFilter] = useState("all");
+  const [selected, setSelected] = useState(null);
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return MATRIX_ENTRIES.filter((e) => {
+      if (condition !== "all" && e.condition !== condition) return false;
+      if (strengthFilter !== "all" && e.strength !== strengthFilter) return false;
+      if (classFilter !== "all" && e.cls !== classFilter) return false;
+      if (!q) return true;
+      return (
+        e.drug.toLowerCase().includes(q) ||
+        e.label.toLowerCase().includes(q) ||
+        e.cls.toLowerCase().includes(q) ||
+        e.route.toLowerCase().includes(q) ||
+        (e.notes || "").toLowerCase().includes(q)
+      );
+    });
+  }, [query, condition, strengthFilter, classFilter]);
+
+  const activeFilters =
+    (condition !== "all" ? 1 : 0) +
+    (strengthFilter !== "all" ? 1 : 0) +
+    (classFilter !== "all" ? 1 : 0);
+
+  const showEpisodic = condition !== "chronic";
+  const showChronic = condition !== "episodic";
+
+  const episodicMatches = filtered.filter((e) => e.condition === "episodic");
+  const chronicMatches = filtered.filter((e) => e.condition === "chronic");
+
+  return (
+    <>
+      <Section
+        icon={<TableIcon className="h-5 w-5" />}
+        title="Prevention evidence matrix"
+        subtitle="Rows = strength of recommendation; columns = quality of evidence. Click any entry for full dosing and safety detail."
+      >
+        {/* Search + filters */}
+        <div className="mb-4 space-y-3">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#2d2a33]/40" />
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search drug, class, route, or notes…"
+              className="w-full rounded-full border border-[#2d2a33]/15 bg-white/80 py-2 pl-9 pr-9 text-sm focus:border-[#0b3d5c] focus:outline-none focus:ring-2 focus:ring-[#0b3d5c]/20"
+            />
+            {query && (
+              <button
+                onClick={() => setQuery("")}
+                aria-label="Clear search"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-[#2d2a33]/50 hover:bg-[#2d2a33]/10"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 text-xs">
+            <span className="inline-flex items-center gap-1 text-[#2d2a33]/60">
+              <Filter className="h-3.5 w-3.5" /> Filters:
+            </span>
+            <FilterChipGroup
+              label="Condition"
+              value={condition}
+              onChange={setCondition}
+              options={[
+                { v: "all", l: "All" },
+                { v: "episodic", l: "Episodic" },
+                { v: "chronic", l: "Chronic" },
+              ]}
+            />
+            <FilterChipGroup
+              label="Strength"
+              value={strengthFilter}
+              onChange={setStrengthFilter}
+              options={[
+                { v: "all", l: "All" },
+                ...STRENGTH_ROWS.map((s) => ({ v: s, l: s.replace(" in favor", "") })),
+              ]}
+            />
+            <FilterChipGroup
+              label="Class"
+              value={classFilter}
+              onChange={setClassFilter}
+              options={[
+                { v: "all", l: "All classes" },
+                ...DRUG_CLASSES.map((c) => ({ v: c, l: c })),
+              ]}
+            />
+            {(activeFilters > 0 || query) && (
+              <button
+                onClick={() => {
+                  setQuery("");
+                  setCondition("all");
+                  setStrengthFilter("all");
+                  setClassFilter("all");
+                }}
+                className="ml-auto rounded-full border border-[#c8391a]/25 bg-[#c8391a]/5 px-2.5 py-1 text-[11px] font-medium text-[#c8391a] hover:bg-[#c8391a]/10"
+              >
+                Reset
+              </button>
+            )}
+          </div>
+
+          <p className="text-[11px] text-[#2d2a33]/50">
+            {filtered.length} {filtered.length === 1 ? "entry" : "entries"} match
+          </p>
+        </div>
+
+        {showEpisodic && (
+          <>
+            <SubHeading label="Episodic migraine (Table 1.4)" />
+            <EvidenceMatrix
+              entries={episodicMatches}
+              onSelect={setSelected}
+              highlight={query.trim()}
+            />
+          </>
+        )}
+
+        {showChronic && (
+          <div className={showEpisodic ? "mt-6" : ""}>
+            <SubHeading label="Chronic migraine (Table 1.5)" />
+            <EvidenceMatrix
+              entries={chronicMatches}
+              onSelect={setSelected}
+              highlight={query.trim()}
+            />
+          </div>
+        )}
+
+        <CitationList citations={MATRIX_CITATIONS} className="mt-4" />
+      </Section>
+
+      <Sheet open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
+        <SheetContent className="w-full sm:max-w-md overflow-y-auto bg-[#f6f2ea]">
+          {selected && <EntryDetail entry={selected} />}
+        </SheetContent>
+      </Sheet>
+    </>
+  );
+}
+
+function FilterChipGroup({ label, value, onChange, options }) {
+  return (
+    <div className="inline-flex items-center gap-1 rounded-full bg-[#2d2a33]/5 p-0.5">
+      <span className="px-2 text-[10px] font-semibold uppercase tracking-wide text-[#2d2a33]/50">
+        {label}
+      </span>
+      {options.map((o) => (
+        <button
+          key={o.v}
+          onClick={() => onChange(o.v)}
+          className={`rounded-full px-2.5 py-1 text-[11px] font-medium transition ${
+            value === o.v
+              ? "bg-[#0b3d5c] text-white shadow-sm"
+              : "text-[#2d2a33]/70 hover:bg-white"
+          }`}
+        >
+          {o.l}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function EvidenceMatrix({ entries, onSelect, highlight }) {
+  const byCell = useMemo(() => {
+    const map = {};
+    for (const s of STRENGTH_ROWS) map[s] = {};
+    for (const s of STRENGTH_ROWS) for (const q of QUALITY_COLS) map[s][q] = [];
+    for (const e of entries) {
+      if (map[e.strength] && map[e.strength][e.quality]) {
+        map[e.strength][e.quality].push(e);
+      }
+    }
+    return map;
+  }, [entries]);
+
+  const empty = entries.length === 0;
+
   return (
     <div className="overflow-x-auto rounded-xl border border-[#2d2a33]/10 bg-white/60">
       <table className="w-full min-w-[720px] border-collapse text-xs">
@@ -486,7 +791,7 @@ function EvidenceMatrix({ matrix }) {
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => {
+          {STRENGTH_ROWS.map((row) => {
             const strong = row.startsWith("Strong");
             return (
               <tr key={row} className="border-t border-[#2d2a33]/10 align-top">
@@ -497,26 +802,138 @@ function EvidenceMatrix({ matrix }) {
                 >
                   {row}
                 </td>
-                {matrix[row].map((cell, i) => (
-                  <td key={i} className="p-2 text-[#2d2a33]/85">
-                    {cell.length === 0 ? (
-                      <span className="text-[#2d2a33]/30">—</span>
-                    ) : (
-                      <ul className="space-y-1 list-disc pl-4">
-                        {cell.map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
-                      </ul>
-                    )}
-                  </td>
-                ))}
+                {QUALITY_COLS.map((q) => {
+                  const cell = byCell[row][q];
+                  return (
+                    <td key={q} className="p-2 text-[#2d2a33]/85">
+                      {cell.length === 0 ? (
+                        <span className="text-[#2d2a33]/25">—</span>
+                      ) : (
+                        <ul className="space-y-1">
+                          {cell.map((e) => (
+                            <li key={e.id}>
+                              <button
+                                onClick={() => onSelect(e)}
+                                className="group inline-flex w-full items-start gap-1 rounded-md border border-transparent px-1.5 py-1 text-left hover:border-[#0b3d5c]/25 hover:bg-[#0b3d5c]/5"
+                              >
+                                <span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-[#0b3d5c]/50 group-hover:bg-[#0b3d5c]" />
+                                <span>{highlightText(e.label, highlight)}</span>
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </td>
+                  );
+                })}
               </tr>
             );
           })}
         </tbody>
       </table>
+      {empty && (
+        <div className="p-4 text-center text-xs text-[#2d2a33]/50">
+          No entries match. Try clearing filters or a different search term.
+        </div>
+      )}
     </div>
   );
 }
+
+function highlightText(text, q) {
+  if (!q) return text;
+  const idx = text.toLowerCase().indexOf(q.toLowerCase());
+  if (idx === -1) return text;
+  return (
+    <>
+      {text.slice(0, idx)}
+      <mark className="rounded bg-[#d69838]/40 px-0.5 text-[#2d2a33]">
+        {text.slice(idx, idx + q.length)}
+      </mark>
+      {text.slice(idx + q.length)}
+    </>
+  );
+}
+
+function EntryDetail({ entry }) {
+  const strong = entry.strength.startsWith("Strong");
+  return (
+    <div className="text-[#2d2a33]">
+      <SheetHeader className="text-left">
+        <div className="flex flex-wrap gap-1.5 mb-2">
+          <Tag color={entry.condition === "chronic" ? "#c8391a" : "#0b3d5c"}>
+            {entry.condition === "chronic" ? "Chronic migraine" : "Episodic migraine"}
+          </Tag>
+          <Tag color={strong ? "#4b8b6b" : "#d69838"}>{entry.strength}</Tag>
+          <Tag color="#0b3d5c">Quality: {entry.quality}</Tag>
+          <Tag color="#2d2a33">{entry.cls}</Tag>
+          <Tag color="#2d2a33">{entry.route}</Tag>
+        </div>
+        <SheetTitle className="text-xl">{entry.drug}</SheetTitle>
+        <SheetDescription className="text-[#2d2a33]/70">
+          {entry.label}
+        </SheetDescription>
+      </SheetHeader>
+
+      <div className="mt-5 space-y-4 text-sm">
+        <DetailBlock title="Dose">{entry.dose}</DetailBlock>
+        {entry.notes && (
+          <DetailBlock title="Clinical notes">{entry.notes}</DetailBlock>
+        )}
+        {entry.contra && (
+          <DetailBlock title="Contraindications" tone="danger">
+            {entry.contra}
+          </DetailBlock>
+        )}
+        {entry.adverse && (
+          <DetailBlock title="Key adverse effects" tone="warn">
+            {entry.adverse}
+          </DetailBlock>
+        )}
+        {entry.citations && entry.citations.length > 0 && (
+          <div>
+            <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-[#2d2a33]/50">
+              Citations
+            </p>
+            <CitationList citations={entry.citations} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Tag({ color, children }) {
+  return (
+    <span
+      className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold"
+      style={{
+        color,
+        backgroundColor: `${color}15`,
+        border: `1px solid ${color}40`,
+      }}
+    >
+      {children}
+    </span>
+  );
+}
+
+function DetailBlock({ title, tone, children }) {
+  const toneClass =
+    tone === "danger"
+      ? "border-[#c8391a]/25 bg-[#c8391a]/5 text-[#c8391a]"
+      : tone === "warn"
+      ? "border-[#d69838]/30 bg-[#d69838]/5 text-[#7a5312]"
+      : "border-[#2d2a33]/10 bg-white/70 text-[#2d2a33]/85";
+  return (
+    <div className={`rounded-lg border p-3 ${toneClass}`}>
+      <p className="mb-1 text-[10px] font-semibold uppercase tracking-wide opacity-80">
+        {title}
+      </p>
+      <p className="text-sm leading-relaxed">{children}</p>
+    </div>
+  );
+}
+
 
 
