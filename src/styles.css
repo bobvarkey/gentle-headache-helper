@@ -522,10 +522,43 @@
   100% { transform: scale(1); opacity: 1; }
 }
 
-.animate-clay-press {
-  animation: clay-press 0.15s ease-out;
+@keyframes step-in {
+  0% { opacity: 0; transform: translateX(24px); }
+  100% { opacity: 1; transform: translateX(0); }
 }
 
-.animate-clay-pop {
-  animation: clay-pop 0.3s ease-out;
+@keyframes soft-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
 }
+
+@keyframes checkmark-pop {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.animate-clay-press { animation: clay-press 0.15s ease-out; }
+.animate-clay-pop { animation: clay-pop 0.3s ease-out; }
+.animate-step-in { animation: step-in 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+.animate-soft-float { animation: soft-float 3.5s ease-in-out infinite; }
+.animate-checkmark { animation: checkmark-pop 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg,
+    rgba(0,0,0,0.04) 0%,
+    rgba(255,255,255,0.6) 50%,
+    rgba(0,0,0,0.04) 100%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s linear infinite;
+  border-radius: 12px;
+}
+
+.clay-pill:active { transform: translateY(1px) scale(0.98); transition: transform 0.08s ease; }
+.clay-button-press { transition: transform 0.12s ease, box-shadow 0.12s ease; }
+.clay-button-press:active { transform: translateY(1px) scale(0.98); }
