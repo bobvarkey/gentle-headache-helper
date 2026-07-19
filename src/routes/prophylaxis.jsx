@@ -9,6 +9,7 @@ import {
   AlertTriangle,
   RotateCcw,
   ExternalLink,
+  Table as TableIcon,
 } from "lucide-react";
 
 export const Route = createFileRoute("/prophylaxis")({
@@ -164,6 +165,67 @@ const STOPPING_CITATIONS = [
   { label: "NICE CG150 visual summary (PDF)", href: "https://www.nice.org.uk/guidance/cg150/resources/visual-summary-on-prophylaxis-of-migraine-with-or-without-aura-pdf-15363542125" },
 ];
 
+// Evidence matrices (International guideline — Table 1.4 episodic, Table 1.5 chronic).
+// Rows = strength of recommendation, columns = quality of evidence.
+const QUALITY_COLS = ["High", "Moderate", "Low", "Very low"];
+
+const EPISODIC_MATRIX = {
+  "Strong in favor": [
+    [
+      "Atogepant 60 mg oral",
+      "Erenumab 70 & 140 mg SC every 4 weeks",
+      "Fremanezumab 225 mg monthly / 675 mg quarterly SC",
+      "Galcanezumab 120 mg monthly SC",
+    ],
+    ["Topiramate 100 & 200 mg oral", "Eptinezumab 100 & 300 mg IV quarterly"],
+    [],
+    [],
+  ],
+  "Weak in favor": [
+    [],
+    ["Amitriptyline 25 mg oral", "Candesartan 16 mg oral"],
+    [
+      "Topiramate 50 mg oral",
+      "Lisinopril 20 mg oral",
+      "Propranolol 160 mg oral",
+    ],
+    [
+      "Valproate 750 & 1500 mg oral",
+      "Lamotrigine 50 mg oral",
+      "Levetiracetam 1000 mg oral",
+    ],
+  ],
+};
+
+const CHRONIC_MATRIX = {
+  "Strong in favor": [
+    [
+      "OnabotulinumtoxinA 155–195 IU IM",
+      "Atogepant 60 mg oral",
+      "Eptinezumab 100 & 300 mg IV quarterly",
+      "Fremanezumab 675 mg quarterly SC",
+      "Galcanezumab 120 mg monthly SC",
+    ],
+    [
+      "Erenumab 70 & 140 mg SC every 4 weeks",
+      "Fremanezumab 225 mg monthly SC",
+    ],
+    [],
+    [],
+  ],
+  "Weak in favor": [
+    [],
+    [],
+    ["Topiramate 200 mg oral"],
+    ["Topiramate 50 mg oral"],
+  ],
+};
+
+const MATRIX_CITATIONS = [
+  { label: "NICE CG150 (context)", href: "https://www.nice.org.uk/guidance/cg150" },
+  { label: "EHF/EAN guideline on preventive migraine treatment", href: "https://thejournalofheadacheandpain.biomedcentral.com/articles/10.1186/s10194-023-01541-0" },
+];
+
 function Prophylaxis() {
   return (
     <div className="min-h-screen bg-[#ebe7df] text-[#2d2a33]">
@@ -265,6 +327,23 @@ function Prophylaxis() {
               <DrugCard key={tx.name} tx={tx} tone="alt" />
             ))}
           </div>
+        </Section>
+
+        {/* EVIDENCE MATRICES */}
+        <Section
+          icon={<TableIcon className="h-5 w-5" />}
+          title="Prevention evidence matrix"
+          subtitle="Rows = strength of recommendation; columns = quality of evidence. Adapted from the international preventive migraine treatment guideline (Tables 1.4 & 1.5)."
+        >
+          <SubHeading label="Episodic migraine (Table 1.4)" />
+          <EvidenceMatrix matrix={EPISODIC_MATRIX} />
+
+          <div className="mt-6">
+            <SubHeading label="Chronic migraine (Table 1.5)" />
+            <EvidenceMatrix matrix={CHRONIC_MATRIX} />
+          </div>
+
+          <CitationList citations={MATRIX_CITATIONS} className="mt-4" />
         </Section>
 
         {/* STOPPING RULES */}
@@ -388,4 +467,56 @@ function CitationList({ citations, className = "" }) {
     </div>
   );
 }
+
+function EvidenceMatrix({ matrix }) {
+  const rows = Object.keys(matrix);
+  return (
+    <div className="overflow-x-auto rounded-xl border border-[#2d2a33]/10 bg-white/60">
+      <table className="w-full min-w-[720px] border-collapse text-xs">
+        <thead>
+          <tr className="bg-[#0b3d5c]/8 text-left">
+            <th className="p-2 font-semibold text-[#2d2a33]/70 w-32">
+              Strength ↓ / Quality →
+            </th>
+            {QUALITY_COLS.map((q) => (
+              <th key={q} className="p-2 font-semibold text-[#0b3d5c]">
+                {q}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => {
+            const strong = row.startsWith("Strong");
+            return (
+              <tr key={row} className="border-t border-[#2d2a33]/10 align-top">
+                <td
+                  className={`p-2 font-semibold ${
+                    strong ? "text-[#4b8b6b]" : "text-[#d69838]"
+                  }`}
+                >
+                  {row}
+                </td>
+                {matrix[row].map((cell, i) => (
+                  <td key={i} className="p-2 text-[#2d2a33]/85">
+                    {cell.length === 0 ? (
+                      <span className="text-[#2d2a33]/30">—</span>
+                    ) : (
+                      <ul className="space-y-1 list-disc pl-4">
+                        {cell.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </td>
+                ))}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 
