@@ -413,6 +413,17 @@ function Index() {
               </div>
               <h3 className="font-semibold text-lg mb-1.5 leading-tight">{t.title}</h3>
               <p className="text-sm text-[#1a1330]/70 leading-relaxed">{t.body}</p>
+              {t.citations && t.citations.length > 0 && (
+                <div className="mt-4 pt-3 border-t border-[#1a1330]/10 flex flex-wrap gap-1.5">
+                  {t.citations.map((c) => (
+                    <a key={c.url} href={c.url} target="_blank" rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-1 rounded-full bg-white/70 text-[#e84393] border border-[#e84393]/20 hover:bg-[#e84393] hover:text-white transition-colors">
+                      <BookOpen className="h-3 w-3" strokeWidth={2.5} />
+                      {c.label}
+                    </a>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </div>
