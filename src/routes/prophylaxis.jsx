@@ -165,6 +165,67 @@ const STOPPING_CITATIONS = [
   { label: "NICE CG150 visual summary (PDF)", href: "https://www.nice.org.uk/guidance/cg150/resources/visual-summary-on-prophylaxis-of-migraine-with-or-without-aura-pdf-15363542125" },
 ];
 
+// Evidence matrices (International guideline — Table 1.4 episodic, Table 1.5 chronic).
+// Rows = strength of recommendation, columns = quality of evidence.
+const QUALITY_COLS = ["High", "Moderate", "Low", "Very low"];
+
+const EPISODIC_MATRIX = {
+  "Strong in favor": [
+    [
+      "Atogepant 60 mg oral",
+      "Erenumab 70 & 140 mg SC every 4 weeks",
+      "Fremanezumab 225 mg monthly / 675 mg quarterly SC",
+      "Galcanezumab 120 mg monthly SC",
+    ],
+    ["Topiramate 100 & 200 mg oral", "Eptinezumab 100 & 300 mg IV quarterly"],
+    [],
+    [],
+  ],
+  "Weak in favor": [
+    [],
+    ["Amitriptyline 25 mg oral", "Candesartan 16 mg oral"],
+    [
+      "Topiramate 50 mg oral",
+      "Lisinopril 20 mg oral",
+      "Propranolol 160 mg oral",
+    ],
+    [
+      "Valproate 750 & 1500 mg oral",
+      "Lamotrigine 50 mg oral",
+      "Levetiracetam 1000 mg oral",
+    ],
+  ],
+};
+
+const CHRONIC_MATRIX = {
+  "Strong in favor": [
+    [
+      "OnabotulinumtoxinA 155–195 IU IM",
+      "Atogepant 60 mg oral",
+      "Eptinezumab 100 & 300 mg IV quarterly",
+      "Fremanezumab 675 mg quarterly SC",
+      "Galcanezumab 120 mg monthly SC",
+    ],
+    [
+      "Erenumab 70 & 140 mg SC every 4 weeks",
+      "Fremanezumab 225 mg monthly SC",
+    ],
+    [],
+    [],
+  ],
+  "Weak in favor": [
+    [],
+    [],
+    ["Topiramate 200 mg oral"],
+    ["Topiramate 50 mg oral"],
+  ],
+};
+
+const MATRIX_CITATIONS = [
+  { label: "NICE CG150 (context)", href: "https://www.nice.org.uk/guidance/cg150" },
+  { label: "EHF/EAN guideline on preventive migraine treatment", href: "https://thejournalofheadacheandpain.biomedcentral.com/articles/10.1186/s10194-023-01541-0" },
+];
+
 function Prophylaxis() {
   return (
     <div className="min-h-screen bg-[#ebe7df] text-[#2d2a33]">
