@@ -288,6 +288,7 @@ function Prophylaxis() {
               already on another prophylaxis and migraine is well controlled, continue.
             </li>
           </ul>
+          <CitationList citations={STOPPING_CITATIONS} className="mt-4" />
         </div>
 
         <a
@@ -298,6 +299,7 @@ function Prophylaxis() {
         >
           Source: NICE CG150 visual summary <ExternalLink className="h-3.5 w-3.5" />
         </a>
+
       </main>
     </div>
   );
