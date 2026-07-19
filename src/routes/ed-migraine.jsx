@@ -649,6 +649,28 @@ function TxCard({ tx, tone }) {
           </ul>
         </div>
       )}
+      {tx.readinessGroups && tx.readinessGroups.length > 0 && (
+        <div className="mt-3 rounded-lg border border-[#3a6ea5]/30 bg-[#3a6ea5]/8 p-3">
+          <p className="text-xs font-semibold text-[#1f4571] mb-2">
+            {tx.readinessTitle || "Pre-infusion readiness checklist"}
+          </p>
+          <div className="space-y-3">
+            {tx.readinessGroups.map((g) => (
+              <div key={g.heading}>
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-[#1f4571]/80 mb-1">{g.heading}</p>
+                <ul className="space-y-1">
+                  {g.items.map((item) => (
+                    <li key={item} className="flex items-start gap-2 text-xs text-[#2d2a33]/80">
+                      <span className="mt-0.5 inline-block h-3.5 w-3.5 rounded border border-[#3a6ea5]/60 shrink-0" aria-hidden="true" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
       {tx.notes && <p className="text-xs text-[#2d2a33]/60 mt-1 italic">{tx.notes}</p>}
     </div>
   );
