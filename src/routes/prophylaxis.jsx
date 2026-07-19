@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Brain,
@@ -10,7 +11,17 @@ import {
   RotateCcw,
   ExternalLink,
   Table as TableIcon,
+  Search,
+  X,
+  Filter,
 } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 
 export const Route = createFileRoute("/prophylaxis")({
   head: () => ({
