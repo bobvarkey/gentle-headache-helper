@@ -186,6 +186,42 @@ const TAC_SAFETY = [
   }
 ];
 
+const INTERACTION_RULES = [
+  {
+    id: "triptan_cvd",
+    type: "contraindication",
+    medication: "Triptans",
+    condition: "Cardiovascular Disease",
+    message: "Contraindicated in patients with ischaemic heart disease, prior stroke/TIA, or uncontrolled hypertension.",
+    check: (answers) => answers.history_cvd === true
+  },
+  {
+    id: "gepant_cyp3a4",
+    type: "warning",
+    medication: "Gepants (Ubrogepant/Rimegepant)",
+    condition: "CYP3A4 Inhibitors",
+    message: "Avoid use or reduce dose with strong CYP3A4 inhibitors (e.g. ketoconazole, clarithromycin).",
+    check: (answers) => answers.meds_cyp3a4 === true
+  },
+  {
+    id: "oxygen_copd",
+    type: "precaution",
+    medication: "High-Flow Oxygen",
+    condition: "Severe COPD",
+    message: "Use with caution in severe COPD due to risk of CO2 retention.",
+    check: (answers) => answers.history_copd === true
+  },
+  {
+    id: "indomethacin_pud",
+    type: "contraindication",
+    medication: "Indomethacin",
+    condition: "Active PUD / Renal Impairment",
+    message: "Absolute contraindication in active peptic ulcer disease or severe renal impairment.",
+    check: (answers) => answers.history_pud === true || answers.history_renal === true
+  }
+];
+
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -219,7 +255,19 @@ const STEPS = [
       { value: 1, label: "Mild" }, { value: 2, label: "Moderate" }, { value: 3, label: "Bad" },
       { value: 4, label: "Severe" }, { value: 5, label: "The worst" },
     ] },
+  { id: "comorbidities", icon: Shield, title: "Any relevant medical history?", hint: "We use this to flag potential medication interactions.",
+    options: [
+      { value: "history_cvd", label: "Heart disease / Stroke" },
+      { value: "history_pud", label: "Peptic ulcer / Gastritis" },
+      { value: "history_copd", label: "Severe COPD / Asthma" },
+      { value: "history_renal", label: "Renal impairment" },
+      { value: "meds_cyp3a4", label: "Taking CYP3A4 inhibitors" },
+      { value: "none", label: "None of these" },
+    ],
+    multi: true
+  },
 ];
+
 
 const MINI_APPS = [
   { to: "/ed-migraine", icon: Siren, title: "ED Acute Algorithm", desc: "AHS 2025 step-by-step pathway for acute migraine in the emergency department.", tag: "For clinicians" },
@@ -254,25 +302,61 @@ function Index() {
   const pick = (value) => {
     const key = `${step.id}:${String(value)}`;
     setTappedKey(key);
-    const next = { ...answers, [step.id]: value };
-    setAnswers(next);
-    setTimeout(() => {
-      if (stepIdx < STEPS.length - 1) {
-        setStepIdx(stepIdx + 1);
-        setTappedKey(null);
+    
+    let nextAnswers;
+    if (step.multi) {
+      const current = answers[step.id] || [];
+      if (value === 'none') {
+        nextAnswers = { ...answers, [step.id]: ['none'] };
       } else {
-        setComputing(true);
-        // Show skeleton so results feel immediate, then reveal
-        setTimeout(() => {
-          setDone(true);
-          setComputing(false);
-          setTimeout(() => {
-            document.getElementById("results")?.scrollIntoView({ behavior: "smooth", block: "start" });
-          }, 60);
-        }, 450);
+        const filtered = current.filter(v => v !== 'none');
+        if (filtered.includes(value)) {
+          nextAnswers = { ...answers, [step.id]: filtered.filter(v => v !== value) };
+        } else {
+          nextAnswers = { ...answers, [step.id]: [...filtered, value] };
+        }
       }
-    }, 200);
+    } else {
+      nextAnswers = { ...answers, [step.id]: value };
+    }
+
+    setAnswers(nextAnswers);
+
+    if (!step.multi) {
+      setTimeout(() => {
+        if (stepIdx < STEPS.length - 1) {
+          setStepIdx(stepIdx + 1);
+          setTappedKey(null);
+        } else {
+          setComputing(true);
+          setTimeout(() => {
+            setDone(true);
+            setComputing(false);
+            setTimeout(() => {
+              document.getElementById("results")?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }, 60);
+          }, 450);
+        }
+      }, 200);
+    }
   };
+
+  const nextStep = () => {
+    if (stepIdx < STEPS.length - 1) {
+      setStepIdx(stepIdx + 1);
+      setTappedKey(null);
+    } else {
+      setComputing(true);
+      setTimeout(() => {
+        setDone(true);
+        setComputing(false);
+        setTimeout(() => {
+          document.getElementById("results")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 60);
+      }, 450);
+    }
+  };
+
 
   const back = () => { if (stepIdx > 0) setStepIdx(stepIdx - 1); };
   const restart = () => {
@@ -452,7 +536,10 @@ function Index() {
 
                 <div className={`grid gap-2 ${step.options.length > 4 ? "grid-cols-2 md:grid-cols-3" : "grid-cols-2"}`}>
                   {step.options.map((opt) => {
-                    const selected = answers[step.id] === opt.value;
+                    const isMulti = step.multi;
+                    const selected = isMulti 
+                      ? (answers[step.id] || []).includes(opt.value)
+                      : answers[step.id] === opt.value;
                     const key = `${step.id}:${String(opt.value)}`;
                     const isTapped = tappedKey === key;
                     return (
@@ -469,6 +556,7 @@ function Index() {
                       </button>
                     );
                   })}
+
                 </div>
               </div>
 
@@ -477,7 +565,15 @@ function Index() {
                   className="inline-flex items-center gap-1.5 text-sm font-medium text-[#1a1330]/60 hover:text-[#1a1330] disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
                   <ArrowLeft className="h-4 w-4" /> Back
                 </button>
-                <span className="text-xs text-[#1a1330]/40">Tap an answer to continue</span>
+                {step.multi ? (
+                  <button onClick={nextStep} 
+                    className="sunset-btn text-xs px-4 py-2">
+                    Continue <ArrowRight className="h-3.5 w-3.5" />
+                  </button>
+                ) : (
+                  <span className="text-xs text-[#1a1330]/40">Tap an answer to continue</span>
+                )}
+
               </div>
             </>
           )}
@@ -497,9 +593,10 @@ function Index() {
 
           {done && results && (
             <div id="results" className="animate-step-in">
-              <ResultsView results={results} onRestart={restart} />
+              <ResultsView results={results} answers={answers} onRestart={restart} />
             </div>
           )}
+
         </div>
       </section>
 
@@ -780,8 +877,17 @@ function Index() {
   );
 }
 
-function ResultsView({ results, onRestart }) {
+function ResultsView({ results, answers, onRestart }) {
   const hasDiffs = results.differentials && results.differentials.length > 0;
+
+  const interactions = useMemo(() => {
+    const userMeds = answers.comorbidities || [];
+    const flattenedAnswers = { ...answers };
+    userMeds.forEach(m => { flattenedAnswers[m] = true; });
+    
+    return INTERACTION_RULES.filter(rule => rule.check(flattenedAnswers));
+  }, [answers]);
+
   
   const recommendations = useMemo(() => {
     if (!hasDiffs) return [];
@@ -822,6 +928,29 @@ function ResultsView({ results, onRestart }) {
         </div>
       )}
 
+      {interactions.length > 0 && (
+        <div className="clay-alert warning mb-6 animate-clay-pop">
+          <h3 className="text-sm font-bold flex items-center gap-2 mb-3 text-[#1a1330]">
+            <Shield className="h-4 w-4 text-[#e84393]" strokeWidth={2.5} /> Potential Medication Interactions
+          </h3>
+          <div className="space-y-3">
+            {interactions.map(rule => (
+              <div key={rule.id} className="text-xs">
+                <div className="flex items-center gap-2 font-bold text-[#1a1330] mb-0.5">
+                  <span className={`px-1.5 py-0.5 rounded text-[10px] uppercase tracking-wider ${
+                    rule.type === 'contraindication' ? 'bg-[#e84393] text-white' : 'bg-[#f7931e] text-white'
+                  }`}>
+                    {rule.type}
+                  </span>
+                  {rule.medication}
+                </div>
+                <p className="text-[#1a1330]/70 leading-relaxed">{rule.message}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="flex items-center gap-3 mb-5">
         <div className="feature-icon"><Stethoscope className="h-5 w-5" strokeWidth={2.25} /></div>
         <div>
@@ -829,6 +958,7 @@ function ResultsView({ results, onRestart }) {
           <p className="text-xs text-[#1a1330]/55">Ranked by how well your answers matched each pattern.</p>
         </div>
       </div>
+
 
       {hasDiffs ? (
         <div className="space-y-3">
