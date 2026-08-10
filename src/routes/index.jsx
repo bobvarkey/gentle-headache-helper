@@ -565,7 +565,15 @@ function Index() {
                   className="inline-flex items-center gap-1.5 text-sm font-medium text-[#1a1330]/60 hover:text-[#1a1330] disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
                   <ArrowLeft className="h-4 w-4" /> Back
                 </button>
-                <span className="text-xs text-[#1a1330]/40">Tap an answer to continue</span>
+                {step.multi ? (
+                  <button onClick={nextStep} 
+                    className="sunset-btn text-xs px-4 py-2">
+                    Continue <ArrowRight className="h-3.5 w-3.5" />
+                  </button>
+                ) : (
+                  <span className="text-xs text-[#1a1330]/40">Tap an answer to continue</span>
+                )}
+
               </div>
             </>
           )}
