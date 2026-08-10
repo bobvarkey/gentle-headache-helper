@@ -782,6 +782,27 @@ function Index() {
 
 function ResultsView({ results, onRestart }) {
   const hasDiffs = results.differentials && results.differentials.length > 0;
+  
+  const recommendations = useMemo(() => {
+    if (!hasDiffs) return [];
+    const top = results.differentials[0];
+    const recs = [];
+    
+    if (top.category === 'migraine') {
+      recs.push({ label: "Check Gepants for Migraine", href: "#gepants" });
+      recs.push({ label: "View Prophylaxis Options", href: "/prophylaxis" });
+    } else if (top.category === 'tac') {
+      recs.push({ label: "TAC Subtypes Comparison", href: "#tac" });
+      recs.push({ label: "TAC Safety & Contraindications", href: "#tac-safety" });
+    } else if (top.id === 'ndph') {
+      recs.push({ label: "Review NDPH Criteria", href: "#tac" });
+    }
+    
+    // Always suggest mini-apps as a fall-back or additional resource
+    recs.push({ label: "Clinician Tools", href: "#mini-apps" });
+    
+    return recs;
+  }, [hasDiffs, results.differentials]);
 
   return (
     <>
@@ -838,6 +859,37 @@ function ResultsView({ results, onRestart }) {
               )}
             </div>
           ))}
+
+          {recommendations.length > 0 && (
+            <div className="mt-6 p-5 rounded-[24px] bg-white/40 border border-white/60 animate-step-in" style={{ animationDelay: "300ms", animationFillMode: "both" }}>
+              <h4 className="text-xs font-bold text-[#1a1330]/60 uppercase tracking-wider mb-4 flex items-center gap-2">
+                <Lightbulb className="h-3.5 w-3.5 text-[#e84393]" strokeWidth={2.5} /> Recommended Reading
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {recommendations.map((rec, i) => (
+                  rec.href.startsWith('#') ? (
+                    <a 
+                      key={i} 
+                      href={rec.href}
+                      className="flex items-center justify-between p-3 rounded-xl bg-white/60 border border-white/40 text-sm font-semibold text-[#1a1330] hover:bg-white hover:border-[#e84393]/30 transition-all group"
+                    >
+                      {rec.label}
+                      <ArrowRight className="h-3.5 w-3.5 text-[#e84393] opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                    </a>
+                  ) : (
+                    <Link 
+                      key={i} 
+                      to={rec.href}
+                      className="flex items-center justify-between p-3 rounded-xl bg-white/60 border border-white/40 text-sm font-semibold text-[#1a1330] hover:bg-white hover:border-[#e84393]/30 transition-all group"
+                    >
+                      {rec.label}
+                      <ArrowRight className="h-3.5 w-3.5 text-[#e84393] opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                    </Link>
+                  )
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <div className="text-center py-8">
@@ -868,3 +920,4 @@ function ResultsView({ results, onRestart }) {
     </>
   );
 }
+
