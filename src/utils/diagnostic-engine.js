@@ -171,9 +171,17 @@ export function diagnose(answers) {
   
   // SUNCT/SUNA (3.3)
   if (sunctScore >= 2) {
-    differentials.push(createDiagnosis('sunct', 'SUNCT/SUNA', '3.3', 70,
-      'A.≥20 B.1-600sec C.neuralgiform D.≥3/day',
-      'Lamotrigine, gabapentin. Limited acute options.'
+    differentials.push(createDiagnosis('sunct', 'SUNCT/SUNA', '3.3', Math.min(95, sunctScore * 25),
+      'A.≥20 B.1-600sec C.autonomic D.≥1/day E.stabbing pain',
+      'Lamotrigine 25-200mg/day. Managed by neurology. Acute treatment (oxygen/triptans) often ineffective due to brief duration.'
+    ));
+  }
+
+  // New Daily Persistent Headache (4.10)
+  if (answers.suddenOnset === true && answers.duration === 'continuous') {
+    differentials.push(createDiagnosis('ndph', 'New Daily Persistent Headache (NDPH)', '4.10', 85,
+      'Continuous headache from onset (remembered date/time) persisting for >3 months',
+      'Requires specialist assessment to exclude secondary causes'
     ));
   }
   

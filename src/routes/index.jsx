@@ -57,6 +57,44 @@ const TIPS = [
     ],
   },
 ];
+
+const TAC_SUBTYPES = [
+  {
+    type: "Cluster Headache",
+    duration: "15 – 180 minutes",
+    frequency: "1 every other day to 8 per day",
+    feature: "Striking circadian (clock-like) rhythm. Treated acutely with 100% high-flow oxygen or subcutaneous triptans.",
+    code: "3.1"
+  },
+  {
+    type: "Paroxysmal Hemicrania",
+    duration: "2 – 30 minutes",
+    frequency: "Typically 5 to 40 per day",
+    feature: "Absolute, diagnostic response to the anti-inflammatory drug indomethacin.",
+    code: "3.2"
+  },
+  {
+    type: "SUNCT / SUNA",
+    duration: "1 – 600 seconds",
+    frequency: "Up to 100+ times per day",
+    feature: "Short, lightning-like stabs. Triggered by light facial touch. Managed primarily with lamotrigine.",
+    code: "3.3"
+  },
+  {
+    type: "Hemicrania Continua",
+    duration: "Continuous (24/7)",
+    frequency: "Constant baseline pain",
+    feature: "Continuous baseline pain with spikes of autonomic severe pain. Also completely responsive to indomethacin.",
+    code: "3.4"
+  },
+  {
+    type: "NDPH",
+    duration: "Continuous (from onset)",
+    frequency: "Daily from first day",
+    feature: "New Daily Persistent Headache. Clearly remembered onset date. Persistent from within 24 hours.",
+    code: "4.10"
+  }
+];
 import { diagnose, formatDifferentialResults } from "../utils/diagnostic-engine";
 import heroImage from "../assets/hero-headache-glow.png.asset.json";
 import { SkeletonResults } from "../components/Skeleton";
@@ -168,6 +206,7 @@ function Index() {
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
             <a href="#diagnose" className="text-[#1a1330]/70 hover:text-[#e84393] transition-colors">Check-in</a>
             <a href="#mini-apps" className="text-[#1a1330]/70 hover:text-[#e84393] transition-colors">Tools</a>
+            <a href="#tac" className="text-[#1a1330]/70 hover:text-[#e84393] transition-colors">TACs</a>
             <Link to="/ed-migraine" className="text-[#1a1330]/70 hover:text-[#e84393] transition-colors">ED</Link>
             <Link to="/prophylaxis" className="text-[#1a1330]/70 hover:text-[#e84393] transition-colors">Prophylaxis</Link>
           </nav>
@@ -436,6 +475,51 @@ function Index() {
               )}
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* TAC SECTION */}
+      <section id="tac" className="mx-auto max-w-6xl px-4 pb-20 scroll-mt-24">
+        <div className="clay-card p-6 md:p-8">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="feature-icon"><Zap className="h-5 w-5 text-[#e84393]" strokeWidth={2.25} /></div>
+            <div>
+              <h2 className="text-2xl font-bold">Trigeminal autonomic cephalalgias</h2>
+              <p className="text-xs text-[#1a1330]/55 uppercase tracking-wider font-semibold">Diagnostic Subtypes & Criteria</p>
+            </div>
+          </div>
+          
+          <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
+            <table className="w-full text-sm text-left">
+              <thead>
+                <tr className="border-b border-[#1a1330]/10 text-[#1a1330]/60">
+                  <th className="pb-3 pr-4 font-semibold">Subtype</th>
+                  <th className="pb-3 pr-4 font-semibold">Attack Duration</th>
+                  <th className="pb-3 pr-4 font-semibold">Daily Frequency</th>
+                  <th className="pb-3 font-semibold">Key Feature / First-Line Management</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#1a1330]/5">
+                {TAC_SUBTYPES.map((t) => (
+                  <tr key={t.type} className="hover:bg-white/40 transition-colors group">
+                    <td className="py-4 pr-4 align-top">
+                      <div className="font-bold text-[#1a1330]">{t.type}</div>
+                      <div className="text-[10px] text-[#e84393] font-semibold opacity-70 mt-0.5">ICHD-3 {t.code}</div>
+                    </td>
+                    <td className="py-4 pr-4 align-top text-[#1a1330]/80">{t.duration}</td>
+                    <td className="py-4 pr-4 align-top text-[#1a1330]/80">{t.frequency}</td>
+                    <td className="py-4 align-top leading-relaxed text-[#1a1330]/80">
+                      {t.feature}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          
+          <div className="mt-8 pt-6 border-t border-[#1a1330]/10 text-[11px] text-[#1a1330]/50 italic">
+            Note: Hemicrania Continua and NDPH are persistent (daily) headaches. Episodic and Chronic variants exist for Cluster and Paroxysmal Hemicrania based on remission periods.
+          </div>
         </div>
       </section>
 
