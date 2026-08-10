@@ -536,7 +536,10 @@ function Index() {
 
                 <div className={`grid gap-2 ${step.options.length > 4 ? "grid-cols-2 md:grid-cols-3" : "grid-cols-2"}`}>
                   {step.options.map((opt) => {
-                    const selected = answers[step.id] === opt.value;
+                    const isMulti = step.multi;
+                    const selected = isMulti 
+                      ? (answers[step.id] || []).includes(opt.value)
+                      : answers[step.id] === opt.value;
                     const key = `${step.id}:${String(opt.value)}`;
                     const isTapped = tappedKey === key;
                     return (
@@ -553,6 +556,7 @@ function Index() {
                       </button>
                     );
                   })}
+
                 </div>
               </div>
 
