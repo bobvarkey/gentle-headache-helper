@@ -255,7 +255,19 @@ const STEPS = [
       { value: 1, label: "Mild" }, { value: 2, label: "Moderate" }, { value: 3, label: "Bad" },
       { value: 4, label: "Severe" }, { value: 5, label: "The worst" },
     ] },
+  { id: "comorbidities", icon: Shield, title: "Any relevant medical history?", hint: "We use this to flag potential medication interactions.",
+    options: [
+      { value: "history_cvd", label: "Heart disease / Stroke" },
+      { value: "history_pud", label: "Peptic ulcer / Gastritis" },
+      { value: "history_copd", label: "Severe COPD / Asthma" },
+      { value: "history_renal", label: "Renal impairment" },
+      { value: "meds_cyp3a4", label: "Taking CYP3A4 inhibitors" },
+      { value: "none", label: "None of these" },
+    ],
+    multi: true
+  },
 ];
+
 
 const MINI_APPS = [
   { to: "/ed-migraine", icon: Siren, title: "ED Acute Algorithm", desc: "AHS 2025 step-by-step pathway for acute migraine in the emergency department.", tag: "For clinicians" },
