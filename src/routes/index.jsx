@@ -273,6 +273,7 @@ const MINI_APPS = [
   { to: "/ed-migraine", icon: Siren, title: "ED Acute Algorithm", desc: "AHS 2025 step-by-step pathway for acute migraine in the emergency department.", tag: "For clinicians" },
   { to: "/prophylaxis", icon: Pill, title: "Prophylaxis Guide", desc: "NICE CG150 preventive options with dose, contraindications, and stopping rules.", tag: "NICE CG150" },
   { to: "/diagnostic", icon: Activity, title: "Full ICHD-3 Check-in", desc: "A deeper diagnostic wizard with red-flag screening and differential ranking.", tag: "ICHD-3" },
+  { to: "/tac-safety", icon: Shield, title: "TAC Safety Page", desc: "Critical clinical warnings for Indomethacin, Oxygen, and Lamotrigine titration.", tag: "Safety First" },
 ];
 
 const FEATURES = [
@@ -382,6 +383,7 @@ function Index() {
             <a href="#gepants" className="text-[#1a1330]/70 hover:text-[#e84393] transition-colors">Gepants</a>
             <Link to="/ed-migraine" className="text-[#1a1330]/70 hover:text-[#e84393] transition-colors">ED</Link>
             <Link to="/prophylaxis" className="text-[#1a1330]/70 hover:text-[#e84393] transition-colors">Prophylaxis</Link>
+            <Link to="/tac-safety" className="text-[#1a1330]/70 hover:text-[#e84393] transition-colors font-bold">Safety</Link>
           </nav>
           <a href="#diagnose" className="sunset-btn text-sm" style={{ padding: "0.55rem 1.1rem" }}>
             Start <ArrowRight className="h-4 w-4" />

@@ -9,11 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TacSafetyRouteImport } from './routes/tac-safety'
 import { Route as ProphylaxisRouteImport } from './routes/prophylaxis'
 import { Route as EdMigraineRouteImport } from './routes/ed-migraine'
 import { Route as DiagnosticRouteImport } from './routes/diagnostic'
 import { Route as IndexRouteImport } from './routes/index'
 
+const TacSafetyRoute = TacSafetyRouteImport.update({
+  id: '/tac-safety',
+  path: '/tac-safety',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProphylaxisRoute = ProphylaxisRouteImport.update({
   id: '/prophylaxis',
   path: '/prophylaxis',
@@ -40,12 +46,14 @@ export interface FileRoutesByFullPath {
   '/diagnostic': typeof DiagnosticRoute
   '/ed-migraine': typeof EdMigraineRoute
   '/prophylaxis': typeof ProphylaxisRoute
+  '/tac-safety': typeof TacSafetyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/diagnostic': typeof DiagnosticRoute
   '/ed-migraine': typeof EdMigraineRoute
   '/prophylaxis': typeof ProphylaxisRoute
+  '/tac-safety': typeof TacSafetyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,25 @@ export interface FileRoutesById {
   '/diagnostic': typeof DiagnosticRoute
   '/ed-migraine': typeof EdMigraineRoute
   '/prophylaxis': typeof ProphylaxisRoute
+  '/tac-safety': typeof TacSafetyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/diagnostic' | '/ed-migraine' | '/prophylaxis'
+  fullPaths:
+    | '/'
+    | '/diagnostic'
+    | '/ed-migraine'
+    | '/prophylaxis'
+    | '/tac-safety'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/diagnostic' | '/ed-migraine' | '/prophylaxis'
-  id: '__root__' | '/' | '/diagnostic' | '/ed-migraine' | '/prophylaxis'
+  to: '/' | '/diagnostic' | '/ed-migraine' | '/prophylaxis' | '/tac-safety'
+  id:
+    | '__root__'
+    | '/'
+    | '/diagnostic'
+    | '/ed-migraine'
+    | '/prophylaxis'
+    | '/tac-safety'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,10 +87,18 @@ export interface RootRouteChildren {
   DiagnosticRoute: typeof DiagnosticRoute
   EdMigraineRoute: typeof EdMigraineRoute
   ProphylaxisRoute: typeof ProphylaxisRoute
+  TacSafetyRoute: typeof TacSafetyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tac-safety': {
+      id: '/tac-safety'
+      path: '/tac-safety'
+      fullPath: '/tac-safety'
+      preLoaderRoute: typeof TacSafetyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/prophylaxis': {
       id: '/prophylaxis'
       path: '/prophylaxis'
@@ -107,6 +135,7 @@ const rootRouteChildren: RootRouteChildren = {
   DiagnosticRoute: DiagnosticRoute,
   EdMigraineRoute: EdMigraineRoute,
   ProphylaxisRoute: ProphylaxisRoute,
+  TacSafetyRoute: TacSafetyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
