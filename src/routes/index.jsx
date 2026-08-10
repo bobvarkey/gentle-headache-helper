@@ -575,6 +575,130 @@ function Index() {
         </div>
       </section>
 
+      {/* GEPANTS COMPARISON */}
+      <section id="gepants" className="mx-auto max-w-6xl px-4 pb-20 scroll-mt-24">
+        <div className="clay-card p-6 md:p-8">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="feature-icon"><Pill className="h-5 w-5 text-[#e84393]" strokeWidth={2.25} /></div>
+            <div>
+              <h2 className="text-2xl font-bold">Gepants comparison</h2>
+              <p className="text-xs text-[#1a1330]/55 uppercase tracking-wider font-semibold">CGRP Receptor Antagonists</p>
+            </div>
+          </div>
+          
+          <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
+            <table className="w-full text-sm text-left">
+              <thead>
+                <tr className="border-b border-[#1a1330]/10 text-[#1a1330]/60 text-[11px] uppercase tracking-wider">
+                  <th className="pb-3 pr-4 font-bold">Medication</th>
+                  <th className="pb-3 pr-4 font-bold">Indication</th>
+                  <th className="pb-3 pr-4 font-bold">Onset / Timing</th>
+                  <th className="pb-3 font-bold">Key Safety</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#1a1330]/5">
+                {GEPANTS.map((g) => (
+                  <tr 
+                    key={g.name} 
+                    className="hover:bg-white/40 transition-colors group cursor-pointer"
+                    onClick={() => setSelectedGepant(g)}
+                  >
+                    <td className="py-4 pr-4 align-top">
+                      <div className="font-bold text-[#1a1330] group-hover:text-[#e84393] transition-colors">{g.name}</div>
+                      <div className="text-[10px] text-[#1a1330]/40 font-semibold mt-0.5">{g.brand}</div>
+                    </td>
+                    <td className="py-4 pr-4 align-top text-[#1a1330]/80 text-xs leading-relaxed">{g.indication}</td>
+                    <td className="py-4 pr-4 align-top text-[#1a1330]/80 text-xs leading-relaxed">{g.timing}</td>
+                    <td className="py-4 align-top text-[#1a1330]/80 text-xs leading-relaxed">
+                      {g.safety}
+                      <div className="mt-2 text-[10px] text-[#e84393] font-bold opacity-0 group-hover:opacity-100 transition-opacity">Click for full details →</div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* GEPANT DETAIL SHEET */}
+      <Sheet open={!!selectedGepant} onOpenChange={() => setSelectedGepant(null)}>
+        <SheetContent className="w-full sm:max-w-md overflow-y-auto">
+          {selectedGepant && (
+            <div className="space-y-6 pt-4">
+              <SheetHeader className="text-left">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e84393]/10 text-[#e84393] text-[10px] font-bold uppercase tracking-widest w-fit mb-2">
+                  Gepant · {selectedGepant.brand}
+                </div>
+                <SheetTitle className="text-2xl font-bold text-[#1a1330]">{selectedGepant.name}</SheetTitle>
+                <SheetDescription className="text-sm text-[#1a1330]/70 leading-relaxed">
+                  Clinical profile for {selectedGepant.name} based on AHS and NICE evidence.
+                </SheetDescription>
+              </SheetHeader>
+
+              <div className="space-y-4">
+                <div className="p-4 rounded-2xl bg-[#fff7f0] border border-[#ff6b35]/20">
+                  <h4 className="text-xs font-bold text-[#ff6b35] uppercase tracking-wider mb-2 flex items-center gap-2">
+                    <Activity className="h-3.5 w-3.5" /> Dosing & Route
+                  </h4>
+                  <p className="text-sm text-[#1a1330] leading-relaxed font-medium">{selectedGepant.dose}</p>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="p-4 rounded-2xl bg-white border border-[#1a1330]/5">
+                    <h4 className="text-xs font-bold text-[#1a1330]/40 uppercase tracking-wider mb-2 flex items-center gap-2">
+                      <Clock className="h-3.5 w-3.5" /> Timing
+                    </h4>
+                    <p className="text-sm text-[#1a1330]/80 leading-relaxed">{selectedGepant.timing}</p>
+                  </div>
+                  
+                  <div className="p-4 rounded-2xl bg-[#f8d4d4]/30 border border-[#8a3a3a]/10">
+                    <h4 className="text-xs font-bold text-[#8a3a3a] uppercase tracking-wider mb-2 flex items-center gap-2">
+                      <AlertTriangle className="h-3.5 w-3.5" /> Contraindications
+                    </h4>
+                    <p className="text-sm text-[#8a3a3a]/90 leading-relaxed">{selectedGepant.contra}</p>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-[#fdf5d3]/40 border border-[#b08a4c]/10">
+                    <h4 className="text-xs font-bold text-[#b08a4c] uppercase tracking-wider mb-2 flex items-center gap-2">
+                      <Zap className="h-3.5 w-3.5" /> Common Adverse Effects
+                    </h4>
+                    <p className="text-sm text-[#1a1330]/80 leading-relaxed">{selectedGepant.adverse}</p>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <h4 className="text-[10px] font-bold text-[#1a1330]/40 uppercase tracking-wider px-1">Citations & Sources</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedGepant.citations.map((c) => (
+                      <a 
+                        key={c.url} 
+                        href={c.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-[#1a1330]/10 text-xs text-[#e84393] font-semibold hover:bg-[#e84393] hover:text-white transition-all"
+                      >
+                        <ExternalLink className="h-3 w-3" />
+                        {c.label}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-[#1a1330]/5">
+                <button 
+                  onClick={() => setSelectedGepant(null)}
+                  className="w-full py-3 rounded-2xl bg-[#1a1330] text-white text-sm font-bold shadow-lg active:scale-[0.98] transition-all"
+                >
+                  Close Reference
+                </button>
+              </div>
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
+
       <footer className="py-10 mt-4" style={{ background: "linear-gradient(180deg, transparent, rgba(26,19,48,0.05))" }}>
 
         <div className="mx-auto max-w-4xl px-4 text-center text-sm text-[#1a1330]/60">
