@@ -126,7 +126,7 @@ function RootComponent() {
       {!isHome && (
         <Link
           to="/"
-          className="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-all hover:scale-110 active:scale-95"
+          className="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-[#1a1330] text-white shadow-lg transition-all hover:scale-110 active:scale-95 border border-white/20"
           aria-label="Back to home"
         >
           <Home className="h-6 w-6" />
