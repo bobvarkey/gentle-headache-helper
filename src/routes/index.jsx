@@ -150,6 +150,42 @@ const GEPANTS = [
   }
 ];
 
+const TAC_SAFETY = [
+  {
+    category: "Indomethacin Response Testing",
+    warnings: [
+      "Absolute contraindication: Active peptic ulcer disease or severe renal impairment.",
+      "Requires gastric protection: Always co-prescribe a PPI (e.g., omeprazole) during the test period.",
+      "Dose titration: Typical test is 25mg TDS for 3 days, then 50mg TDS for 3 days, up to 75mg TDS if needed."
+    ],
+    priority: "critical"
+  },
+  {
+    category: "High-Flow Oxygen (Cluster)",
+    warnings: [
+      "Standard of care: 100% oxygen at 12–15 L/min via a non-rebreathing mask.",
+      "Safety: Ensure no smoking or open flames; caution in patients with severe COPD (risk of CO2 retention)."
+    ],
+    priority: "standard"
+  },
+  {
+    category: "Triptans (Acute)",
+    warnings: [
+      "Subcutaneous sumatriptan 6mg is first-line for Cluster.",
+      "Contraindications: Ischaemic heart disease, prior stroke/TIA, uncontrolled hypertension, or peripheral vascular disease."
+    ],
+    priority: "high"
+  },
+  {
+    category: "Lamotrigine (SUNCT/SUNA)",
+    warnings: [
+      "Severe rash risk: Stevens-Johnson Syndrome (SJS) risk requires very slow titration (e.g., 25mg every other day or daily for 2 weeks).",
+      "Immediate action: Stop immediately if any new rash or mouth sores develop."
+    ],
+    priority: "critical"
+  }
+];
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -572,6 +608,38 @@ function Index() {
           
           <div className="mt-8 pt-6 border-t border-[#1a1330]/10 text-[11px] text-[#1a1330]/50 italic">
             Note: Hemicrania Continua and NDPH are persistent (daily) headaches. Episodic and Chronic variants exist for Cluster and Paroxysmal Hemicrania based on remission periods.
+          </div>
+        </div>
+      </section>
+
+      {/* TAC SAFETY PANEL */}
+      <section id="tac-safety" className="mx-auto max-w-6xl px-4 pb-20 scroll-mt-24">
+        <div className="clay-alert warning border-[#e84393]/20 bg-white/40 backdrop-blur-md p-6 md:p-8 rounded-[32px]">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="feature-icon bg-[#1a1330]"><Shield className="h-5 w-5 text-white" strokeWidth={2.5} /></div>
+            <div>
+              <h2 className="text-xl font-bold text-[#1a1330]">TAC Safety & Contraindications</h2>
+              <p className="text-[10px] text-[#1a1330]/50 uppercase tracking-widest font-bold">Clinical Guidance & Warnings</p>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {TAC_SAFETY.map((s) => (
+              <div key={s.category} className="space-y-2">
+                <h3 className="text-sm font-bold flex items-center gap-2 text-[#1a1330]">
+                  <div className={`h-1.5 w-1.5 rounded-full ${s.priority === 'critical' ? 'bg-[#e84393]' : 'bg-[#f7931e]'}`} />
+                  {s.category}
+                </h3>
+                <ul className="space-y-1.5">
+                  {s.warnings.map((w, i) => (
+                    <li key={i} className="text-xs text-[#1a1330]/70 leading-relaxed pl-3.5 relative">
+                      <span className="absolute left-0 top-1.5 h-1 w-1 rounded-full bg-[#1a1330]/20" />
+                      {w}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
       </section>
