@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import edAcuteTreatmentAsset from "@/assets/ed-acute-treatment.png.asset.json";
 import edDischargePrescriptionsAsset from "@/assets/ed-discharge-prescriptions.png.asset.json";
+import recommendationsParenteralEdAsset from "@/assets/recommendations-parenteral-ed.png.asset.json";
 import { useState } from "react";
 import {
   Brain,
