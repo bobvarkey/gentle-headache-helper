@@ -186,6 +186,42 @@ const TAC_SAFETY = [
   }
 ];
 
+const INTERACTION_RULES = [
+  {
+    id: "triptan_cvd",
+    type: "contraindication",
+    medication: "Triptans",
+    condition: "Cardiovascular Disease",
+    message: "Contraindicated in patients with ischaemic heart disease, prior stroke/TIA, or uncontrolled hypertension.",
+    check: (answers) => answers.history_cvd === true
+  },
+  {
+    id: "gepant_cyp3a4",
+    type: "warning",
+    medication: "Gepants (Ubrogepant/Rimegepant)",
+    condition: "CYP3A4 Inhibitors",
+    message: "Avoid use or reduce dose with strong CYP3A4 inhibitors (e.g. ketoconazole, clarithromycin).",
+    check: (answers) => answers.meds_cyp3a4 === true
+  },
+  {
+    id: "oxygen_copd",
+    type: "precaution",
+    medication: "High-Flow Oxygen",
+    condition: "Severe COPD",
+    message: "Use with caution in severe COPD due to risk of CO2 retention.",
+    check: (answers) => answers.history_copd === true
+  },
+  {
+    id: "indomethacin_pud",
+    type: "contraindication",
+    medication: "Indomethacin",
+    condition: "Active PUD / Renal Impairment",
+    message: "Absolute contraindication in active peptic ulcer disease or severe renal impairment.",
+    check: (answers) => answers.history_pud === true || answers.history_renal === true
+  }
+];
+
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
