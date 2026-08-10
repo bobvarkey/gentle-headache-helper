@@ -6,7 +6,9 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  useLocation,
 } from "@tanstack/react-router";
+import { Home } from "lucide-react";
 
 import appCss from "../styles.css?url";
 
@@ -114,11 +116,22 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const location = useLocation();
+  const isHome = location.pathname === "/";
 
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
+      {!isHome && (
+        <Link
+          to="/"
+          className="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-all hover:scale-110 active:scale-95"
+          aria-label="Back to home"
+        >
+          <Home className="h-6 w-6" />
+        </Link>
+      )}
     </QueryClientProvider>
   );
 }
