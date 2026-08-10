@@ -302,25 +302,61 @@ function Index() {
   const pick = (value) => {
     const key = `${step.id}:${String(value)}`;
     setTappedKey(key);
-    const next = { ...answers, [step.id]: value };
-    setAnswers(next);
-    setTimeout(() => {
-      if (stepIdx < STEPS.length - 1) {
-        setStepIdx(stepIdx + 1);
-        setTappedKey(null);
+    
+    let nextAnswers;
+    if (step.multi) {
+      const current = answers[step.id] || [];
+      if (value === 'none') {
+        nextAnswers = { ...answers, [step.id]: ['none'] };
       } else {
-        setComputing(true);
-        // Show skeleton so results feel immediate, then reveal
-        setTimeout(() => {
-          setDone(true);
-          setComputing(false);
-          setTimeout(() => {
-            document.getElementById("results")?.scrollIntoView({ behavior: "smooth", block: "start" });
-          }, 60);
-        }, 450);
+        const filtered = current.filter(v => v !== 'none');
+        if (filtered.includes(value)) {
+          nextAnswers = { ...answers, [step.id]: filtered.filter(v => v !== value) };
+        } else {
+          nextAnswers = { ...answers, [step.id]: [...filtered, value] };
+        }
       }
-    }, 200);
+    } else {
+      nextAnswers = { ...answers, [step.id]: value };
+    }
+
+    setAnswers(nextAnswers);
+
+    if (!step.multi) {
+      setTimeout(() => {
+        if (stepIdx < STEPS.length - 1) {
+          setStepIdx(stepIdx + 1);
+          setTappedKey(null);
+        } else {
+          setComputing(true);
+          setTimeout(() => {
+            setDone(true);
+            setComputing(false);
+            setTimeout(() => {
+              document.getElementById("results")?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }, 60);
+          }, 450);
+        }
+      }, 200);
+    }
   };
+
+  const nextStep = () => {
+    if (stepIdx < STEPS.length - 1) {
+      setStepIdx(stepIdx + 1);
+      setTappedKey(null);
+    } else {
+      setComputing(true);
+      setTimeout(() => {
+        setDone(true);
+        setComputing(false);
+        setTimeout(() => {
+          document.getElementById("results")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 60);
+      }, 450);
+    }
+  };
+
 
   const back = () => { if (stepIdx > 0) setStepIdx(stepIdx - 1); };
   const restart = () => {
