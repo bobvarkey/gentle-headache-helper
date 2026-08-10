@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import edAcuteTreatmentAsset from "@/assets/ed-acute-treatment.png.asset.json";
 import edDischargePrescriptionsAsset from "@/assets/ed-discharge-prescriptions.png.asset.json";
+import recommendationsParenteralEdAsset from "@/assets/recommendations-parenteral-ed.png.asset.json";
 import { useState } from "react";
 import {
   Brain,
@@ -306,7 +307,7 @@ function EDMigraine() {
               Acute treatment pathway — first- to third-line therapy and nerve blocks.
             </figcaption>
           </figure>
-          <figure>
+          <figure className="mb-6">
             <img
               src={edDischargePrescriptionsAsset.url}
               alt="Discharge prescriptions — acute options, preventive indications, preventive medications, and nutraceuticals"
@@ -315,6 +316,17 @@ function EDMigraine() {
             />
             <figcaption className="mt-2 text-xs text-[#2d2a33]/55 text-center">
               Discharge prescriptions — acute, preventive, and nutraceutical options.
+            </figcaption>
+          </figure>
+          <figure>
+            <img
+              src={recommendationsParenteralEdAsset.url}
+              alt="Recommendations for parenteral interventions for treating migraine in the ED - Must Offer, Should Offer, May Offer, May Not Offer, Must Not Offer, No Recommendation"
+              className="w-full h-auto rounded-2xl shadow-sm border border-black/5"
+              loading="lazy"
+            />
+            <figcaption className="mt-2 text-xs text-[#2d2a33]/55 text-center">
+              Parenteral intervention recommendations summary (AHS 2025).
             </figcaption>
           </figure>
         </div>
