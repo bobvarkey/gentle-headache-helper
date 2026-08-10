@@ -18,6 +18,17 @@ const TIPS = [
     ],
   },
   {
+    icon: Pill,
+    tag: "Acute & Preventive",
+    title: "Gepants in Migraine",
+    body: "Gepants (CGRP receptor antagonists) like Rimegepant and Atogepant provide a non-constricting alternative to triptans. Rimegepant is unique as it's licensed for both acute treatment and every-other-day prevention.",
+    citations: [
+      { label: "NICE TA906 (Rimegepant)", url: "https://www.nice.org.uk/guidance/ta906" },
+      { label: "NICE TA973 (Atogepant)", url: "https://www.nice.org.uk/guidance/ta973" },
+      { label: "AHS Gepant Consensus", url: "https://americanheadachesociety.org/wp-content/uploads/2021/01/AHS_Consensus_Statement_Update.pdf" },
+    ],
+  },
+  {
     icon: CloudRain,
     tag: "Prevention",
     title: "Fremanezumab & weather-triggered attacks",
@@ -30,7 +41,7 @@ const TIPS = [
     icon: Droplet,
     tag: "Lifestyle",
     title: "Saline instead of toothpaste",
-    body: "Brushing with saline instead of toothpaste for 4 weeks cut weekly migraine frequency from 3 to 1, dropped median intensity to 0/10, and gave nearly a third complete freedom from migraine. Also ask about Vicks, balms, and other strong topical scents.",
+    body: "Brushing with saline instead of toothpaste for 4 weeks cut weekly migraine frequency from 3 to 1, dropped median intensity to 0/10, and gave nearly a third complete freedom from migraine.",
     citations: [
       { label: "AAN 2025 abstract — saline brushing trial", url: "https://www.aan.com/AAN-Resources/Details/press-room/press-releases/" },
     ],
@@ -39,11 +50,10 @@ const TIPS = [
     icon: Syringe,
     tag: "GLP-1 signals",
     title: "GLP-1 RAs vs topiramate in chronic migraine",
-    body: "Retrospective TriNetX study (AHS 2026): starting a GLP-1 within a year of migraine diagnosis was linked to 17% lower ED visits (RR 0.83), 13% lower hospitalization (RR 0.87), 25% less nerve-block use, 20% fewer triptan starts, and roughly half the rate of new antidepressant, gepant, valproate, or CGRP mAb prescriptions vs topiramate. Signals only — no headache-frequency or adherence data; RCTs still needed.",
+    body: "Retrospective TriNetX study (AHS 2026): starting a GLP-1 was linked to 17% lower ED visits and 13% lower hospitalization compared to topiramate. Signals only; RCTs needed.",
     citations: [
-      { label: "Acar et al., AHS 2026 (TriNetX cohort)", url: "https://americanheadachesociety.org/annual-meeting/" },
+      { label: "Acar et al., AHS 2026", url: "https://americanheadachesociety.org/annual-meeting/" },
       { label: "Liraglutide in chronic migraine (Headache 2024)", url: "https://headachejournal.onlinelibrary.wiley.com/doi/10.1111/head.14624" },
-      { label: "FAERS GLP-1 headache signal", url: "https://pubmed.ncbi.nlm.nih.gov/?term=GLP-1+FAERS+headache+migraine" },
     ],
   },
 ];
