@@ -259,6 +259,7 @@ function Index() {
             <a href="#diagnose" className="text-[#1a1330]/70 hover:text-[#e84393] transition-colors">Check-in</a>
             <a href="#mini-apps" className="text-[#1a1330]/70 hover:text-[#e84393] transition-colors">Tools</a>
             <a href="#tac" className="text-[#1a1330]/70 hover:text-[#e84393] transition-colors">TACs</a>
+            <a href="#gepants" className="text-[#1a1330]/70 hover:text-[#e84393] transition-colors">Gepants</a>
             <Link to="/ed-migraine" className="text-[#1a1330]/70 hover:text-[#e84393] transition-colors">ED</Link>
             <Link to="/prophylaxis" className="text-[#1a1330]/70 hover:text-[#e84393] transition-colors">Prophylaxis</Link>
           </nav>
