@@ -928,6 +928,29 @@ function ResultsView({ results, answers, onRestart }) {
         </div>
       )}
 
+      {interactions.length > 0 && (
+        <div className="clay-alert warning mb-6 animate-clay-pop">
+          <h3 className="text-sm font-bold flex items-center gap-2 mb-3 text-[#1a1330]">
+            <Shield className="h-4 w-4 text-[#e84393]" strokeWidth={2.5} /> Potential Medication Interactions
+          </h3>
+          <div className="space-y-3">
+            {interactions.map(rule => (
+              <div key={rule.id} className="text-xs">
+                <div className="flex items-center gap-2 font-bold text-[#1a1330] mb-0.5">
+                  <span className={`px-1.5 py-0.5 rounded text-[10px] uppercase tracking-wider ${
+                    rule.type === 'contraindication' ? 'bg-[#e84393] text-white' : 'bg-[#f7931e] text-white'
+                  }`}>
+                    {rule.type}
+                  </span>
+                  {rule.medication}
+                </div>
+                <p className="text-[#1a1330]/70 leading-relaxed">{rule.message}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="flex items-center gap-3 mb-5">
         <div className="feature-icon"><Stethoscope className="h-5 w-5" strokeWidth={2.25} /></div>
         <div>
@@ -935,6 +958,7 @@ function ResultsView({ results, answers, onRestart }) {
           <p className="text-xs text-[#1a1330]/55">Ranked by how well your answers matched each pattern.</p>
         </div>
       </div>
+
 
       {hasDiffs ? (
         <div className="space-y-3">
