@@ -593,9 +593,10 @@ function Index() {
 
           {done && results && (
             <div id="results" className="animate-step-in">
-              <ResultsView results={results} onRestart={restart} />
+              <ResultsView results={results} answers={answers} onRestart={restart} />
             </div>
           )}
+
         </div>
       </section>
 
