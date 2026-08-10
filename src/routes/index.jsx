@@ -877,8 +877,17 @@ function Index() {
   );
 }
 
-function ResultsView({ results, onRestart }) {
+function ResultsView({ results, answers, onRestart }) {
   const hasDiffs = results.differentials && results.differentials.length > 0;
+
+  const interactions = useMemo(() => {
+    const userMeds = answers.comorbidities || [];
+    const flattenedAnswers = { ...answers };
+    userMeds.forEach(m => { flattenedAnswers[m] = true; });
+    
+    return INTERACTION_RULES.filter(rule => rule.check(flattenedAnswers));
+  }, [answers]);
+
   
   const recommendations = useMemo(() => {
     if (!hasDiffs) return [];
