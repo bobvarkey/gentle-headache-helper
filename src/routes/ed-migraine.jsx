@@ -14,7 +14,15 @@ import {
   Syringe,
   ShieldAlert,
   RotateCcw,
+  ExternalLink,
 } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 
 export const Route = createFileRoute("/ed-migraine")({
   head: () => ({
@@ -243,12 +251,24 @@ function EDMigraine() {
   const [redFlag, setRedFlag] = useState(null);
   const [firstLineResponse, setFirstLineResponse] = useState(null);
   const [secondLineResponse, setSecondLineResponse] = useState(null);
+  const [selectedEntry, setSelectedEntry] = useState(null);
 
   const reset = () => {
     setStep(0);
     setRedFlag(null);
     setFirstLineResponse(null);
     setSecondLineResponse(null);
+  };
+
+  const handleImgClick = (e) => {
+    // Determine the medication from the click position or provide a generic menu
+    // Since it's a static image, we'll provide a selection of the key recommendations
+    // for the interactive panel.
+    setSelectedEntry({
+      name: "Parenteral Recommendations",
+      isGroup: true,
+      items: [...LEVEL_A, ...LEVEL_B, ...LEVEL_C].slice(0, 8)
+    });
   };
 
   return (
@@ -318,15 +338,20 @@ function EDMigraine() {
               Discharge prescriptions — acute, preventive, and nutraceutical options.
             </figcaption>
           </figure>
-          <figure>
+          <figure className="relative group cursor-pointer" onClick={handleImgClick}>
             <img
               src={recommendationsParenteralEdAsset.url}
               alt="Recommendations for parenteral interventions for treating migraine in the ED - Must Offer, Should Offer, May Offer, May Not Offer, Must Not Offer, No Recommendation"
-              className="w-full h-auto rounded-2xl shadow-sm border border-black/5"
+              className="w-full h-auto rounded-2xl shadow-sm border border-black/5 transition-opacity group-hover:opacity-90"
               loading="lazy"
             />
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg text-sm font-medium flex items-center gap-2">
+                <Activity className="h-4 w-4 text-[#e05a2b]" /> Click to view details
+              </div>
+            </div>
             <figcaption className="mt-2 text-xs text-[#2d2a33]/55 text-center">
-              Parenteral intervention recommendations summary (AHS 2025).
+              Parenteral intervention recommendations summary (AHS 2025). Click for details.
             </figcaption>
           </figure>
         </div>
@@ -694,6 +719,99 @@ function EDMigraine() {
           </p>
         </div>
       </main>
+
+      <Sheet open={!!selectedEntry} onOpenChange={(open) => !open && setSelectedEntry(null)}>
+        <SheetContent className="w-full sm:max-w-md overflow-y-auto bg-[#ebe7df] border-l border-black/10">
+          <SheetHeader className="mb-6">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="h-8 w-8 rounded-full bg-[#e05a2b]/10 flex items-center justify-center">
+                <Activity className="h-4 w-4 text-[#e05a2b]" />
+              </div>
+              <SheetTitle className="text-xl font-bold">
+                {selectedEntry?.name || "Clinical Details"}
+              </SheetTitle>
+            </div>
+            <SheetDescription className="text-[#2d2a33]/60">
+              {selectedEntry?.isGroup 
+                ? "Select a medication below to view dosing notes and safety profile." 
+                : "AHS 2025 Practice Recommendations for acute migraine therapy."}
+            </SheetDescription>
+          </SheetHeader>
+
+          <div className="space-y-6 pb-8">
+            {selectedEntry?.isGroup ? (
+              <div className="grid gap-3">
+                {selectedEntry.items.map((item) => (
+                  <button
+                    key={item.name}
+                    onClick={() => setSelectedEntry(item)}
+                    className="flex flex-col items-start p-4 rounded-xl border border-black/5 bg-white/50 hover:bg-white transition-colors text-left"
+                  >
+                    <span className="font-bold text-[#2d2a33]">{item.name}</span>
+                    <span className="text-xs text-[#2d2a33]/60">{item.route} · {item.dose.split('(')[0]}</span>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              selectedEntry && (
+                <>
+                  <div className="clay-card p-5 bg-white/80">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-[#2d2a33]/40 mb-3 flex items-center gap-2">
+                      <Activity className="h-3 w-3" /> Dosing & Route
+                    </h4>
+                    <p className="text-sm font-medium text-[#2d2a33]">{selectedEntry.dose}</p>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      <span className="px-2 py-1 rounded bg-[#2d2a33]/5 text-[10px] font-bold uppercase">
+                        Route: {selectedEntry.route}
+                      </span>
+                    </div>
+                  </div>
+
+                  {selectedEntry.contra && (
+                    <div className="clay-card p-5 bg-[#c8391a]/5 border border-[#c8391a]/10">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-[#c8391a] mb-2 flex items-center gap-2">
+                        <AlertTriangle className="h-3 w-3" /> Contraindications
+                      </h4>
+                      <p className="text-sm text-[#2d2a33]/80 leading-relaxed">
+                        {selectedEntry.contra}
+                      </p>
+                    </div>
+                  )}
+
+                  {selectedEntry.adverse && (
+                    <div className="clay-card p-5 bg-[#d69838]/5 border border-[#d69838]/10">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-[#7a5312] mb-2 flex items-center gap-2">
+                        <ShieldAlert className="h-3 w-3" /> Adverse Effects
+                      </h4>
+                      <p className="text-sm text-[#2d2a33]/80 leading-relaxed">
+                        {selectedEntry.adverse}
+                      </p>
+                    </div>
+                  )}
+
+                  {selectedEntry.notes && (
+                    <div className="clay-card p-5 bg-white/50 italic">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-[#2d2a33]/40 mb-2">
+                        Clinical Notes
+                      </h4>
+                      <p className="text-sm text-[#2d2a33]/70">
+                        {selectedEntry.notes}
+                      </p>
+                    </div>
+                  )}
+                  
+                  <button 
+                    onClick={() => handleImgClick()}
+                    className="w-full flex items-center justify-center gap-2 py-3 text-sm font-medium text-[#2d2a33]/60 hover:text-[#2d2a33] transition-colors"
+                  >
+                    <ArrowLeft className="h-4 w-4" /> Back to summary
+                  </button>
+                </>
+              )
+            )}
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
