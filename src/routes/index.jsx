@@ -98,6 +98,57 @@ const TAC_SUBTYPES = [
 import { diagnose, formatDifferentialResults } from "../utils/diagnostic-engine";
 import heroImage from "../assets/hero-headache-glow.png.asset.json";
 import { SkeletonResults } from "../components/Skeleton";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
+
+const GEPANTS = [
+  {
+    name: "Rimegepant",
+    brand: "Vydura",
+    indication: "Acute treatment AND every-other-day prevention.",
+    timing: "Onset: 1-2 hours. Duration: Up to 48 hours.",
+    safety: "Avoid in severe hepatic impairment. Nausea is common.",
+    dose: "75 mg oral lyophilisate (ODT). Acute: max 75 mg/24h. Prevention: 75 mg every other day.",
+    contra: "Severe hepatic impairment (Child-Pugh C). Strong CYP3A4 inhibitors.",
+    adverse: "Nausea (3%), hypersensitivity reactions, rash.",
+    citations: [
+      { label: "NICE TA906", url: "https://www.nice.org.uk/guidance/ta906" },
+      { label: "FDA: Vydura Label", url: "https://www.accessdata.fda.gov/drugsatfda_docs/label/2020/212738s000lbl.pdf" }
+    ]
+  },
+  {
+    name: "Ubrogepant",
+    brand: "Ubrelvy",
+    indication: "Acute treatment only.",
+    timing: "Onset: 1 hour. Relief peak: 2 hours.",
+    safety: "Contraindicated with strong CYP3A4 inhibitors.",
+    dose: "50 mg or 100 mg PO. May repeat after 2h (max 200 mg/24h).",
+    contra: "Concomitant use with strong CYP3A4 inhibitors (e.g., ketoconazole).",
+    adverse: "Nausea, somnolence, dry mouth.",
+    citations: [
+      { label: "FDA: Ubrelvy Label", url: "https://www.accessdata.fda.gov/drugsatfda_docs/label/2019/211765s000lbl.pdf" }
+    ]
+  },
+  {
+    name: "Atogepant",
+    brand: "Aquipta / Qulipta",
+    indication: "Prevention only (Episodic & Chronic).",
+    timing: "Steady state: 2 days. Efficacy: Assess at 12 weeks.",
+    safety: "Monitor for weight loss and decreased appetite.",
+    dose: "10 mg, 30 mg, or 60 mg PO once daily.",
+    contra: "Severe hepatic impairment. Strong CYP3A4 inducers.",
+    adverse: "Nausea, constipation, fatigue, decreased appetite.",
+    citations: [
+      { label: "NICE TA973", url: "https://www.nice.org.uk/guidance/ta973" },
+      { label: "FDA: Qulipta Label", url: "https://www.accessdata.fda.gov/drugsatfda_docs/label/2021/215206s000lbl.pdf" }
+    ]
+  }
+];
 
 export const Route = createFileRoute("/")({
   head: () => ({
