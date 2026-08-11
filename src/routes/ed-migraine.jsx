@@ -27,7 +27,7 @@ import {
 export const Route = createFileRoute("/ed-migraine")({
   head: () => ({
     meta: [
-      { title: "ED Acute Migraine Treatment Algorithm | Mira" },
+      { title: "ED Acute Migraine Treatment Algorithm | Headache Mx" },
       {
         name: "description",
         content:
@@ -278,7 +278,7 @@ function EDMigraine() {
           <div className="clay-icon h-10 w-10">
             <Brain className="h-5 w-5" />
           </div>
-          <span className="text-xl font-semibold">Mira</span>
+          <span className="text-xl font-semibold">Headache Mx</span>
         </Link>
         <Link to="/" className="text-sm text-[#2d2a33]/70 hover:text-[#2d2a33] flex items-center gap-1">
           <ArrowLeft className="h-4 w-4" /> Home

@@ -108,9 +108,9 @@ const TAC_ALGORITHM = [
 export const Route = createFileRoute("/tac-safety")({
   head: () => ({
     meta: [
-      { title: "TAC Safety & Contraindications | Mira" },
+      { title: "TAC Safety & Contraindications | Headache Mx" },
       { name: "description", content: "Clinical safety guidelines and contraindications for Trigeminal Autonomic Cephalalgias treatments including Indomethacin and Oxygen." },
-      { property: "og:title", content: "TAC Safety & Contraindications | Mira" },
+      { property: "og:title", content: "TAC Safety & Contraindications | Headache Mx" },
       { property: "og:description", content: "Essential clinical warnings for TAC management." },
     ],
   }),
@@ -126,7 +126,7 @@ function TacSafetyPage() {
             <div className="feature-icon" style={{ width: 36, height: 36, borderRadius: 12 }}>
               <ArrowLeft className="h-4.5 w-4.5" strokeWidth={2.5} />
             </div>
-            <span className="text-lg font-bold tracking-tight">Back to Mira</span>
+            <span className="text-lg font-bold tracking-tight">Back to Headache Mx</span>
           </Link>
           <div className="clay-badge bg-sunset text-[10px]" style={{ background: "var(--gradient-sunset)" }}>
             Clinical Safety Guide

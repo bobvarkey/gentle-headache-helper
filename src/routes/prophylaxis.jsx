@@ -26,7 +26,7 @@ import {
 export const Route = createFileRoute("/prophylaxis")({
   head: () => ({
     meta: [
-      { title: "Migraine Prophylaxis (NICE CG150) | Mira" },
+      { title: "Migraine Prophylaxis (NICE CG150) | Headache Mx" },
       {
         name: "description",
         content:
