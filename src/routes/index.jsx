@@ -225,9 +225,9 @@ const INTERACTION_RULES = [
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Mira — Understand your headache" },
+      { title: "Headache Mx — Understand your headache" },
       { name: "description", content: "A friendly, ICHD-3 based check-in for your headache. Takes about a minute." },
-      { property: "og:title", content: "Mira — Understand your headache" },
+      { property: "og:title", content: "Headache Mx — Understand your headache" },
       { property: "og:description", content: "Answer 5 quick questions. Get a clear, evidence-based read on what might be going on." },
     ],
   }),
@@ -374,7 +374,7 @@ function Index() {
             <div className="feature-icon" style={{ width: 36, height: 36, borderRadius: 12 }}>
               <Brain className="h-4.5 w-4.5" strokeWidth={2.5} />
             </div>
-            <span className="text-lg font-bold tracking-tight">Mira</span>
+            <span className="text-lg font-bold tracking-tight">Headache Mx</span>
           </Link>
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
             <a href="#diagnose" className="text-[#1a1330]/70 hover:text-[#e84393] transition-colors">Check-in</a>

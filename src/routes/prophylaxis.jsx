@@ -26,7 +26,7 @@ import {
 export const Route = createFileRoute("/prophylaxis")({
   head: () => ({
     meta: [
-      { title: "Migraine Prophylaxis (NICE CG150) | Mira" },
+      { title: "Migraine Prophylaxis (NICE CG150) | Headache Mx" },
       {
         name: "description",
         content:
@@ -366,7 +366,7 @@ function Prophylaxis() {
           <div className="clay-icon h-10 w-10">
             <Brain className="h-5 w-5" />
           </div>
-          <span className="text-xl font-semibold">Mira</span>
+          <span className="text-xl font-semibold">Headache Mx</span>
         </Link>
         <Link
           to="/"
