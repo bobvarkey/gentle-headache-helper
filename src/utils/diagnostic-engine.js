@@ -433,6 +433,8 @@ export function formatDifferentialResults(results) {
     title: 'Possible Diagnoses',
     subtitle: 'Ranked by confidence',
     differentials: results.differentials.map(d => ({
+      id: d.id,
+      category: d.category,
       name: d.name,
       code: d.code,
       confidence: d.confidence,

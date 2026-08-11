@@ -901,7 +901,8 @@ function ResultsView({ results, answers, onRestart }) {
       recs.push({ label: "View Prophylaxis Options", href: "/prophylaxis" });
     } else if (top.category === 'tac') {
       recs.push({ label: "TAC Subtypes Comparison", href: "#tac" });
-      recs.push({ label: "TAC Safety & Contraindications", href: "#tac-safety" });
+      const safetyHash = top.id === 'cluster' ? '#oxygen' : top.id === 'ph' || top.id === 'hc' ? '#indomethacin' : top.id === 'sunct_suna' ? '#lamotrigine' : '';
+      recs.push({ label: `TAC Safety: ${top.name}`, href: `/tac-safety${safetyHash}` });
     } else if (top.id === 'ndph') {
       recs.push({ label: "Review NDPH Criteria", href: "#tac" });
     }
