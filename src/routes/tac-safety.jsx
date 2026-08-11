@@ -1,5 +1,39 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shield, AlertTriangle, Zap, CheckCircle2, ArrowLeft, Info, Pill, Activity, Clock } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+const GLOSSARY = {
+  TAC: "Trigeminal Autonomic Cephalalgias: A group of primary headache disorders characterized by unilateral pain and ipsilateral cranial autonomic features.",
+  indomethacin: "A potent NSAID that is uniquely effective for certain TACs like Paroxysmal Hemicrania and Hemicrania Continua.",
+  lamotrigine: "An anti-epileptic medication used as first-line prophylaxis for SUNCT and SUNA, requiring careful titration to avoid serious skin rashes.",
+  "high-flow oxygen": "100% oxygen delivered at 12-15L/min, used as a fast-acting acute treatment for Cluster Headache.",
+  "SJS": "Stevens-Johnson Syndrome: A rare but serious skin reaction that can be triggered by certain medications like lamotrigine if titrated too quickly."
+};
+
+function GlossaryTerm({ term, children }) {
+  const definition = GLOSSARY[term] || GLOSSARY[term.toLowerCase()];
+  if (!definition) return children || term;
+
+  return (
+    <TooltipProvider>
+      <Tooltip delayDuration={300}>
+        <TooltipTrigger asChild>
+          <span className="cursor-help border-b border-dotted border-[#e84393] text-[#e84393] font-semibold hover:bg-[#e84393]/5 px-0.5 rounded transition-colors">
+            {children || term}
+          </span>
+        </TooltipTrigger>
+        <TooltipContent className="max-w-[200px] text-xs leading-relaxed bg-[#1a1330] text-white border-none clay-card shadow-xl p-3">
+          <p>{definition}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+}
 
 const TAC_SAFETY = [
   {
@@ -30,7 +64,7 @@ const TAC_SAFETY = [
   {
     category: "Lamotrigine (SUNCT/SUNA)",
     warnings: [
-      "Severe rash risk: Stevens-Johnson Syndrome (SJS) risk requires very slow titration (e.g., 25mg every other day or daily for 2 weeks).",
+      "Severe rash risk: Stevens-Johnson Syndrome (<GlossaryTerm term='SJS'>SJS</GlossaryTerm>) risk requires very slow titration (e.g., 25mg every other day or daily for 2 weeks).",
       "Immediate action: Stop immediately if any new rash or mouth sores develop."
     ],
     priority: "critical"
@@ -74,7 +108,7 @@ function TacSafetyPage() {
             </div>
             <div>
               <h1 className="text-3xl md:text-4xl font-bold tracking-tight">TAC Safety</h1>
-              <p className="text-[#1a1330]/60 font-medium">Critical warnings for Trigeminal Autonomic Cephalalgias</p>
+              <p className="text-[#1a1330]/60 font-medium">Critical warnings for <GlossaryTerm term="TAC">Trigeminal Autonomic Cephalalgias</GlossaryTerm></p>
             </div>
           </div>
 
@@ -96,7 +130,19 @@ function TacSafetyPage() {
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-xl font-bold flex items-center gap-3">
                     <div className={`h-2.5 w-2.5 rounded-full ${s.priority === 'critical' ? 'bg-[#e84393]' : s.priority === 'high' ? 'bg-[#f7931e]' : 'bg-[#1a1330]'}`} />
-                    {s.category}
+                    {s.category === "Indomethacin Response Testing" ? (
+                      <>
+                        <GlossaryTerm term="indomethacin">Indomethacin</GlossaryTerm> Response Testing
+                      </>
+                    ) : s.category === "Lamotrigine (SUNCT/SUNA)" ? (
+                      <>
+                        <GlossaryTerm term="lamotrigine">Lamotrigine</GlossaryTerm> (SUNCT/SUNA)
+                      </>
+                    ) : s.category === "High-Flow Oxygen (Cluster)" ? (
+                      <>
+                        <GlossaryTerm term="high-flow oxygen">High-Flow Oxygen</GlossaryTerm> (Cluster)
+                      </>
+                    ) : s.category}
                   </h3>
                   {s.priority === 'critical' && (
                     <span className="text-[10px] font-bold uppercase tracking-widest text-[#e84393] bg-[#e84393]/10 px-2 py-1 rounded-md">
@@ -107,7 +153,7 @@ function TacSafetyPage() {
                 
                 <ul className="space-y-4">
                   {s.warnings.map((w, i) => (
-                    <li key={i} className="flex gap-3 text-[#1a1330]/80 leading-relaxed">
+                    <li key={i} className="flex gap-3 text-[#1a1330]/80 leading-relaxed block">
                       <div className="mt-1.5 shrink-0">
                         <CheckCircle2 className="h-4 w-4 text-[#e84393]" strokeWidth={2.5} />
                       </div>
@@ -120,7 +166,7 @@ function TacSafetyPage() {
                   <div className="mt-6 p-4 rounded-2xl bg-[#1a1330]/5 border border-[#1a1330]/10 flex gap-3 items-start">
                     <Info className="h-4 w-4 mt-0.5 text-[#1a1330]/40" />
                     <p className="text-[11px] text-[#1a1330]/60 italic leading-relaxed">
-                      Indomethacin is diagnostic for Paroxysmal Hemicrania and Hemicrania Continua. Lack of response at 225mg/day usually rules out these diagnoses.
+                      <GlossaryTerm term="indomethacin">Indomethacin</GlossaryTerm> is diagnostic for Paroxysmal Hemicrania and Hemicrania Continua. Lack of response at 225mg/day usually rules out these diagnoses.
                     </p>
                   </div>
                 )}
