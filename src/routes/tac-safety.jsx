@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Shield, AlertTriangle, Zap, CheckCircle2, ArrowLeft, Info, Pill, Activity, Clock } from "lucide-react";
+import { Shield, AlertTriangle, Zap, CheckCircle2, ArrowLeft, Info, Pill, Activity, Clock, Wind, ArrowRight } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -37,6 +37,7 @@ function GlossaryTerm({ term, children }) {
 
 const TAC_SAFETY = [
   {
+    id: "indomethacin",
     category: "Indomethacin Response Testing",
     warnings: [
       "Absolute contraindication: Active peptic ulcer disease or severe renal impairment.",
@@ -46,6 +47,7 @@ const TAC_SAFETY = [
     priority: "critical"
   },
   {
+    id: "oxygen",
     category: "High-Flow Oxygen (Cluster)",
     warnings: [
       "Standard of care: 100% oxygen at 12–15 L/min via a non-rebreathing mask.",
@@ -54,6 +56,7 @@ const TAC_SAFETY = [
     priority: "standard"
   },
   {
+    id: "triptans",
     category: "Triptans (Acute)",
     warnings: [
       "Subcutaneous sumatriptan 6mg is first-line for Cluster.",
@@ -62,12 +65,43 @@ const TAC_SAFETY = [
     priority: "high"
   },
   {
+    id: "lamotrigine",
     category: "Lamotrigine (SUNCT/SUNA)",
     warnings: [
       "Severe rash risk: Stevens-Johnson Syndrome (<GlossaryTerm term='SJS'>SJS</GlossaryTerm>) risk requires very slow titration (e.g., 25mg every other day or daily for 2 weeks).",
       "Immediate action: Stop immediately if any new rash or mouth sores develop."
     ],
     priority: "critical"
+  }
+];
+
+const TAC_ALGORITHM = [
+  {
+    title: "Step 1: Acute Oxygen (Cluster)",
+    description: "Start 100% O2 via non-rebreathing mask at 12-15 L/min.",
+    checks: [
+      "Patient is not smoking/near open flames",
+      "No severe COPD / Type 2 Respiratory Failure risk"
+    ],
+    icon: Wind
+  },
+  {
+    title: "Step 2: Diagnostic Indomethacin (PH/HC)",
+    description: "Titrate indomethacin to confirm diagnosis.",
+    checks: [
+      "Screen for active PUD or Renal impairment",
+      "Start Omeprazole 20mg OD (or equivalent PPI)",
+      "25mg TDS (3 days) → 50mg TDS (3 days) → 75mg TDS"
+    ],
+    icon: Pill
+  },
+  {
+    title: "Step 3: Evaluation",
+    description: "Complete response (100% pain freedom) confirms PH or HC.",
+    checks: [
+      "If no response at 225mg/day, reconsider diagnosis"
+    ],
+    icon: CheckCircle2
   }
 ];
 
@@ -126,19 +160,19 @@ function TacSafetyPage() {
 
           <div className="grid gap-6">
             {TAC_SAFETY.map((s, idx) => (
-              <div key={s.category} className="clay-card p-6 md:p-8 animate-step-in" style={{ animationDelay: `${idx * 100}ms` }}>
+              <div key={s.id} id={s.id} className="clay-card p-6 md:p-8 animate-step-in" style={{ animationDelay: `${idx * 100}ms` }}>
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-xl font-bold flex items-center gap-3">
                     <div className={`h-2.5 w-2.5 rounded-full ${s.priority === 'critical' ? 'bg-[#e84393]' : s.priority === 'high' ? 'bg-[#f7931e]' : 'bg-[#1a1330]'}`} />
-                    {s.category === "Indomethacin Response Testing" ? (
+                    {s.id === "indomethacin" ? (
                       <>
                         <GlossaryTerm term="indomethacin">Indomethacin</GlossaryTerm> Response Testing
                       </>
-                    ) : s.category === "Lamotrigine (SUNCT/SUNA)" ? (
+                    ) : s.id === "lamotrigine" ? (
                       <>
                         <GlossaryTerm term="lamotrigine">Lamotrigine</GlossaryTerm> (SUNCT/SUNA)
                       </>
-                    ) : s.category === "High-Flow Oxygen (Cluster)" ? (
+                    ) : s.id === "oxygen" ? (
                       <>
                         <GlossaryTerm term="high-flow oxygen">High-Flow Oxygen</GlossaryTerm> (Cluster)
                       </>
@@ -162,7 +196,7 @@ function TacSafetyPage() {
                   ))}
                 </ul>
 
-                {s.category.includes("Indomethacin") && (
+                {s.id === "indomethacin" && (
                   <div className="mt-6 p-4 rounded-2xl bg-[#1a1330]/5 border border-[#1a1330]/10 flex gap-3 items-start">
                     <Info className="h-4 w-4 mt-0.5 text-[#1a1330]/40" />
                     <p className="text-[11px] text-[#1a1330]/60 italic leading-relaxed">
@@ -173,6 +207,42 @@ function TacSafetyPage() {
               </div>
             ))}
           </div>
+
+          <section id="algorithm" className="mt-16 animate-clay-pop">
+            <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
+              <div className="feature-icon bg-[#e84393] text-white" style={{ width: 40, height: 40, borderRadius: 12 }}>
+                <Activity className="h-5 w-5" />
+              </div>
+              Treatment Algorithm
+            </h2>
+
+            <div className="space-y-4">
+              {TAC_ALGORITHM.map((step, idx) => (
+                <div key={idx} className="relative flex gap-6 group">
+                  {idx < TAC_ALGORITHM.length - 1 && (
+                    <div className="absolute left-[23px] top-12 bottom-[-16px] w-0.5 bg-gradient-to-b from-[#e84393]/30 to-transparent" />
+                  )}
+                  <div className="shrink-0">
+                    <div className="feature-icon bg-white border-2 border-[#e84393]/20 text-[#e84393]" style={{ width: 48, height: 48, borderRadius: 16 }}>
+                      <step.icon className="h-5 w-5" />
+                    </div>
+                  </div>
+                  <div className="clay-card p-6 flex-1 hover:border-[#e84393]/30 transition-colors">
+                    <h3 className="text-lg font-bold mb-2">{step.title}</h3>
+                    <p className="text-sm text-[#1a1330]/60 mb-4">{step.description}</p>
+                    <div className="grid gap-2">
+                      {step.checks.map((check, cIdx) => (
+                        <div key={cIdx} className="flex items-center gap-2 text-xs font-medium text-[#1a1330]/80">
+                          <div className="h-1.5 w-1.5 rounded-full bg-[#e84393]" />
+                          {check}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
           
           <div className="mt-12 clay-card p-8 bg-white/40">
             <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
