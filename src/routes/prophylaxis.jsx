@@ -182,6 +182,106 @@ const QUALITY_COLS = ["High", "Moderate", "Low", "Very low"];
 const STRENGTH_ROWS = ["Strong in favor", "Weak in favor"];
 const DRUG_CLASSES = ["CGRP", "Gepant", "Beta-blocker", "Antiepileptic", "TCA", "ARB/ACEi", "Toxin", "Other"];
 
+// ----- AAN/AHS 2026 update -----
+const AAN_AHS_CITATIONS = [
+  { label: "AAN/AHS Migraine Prevention Guideline (Oct 2026) — Medscape", href: "https://www.medscape.com/viewarticle/new-migraine-prevention-guidelines-released-2026a1000wv9" },
+  { label: "Migraine headache: prophylactic therapy — Medscape", href: "https://emedicine.medscape.com/article/1142556-treatment#d11" },
+  { label: "Migraine headache: guidelines summary — Medscape", href: "https://emedicine.medscape.com/article/1142556-guidelines#g1" },
+  { label: "NICE — Headaches in over 12s (CG150)", href: "https://reference.medscape.com/cc2/p10/headaches-over-12s-diagnosis-and-management-2022a10012gq" },
+];
+
+const AAN_ELIGIBILITY = [
+  "≥4 migraine days/month",
+  "≥4 moderate–severe headache days/month",
+  "Substantial migraine-related disability",
+  "Acute therapies fail, are overused (>2 days/week), or are contraindicated",
+];
+
+// Higher-confidence preventive options by indication (AAN/AHS 2026)
+const AAN_EFFICACY = [
+  {
+    indication: "Episodic migraine",
+    drugs: ["Atogepant", "Eptinezumab", "Erenumab", "Fremanezumab", "Galcanezumab", "Propranolol", "Topiramate", "Valproate"],
+  },
+  {
+    indication: "Chronic migraine",
+    drugs: ["Atogepant", "Eptinezumab", "Erenumab", "Fremanezumab", "Galcanezumab", "OnabotulinumtoxinA", "Topiramate", "Valproate"],
+  },
+];
+
+// Oral preventive evidence levels (AAN/AHS)
+const AAN_EVIDENCE_LEVELS = [
+  {
+    level: "Level A — established effective",
+    tone: "a",
+    items: [
+      "Topiramate; divalproex / sodium valproate (antiepileptics)",
+      "β-blockers: propranolol, metoprolol, timolol",
+    ],
+  },
+  {
+    level: "Level B — probably effective",
+    tone: "b",
+    items: ["Amitriptyline, venlafaxine", "Atenolol, nadolol"],
+  },
+  {
+    level: "Level C — possibly effective",
+    tone: "alt",
+    items: ["Lisinopril, candesartan, clonidine, guanfacine, carbamazepine", "Several other β-blockers"],
+  },
+];
+
+// Comorbidity-guided selection (AAN/AHS 2026)
+const AAN_COMORBIDITIES = [
+  { condition: "Hypertension", choice: "Consider enalapril, nifedipine, or telmisartan" },
+  { condition: "Fibromyalgia", choice: "Offer amitriptyline" },
+  { condition: "Increased BMI", choice: "Topiramate is the preferred oral option" },
+  { condition: "Medication overuse", choice: "Consider CGRP mAbs, atogepant, onabotulinumtoxinA, or topiramate" },
+];
+
+// Pregnancy guidance (AAN/AHS 2026)
+const AAN_PREGNANCY = [
+  {
+    tag: "First-line",
+    tone: "a",
+    text: "Maximize nonpharmacologic measures and avoid known teratogens. CCBs / antihistamines show the least fetal-risk signal in research.",
+  },
+  {
+    tag: "Preferred drug",
+    tone: "b",
+    text: "Nifedipine — may be offered if medication is needed.",
+  },
+  {
+    tag: "Acceptable with caution",
+    tone: "b",
+    text: "Metoprolol or propranolol if nifedipine is unsuitable/ineffective (balance fetal risk vs benefit). OnabotulinumtoxinA for chronic migraine — pregnancy outcome data are limited.",
+  },
+  {
+    tag: "Avoid",
+    tone: "c",
+    text: "Valproate / divalproex and topiramate (teratogenic). Generally avoid CGRP-targeted agents; stop CGRP mAbs / gepants when pregnancy is recognized (insufficient safety data).",
+  },
+];
+
+// Timing of response assessment (AAN/AHS 2026)
+const AAN_TIMING = [
+  "Most preventives — assess efficacy after 8–12 weeks at a tolerated dose.",
+  "OnabotulinumtoxinA — assess after 24 weeks.",
+  "If response is suboptimal by 8 weeks, optimize toward the maximum tolerated dose.",
+  "If side effects are intolerable, reduce the dose or switch. Adverse effects may appear before full benefit.",
+];
+
+// Stopping therapy (AAN/AHS 2026)
+const AAN_STOPPING = {
+  when: "After 6 months of treatment, in patients with good response and stable control, discuss the potential benefits and risks of tapering.",
+  risks: [
+    "Increased headache days",
+    "More acute medication use",
+    "Reduced headache-related quality of life",
+  ],
+  decision: "Continue, taper, or switch based on the patient’s goals, response, and risk. Tapering should be a decision — not a reflex.",
+};
+
 // Flat entries drive both matrices AND the detail sheet.
 const MATRIX_ENTRIES = [
   // ===== EPISODIC — STRONG =====
