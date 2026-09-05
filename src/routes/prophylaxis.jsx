@@ -503,6 +503,10 @@ function Prophylaxis() {
           </div>
         </div>
 
+        {/* AAN/AHS 2026 UPDATE */}
+        <AanAhsSection />
+
+
         {/* FIRST LINE */}
         <Section
           icon={<Pill className="h-5 w-5" />}
