@@ -691,6 +691,140 @@ function CitationList({ citations, className = "" }) {
   );
 }
 
+function AanAhsSection() {
+  return (
+    <div className="clay-card p-6 mb-8 border-[#6a2b8a]/30">
+      <div className="flex items-center gap-3 mb-2">
+        <div className="clay-icon h-9 w-9 bg-[#6a2b8a]/10">
+          <Sparkles className="h-5 w-5 text-[#6a2b8a]" />
+        </div>
+        <h2 className="text-xl font-semibold">AAN/AHS 2026 update — prevention guidance</h2>
+      </div>
+      <p className="text-sm text-[#2d2a33]/70 mb-4">
+        Updated AAN/AHS guidance adds CGRP-targeted therapies for adult episodic and chronic
+        migraine prevention. No single preventive is clearly superior — choose via shared
+        decision-making: efficacy, tolerability, safety, cost, and route.
+      </p>
+
+      {/* Who should receive prevention */}
+      <div className="rounded-xl border border-[#0b3d5c]/25 bg-[#0b3d5c]/5 p-4 mb-5">
+        <p className="text-sm font-semibold text-[#0b3d5c] mb-2">Who should receive prophylaxis?</p>
+        <ul className="text-sm space-y-1 list-disc pl-5">
+          {AAN_ELIGIBILITY.map((x) => (
+            <li key={x}>{x}</li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Efficacy-driven first choices */}
+      <SubHeading label="Use efficacy evidence to guide first choices — higher-confidence options" />
+      <div className="grid sm:grid-cols-2 gap-3 mb-5">
+        {AAN_EFFICACY.map((g) => (
+          <div key={g.indication} className="rounded-xl border border-[#6a2b8a]/25 bg-white/60 p-4">
+            <p className="font-semibold text-sm text-[#6a2b8a] mb-2">{g.indication}</p>
+            <div className="flex flex-wrap gap-1.5">
+              {g.drugs.map((d) => (
+                <span
+                  key={d}
+                  className="inline-block rounded-full bg-[#6a2b8a]/10 px-2 py-0.5 text-xs font-medium text-[#6a2b8a]"
+                >
+                  {d}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Oral evidence levels */}
+      <SubHeading label="Oral preventive evidence levels (non-pregnant adults)" />
+      <div className="grid gap-3 mb-5">
+        {AAN_EVIDENCE_LEVELS.map((lvl) => (
+          <DrugCard
+            key={lvl.level}
+            tx={{ name: lvl.level, dose: lvl.items.join("; "), notes: undefined }}
+            tone={lvl.tone}
+          />
+        ))}
+      </div>
+
+      {/* Newer & device options */}
+      <SubHeading label="Newer & device options" />
+      <div className="rounded-xl border border-[#0b3d5c]/25 bg-[#0b3d5c]/5 p-4 mb-5 text-sm space-y-1">
+        <p>
+          <strong>CGRP monoclonal antibodies</strong> (erenumab, fremanezumab, galcanezumab,
+          eptinezumab) and <strong>atogepant</strong> — recommended for episodic and chronic
+          migraine, especially after failure of traditional agents or when tolerability is
+          prioritized.
+        </p>
+        <p>
+          <strong>OnabotulinumtoxinA</strong> — recommended for chronic migraine (≥15 headache
+          days/month).
+        </p>
+        <p>
+          <strong>External trigeminal TENS</strong> — can be offered as a nonpharmacologic
+          preventive.
+        </p>
+      </div>
+
+      {/* Comorbidity-guided selection */}
+      <SubHeading label="Use comorbidities to make smarter choices" />
+      <div className="grid sm:grid-cols-2 gap-3 mb-5">
+        {AAN_COMORBIDITIES.map((c) => (
+          <div key={c.condition} className="rounded-xl border border-[#d69838]/40 bg-white/60 p-4">
+            <p className="font-semibold text-sm text-[#7a5312]">{c.condition}</p>
+            <p className="text-sm text-[#2d2a33]/80 mt-1">{c.choice}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Pregnancy */}
+      <SubHeading label="If prevention is needed in pregnancy — narrow the options" />
+      <div className="grid gap-3 mb-5">
+        {AAN_PREGNANCY.map((p) => (
+          <DrugCard
+            key={p.tag}
+            tx={{ name: p.tag, dose: p.text }}
+            tone={p.tone}
+          />
+        ))}
+        <p className="text-xs text-[#2d2a33]/60 italic">
+          Use the lowest overall pharmacologic exposure compatible with control.
+        </p>
+      </div>
+
+      {/* Timing of response assessment */}
+      <SubHeading label="Do not judge response too early — timing of assessment" />
+      <div className="rounded-xl border border-[#4b8b6b]/40 bg-white/60 p-4 mb-5">
+        <ul className="text-sm space-y-2 list-decimal pl-5">
+          {AAN_TIMING.map((t) => (
+            <li key={t}>{t}</li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Stopping therapy */}
+      <SubHeading label="Stopping therapy — tapering should be a decision, not a reflex" />
+      <div className="rounded-xl border border-[#c8391a]/30 bg-white/60 p-4 mb-4">
+        <p className="text-sm text-[#2d2a33]/80 mb-2">
+          <strong>When to consider:</strong> {AAN_STOPPING.when}
+        </p>
+        <p className="text-sm font-semibold text-[#c8391a] mb-1">
+          Limited evidence — discontinuation may lead to:
+        </p>
+        <ul className="text-sm space-y-1 list-disc pl-5 mb-2">
+          {AAN_STOPPING.risks.map((r) => (
+            <li key={r}>{r}</li>
+          ))}
+        </ul>
+        <p className="text-sm text-[#0b3d5c] font-medium">{AAN_STOPPING.decision}</p>
+      </div>
+
+      <CitationList citations={AAN_AHS_CITATIONS} />
+    </div>
+  );
+}
+
 function EvidenceMatrixSection() {
   const [query, setQuery] = useState("");
   const [condition, setCondition] = useState("all"); // all | episodic | chronic
