@@ -14,6 +14,7 @@ import {
   Search,
   X,
   Filter,
+  Sparkles,
 } from "lucide-react";
 import {
   Sheet,
